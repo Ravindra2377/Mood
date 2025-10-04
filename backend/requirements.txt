@@ -1,0 +1,9 @@
+﻿
+# Use a FastAPI and Pydantic combination compatible with modern Python
+fastapi==0.116.1
+uvicorn[standard]==0.22.0
+SQLAlchemy==1.4.49
+pydantic==2.11.7
+python-jose==3.3.0
+passlib[bcrypt]==1.7.4
+alembic==1.12.0
