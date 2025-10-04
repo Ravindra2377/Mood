@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.py[cod]
+instance/
+mh.db
+venv/
+.venv/
+env/
+ENV/
+/.env

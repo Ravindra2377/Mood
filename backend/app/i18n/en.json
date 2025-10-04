@@ -1,0 +1,24 @@
+{
+  "welcome": "Welcome",
+  "crisis_detected": "We detected content that may indicate you're in crisis. Please consider contacting support.",
+  "resources_heading": "Emergency resources"
+  ,
+  "crisis_alert_subject": "[ALERT] Crisis detected for user {user_id}",
+  "crisis_alert_html": "<p>Severity: {severity}</p><p>Match: {match}</p><p>Excerpt: {excerpt}</p>",
+  "crisis_alert_text": "Severity: {severity}\nMatch: {match}\nExcerpt: {excerpt}",
+  "crisis_push_short": "Crisis detected (severity={severity})"
+  ,
+  "password_reset_subject": "Reset your password",
+  "password_reset_html": "<p>Hi {email},</p><p>Click the link to reset your password:</p><p><a href=\"{reset_link}\">Reset password</a></p>",
+  "password_reset_text": "Reset your password: {reset_link}",
+  "password_changed_subject": "Your password was changed",
+  "password_changed_html": "<p>Hi {email},</p><p>Your password was successfully changed. If this wasn't you, contact support.</p><p><a href=\"{login_link}\">Sign in</a></p>",
+  "password_changed_text": "Your password was successfully changed. Sign in: {login_link}",
+  "verify_account_subject": "Verify your account",
+  "verify_account_html": "<p>Hi {email},</p><p>Click the link to verify your account:</p><p><a href=\"{verify_link}\">Verify account</a></p>",
+  "verify_account_text": "Verify your account: {verify_link}"
+  ,
+  "scheduled_checkin_subject": "We miss you — quick check-in",
+  "scheduled_checkin_html": "<p>Hi — we noticed you haven't checked in recently. Want to do a quick mood check?</p>",
+  "scheduled_checkin_text": "We noticed you haven't checked in recently. Want to do a quick mood check?"
+}

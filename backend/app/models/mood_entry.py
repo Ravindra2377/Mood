@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from datetime import datetime
+from datetime import datetime, timezone
 from app.models import Base
 
 class MoodEntry(Base):
@@ -8,4 +8,4 @@ class MoodEntry(Base):
 	user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
 	score = Column(Integer, nullable=False)
 	note = Column(String, nullable=True)
-	created_at = Column(DateTime, default=datetime.utcnow)
+	created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))

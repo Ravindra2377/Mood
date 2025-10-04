@@ -1,0 +1,6 @@
+# Optional ML dependencies for the detector
+# Install these if you set USE_MODEL_DETECTOR=true in app/config or via env
+transformers>=4.30.0
+# Install torch appropriate for your platform; for CPU-only environments you can try:
+# torch>=2.0.0
+# On Windows, it's recommended to follow official install instructions from https://pytorch.org

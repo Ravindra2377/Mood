@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: mh_user
+      POSTGRES_PASSWORD: mh_pass
+      POSTGRES_DB: mh_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://mh_user:mh_pass@db:5432/mh_db
+      - SECRET_KEY=${SECRET_KEY}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app:rw
+
+volumes:
+  pgdata:
+    driver: local

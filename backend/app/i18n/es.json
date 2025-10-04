@@ -1,0 +1,24 @@
+{
+  "welcome": "Bienvenido",
+  "crisis_detected": "Hemos detectado contenido que puede indicar que estás en crisis. Por favor considera contactar con ayuda.",
+  "resources_heading": "Recursos de emergencia"
+  ,
+  "crisis_alert_subject": "[ALERTA] Crisis detectada para el usuario {user_id}",
+  "crisis_alert_html": "<p>Gravedad: {severity}</p><p>Coincidencia: {match}</p><p>Extracto: {excerpt}</p>",
+  "crisis_alert_text": "Gravedad: {severity}\nCoincidencia: {match}\nExtracto: {excerpt}",
+  "crisis_push_short": "Crisis detectada (gravedad={severity})"
+  ,
+  "password_reset_subject": "Restablece tu contraseña",
+  "password_reset_html": "<p>Hola {email},</p><p>Haz clic en el enlace para restablecer tu contraseña:</p><p><a href=\"{reset_link}\">Restablecer contraseña</a></p>",
+  "password_reset_text": "Restablece tu contraseña: {reset_link}",
+  "password_changed_subject": "Tu contraseña ha sido cambiada",
+  "password_changed_html": "<p>Hola {email},</p><p>Tu contraseña ha sido cambiada con éxito. Si no fuiste tú, contacta con soporte.</p><p><a href=\"{login_link}\">Iniciar sesión</a></p>",
+  "password_changed_text": "Tu contraseña ha sido cambiada con éxito. Inicia sesión: {login_link}",
+  "verify_account_subject": "Verifica tu cuenta",
+  "verify_account_html": "<p>Hola {email},</p><p>Haz clic en el enlace para verificar tu cuenta:</p><p><a href=\"{verify_link}\">Verificar cuenta</a></p>",
+  "verify_account_text": "Verifica tu cuenta: {verify_link}"
+  ,
+  "scheduled_checkin_subject": "Te echamos de menos — una pequeña comprobación",
+  "scheduled_checkin_html": "<p>Hola — hemos notado que no has registrado tu estado recientemente. ¿Quieres hacer un chequeo rápido de tu estado de ánimo?</p>",
+  "scheduled_checkin_text": "Hemos notado que no has registrado tu estado recientemente. ¿Quieres hacer un chequeo rápido de tu estado de ánimo?"
+}

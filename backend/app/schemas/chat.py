@@ -4,6 +4,9 @@ from typing import List, Optional
 
 class MessageIn(BaseModel):
     text: str
+    conversation_id: int | None = None
+    modality: str | None = None  # e.g. 'cbt', 'dbt', 'mindfulness'
+    max_context_messages: int | None = 10
 
 class MessageOut(BaseModel):
     id: int
