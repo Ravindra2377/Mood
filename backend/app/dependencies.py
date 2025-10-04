@@ -1,14 +1,10 @@
-from typing import Optional
-from fastapi import Header, HTTPException, Depends
+from fastapi import HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer
 from app.services import security
 
-def get_current_user(authorization: Optional[str] = Header(None)):
-    if not authorization:
-        raise HTTPException(status_code=401, detail='Missing authorization header')
-    try:
-        scheme, token = authorization.split()
-    except Exception:
-        raise HTTPException(status_code=401, detail='Invalid authorization header')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/auth/token')
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
     payload = security.decode_access_token(token)
     if not payload or 'sub' not in payload:
         raise HTTPException(status_code=401, detail='Invalid token')

@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
-from app.controllers import auth, moods
+from app.controllers import auth, moods, profile, chat, gamification
 
 DATABASE_URL = settings.DATABASE_URL
 
@@ -30,6 +30,9 @@ def on_startup():
 
 app.include_router(auth.router, prefix='/api/auth', tags=['auth'])
 app.include_router(moods.router, prefix='/api', tags=['moods'])
+app.include_router(profile.router, prefix='/api', tags=['profile'])
+app.include_router(chat.router, prefix='/api', tags=['chat'])
+app.include_router(gamification.router, prefix='/api', tags=['gamification'])
 
 @app.get('/')
 def root():

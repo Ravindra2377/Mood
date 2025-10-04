@@ -2,8 +2,6 @@ from fastapi import APIRouter, HTTPException, Depends
 from app.schemas.chat import MessageIn, MessageOut
 from app.services import nlp_engine, crisis
 from app.dependencies import get_current_user
-from app.main import SessionLocal
-from app.models.conversation import Conversation, Message
 
 router = APIRouter()
 
@@ -12,6 +10,8 @@ def post_message(payload: MessageIn, user_id: int = Depends(get_current_user)):
     text = payload.text
     if crisis.contains_crisis_language(text):
         # create conversation + message record and return crisis response
+        from app.main import SessionLocal
+        from app.models.conversation import Conversation, Message
         db = SessionLocal()
         try:
             conv = Conversation(user_id=user_id)
@@ -31,6 +31,8 @@ def post_message(payload: MessageIn, user_id: int = Depends(get_current_user)):
             db.close()
     # normal flow
     resp = nlp_engine.respond_to_user(text)
+    from app.main import SessionLocal
+    from app.models.conversation import Conversation, Message
     db = SessionLocal()
     try:
         conv = Conversation(user_id=user_id)
