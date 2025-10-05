@@ -41,7 +41,7 @@ public struct MoodHistoryView: View {
                 }
                 .onDelete(perform: delete)
             }
-            .navigationTitle("Mood History")
+            .navigationTitle("SOUL History")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { vm.refresh() }) { Image(systemName: "arrow.clockwise") }
