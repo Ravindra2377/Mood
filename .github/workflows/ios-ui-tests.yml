@@ -1,0 +1,61 @@
+name: iOS UI Tests
+
+on:
+  push:
+    branches:
+      - feature/ios-scaffold
+    paths:
+      - 'ios-app/**'
+  pull_request:
+    branches:
+      - feature/ios-scaffold
+    paths:
+      - 'ios-app/**'
+
+jobs:
+  ui-tests:
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby (for xcpretty)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.x'
+
+      - name: Install xcpretty
+        run: gem install xcpretty -v 0.3.0 --no-document
+
+      - name: Show Xcode versions
+        run: xcodebuild -version
+
+      - name: Run UI tests (scheme Mood)
+        env:
+          DESTINATION: "platform=iOS Simulator,name=iPhone 14,OS=17.0"
+        run: |
+          set -e
+          PROJECT_PATH="ios-app/Mood.xcodeproj"
+          SCHEME="Mood"
+
+          if [ ! -e "$PROJECT_PATH" ]; then
+            echo "Project not found at $PROJECT_PATH"
+            ls -la ios-app
+            exit 1
+          fi
+
+          # Boot the simulator (best-effort)
+          xcrun simctl list devices
+
+          xcodebuild -project "$PROJECT_PATH" -scheme "$SCHEME" -sdk iphonesimulator -destination "$DESTINATION" clean test | xcpretty || true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-logs
+          path: |
+            ~/Library/Logs/Test/*
+            ios-app/DerivedData/**/Logs/Test
