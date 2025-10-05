@@ -9,6 +9,11 @@ public class SyncManager {
     private let api: APIClient
     private var cancellables = Set<AnyCancellable>()
 
+    // Refresh coordination
+    private let refreshQueue = DispatchQueue(label: "SyncManager.refresh")
+    private var isRefreshing = false
+    private var refreshWaiters: [(Result<String, Error>) -> Void] = []
+
     /// Max attempts per entry (including initial try)
     private let maxAttempts = 3
 
@@ -80,9 +85,10 @@ public class SyncManager {
                     entry.synced = true
                     completion(.success(()))
                 case .failure(let err):
-                    // If 401, try token refresh once and retry
+                    // If 401, try token refresh once and retry using a single shared refresh call
                     if let apiErr = err as? APIClient.APIError, case .clientError(let status) = apiErr, status == 401 {
-                        self.api.tokenProvider.refreshToken { refreshResult in
+                        // Coordinate refresh so concurrent 401 handlers only trigger one network refresh
+                        self.refreshTokenOnce { refreshResult in
                             switch refreshResult {
                             case .success:
                                 if attempt < self.maxAttempts {
@@ -108,5 +114,33 @@ public class SyncManager {
             }, receiveValue: { })
 
         self.cancellables.insert(cancellable)
+    }
+
+    /// Ensure only a single refresh network request runs at a time. Calls completion for the current caller
+    /// once the shared refresh completes (either success or failure).
+    private func refreshTokenOnce(completion: @escaping (Result<String, Error>) -> Void) {
+        refreshQueue.async {
+            // If a refresh is already in progress, enqueue the completion and return
+            if self.isRefreshing {
+                self.refreshWaiters.append(completion)
+                return
+            }
+
+            // Start a refresh and collect waiters
+            self.isRefreshing = true
+            self.refreshWaiters.append(completion)
+
+            self.api.tokenProvider.refreshToken { result in
+                self.refreshQueue.async {
+                    self.isRefreshing = false
+                    let waiters = self.refreshWaiters
+                    self.refreshWaiters.removeAll()
+                    // Notify all waiting callers
+                    for waiter in waiters {
+                        waiter(result)
+                    }
+                }
+            }
+        }
     }
 }
