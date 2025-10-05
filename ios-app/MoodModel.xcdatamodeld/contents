@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18150" systemVersion="20E241" minimumToolsVersion="Automatic">
+  <entity name="MoodEntry" representedClassName="MoodEntry" syncable="YES">
+    <attribute name="id" optional="NO" attributeType="UUID" syncable="YES"/>
+    <attribute name="timestamp" optional="NO" attributeType="date" syncable="YES"/>
+    <attribute name="rating" optional="NO" attributeType="integer 16" syncable="YES"/>
+    <attribute name="note" optional="YES" attributeType="string" syncable="YES"/>
+    <attribute name="synced" optional="NO" attributeType="boolean" defaultValueString="0" syncable="YES"/>
+  </entity>
+</model>
