@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
 from app.controllers import auth, moods, profile, chat, gamification, personalization, community, crisis, i18n
+from app.controllers import timers as timers_controller
 from app.controllers import admin as admin_controller
 from app.controllers import analytics as analytics_controller
 from app.controllers import privacy as privacy_controller
@@ -100,6 +101,7 @@ app.include_router(i18n.router, prefix='/api', tags=['i18n'])
 app.include_router(analytics_controller.router, prefix='/api/analytics', tags=['analytics'])
 app.include_router(admin_controller.router, prefix='/admin', tags=['admin'])
 app.include_router(privacy_controller.router, prefix='/api', tags=['privacy'])
+app.include_router(timers_controller.router, prefix='/api', tags=['timers'])
 
 @app.get('/')
 def root():

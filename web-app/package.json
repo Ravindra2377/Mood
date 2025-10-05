@@ -1,0 +1,29 @@
+{
+  "name": "mood-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "echo \"no lint configured\"",
+    "crop:moods": "node tools/crop_moods.js",
+    "generate:doc": "node tools/generate_doc.js"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "dexie": "^3.2.2",
+    "workbox-window": "^6.5.4"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "typescript": "^5.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "vite-plugin-pwa": "^0.18.0",
+    "jimp": "^0.16.1"
+    ,
+    "minimist": "^1.2.8"
+  }
+}
