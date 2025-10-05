@@ -19,10 +19,16 @@ export default function MoodEntry() {
     <div>
       <label>
         Rating:
-        <input type="range" min={1} max={5} value={rating} onChange={e => setRating(Number((e.target as HTMLInputElement).value))} />
+        <input
+          type="range"
+          min={1}
+          max={5}
+          value={rating}
+          onChange={(e: Event) => setRating(Number((e.target as HTMLInputElement).value))}
+        />
       </label>
       <div>
-        <textarea value={note} onChange={e => setNote((e.target as HTMLTextAreaElement).value)} />
+  <textarea value={note} onChange={(e: Event) => setNote((e.target as HTMLTextAreaElement).value)} />
       </div>
       <button onClick={save}>Save</button>
       <div>{status}</div>
