@@ -11,7 +11,12 @@ struct MoodApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MoodView().environment(\.managedObjectContext, persistenceController.container.viewContext)
+            // Create a shared MoodViewModel for the app so badge and mood view stay in sync
+            let tokenProvider = KeychainTokenProvider()
+            let api = APIClient(baseURL: URL(string: "https://api.example.com")!, tokenProvider: tokenProvider)
+            let sharedVM = MoodViewModel(api: api)
+            MainTabView(viewModel: sharedVM)
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 
