@@ -3,7 +3,7 @@ type AnyEvent = any
 
 import { createJournal, updateJournal, deleteJournal } from '../api/journals'
 
-export default function JournalEditor({ date, onSaved, initial }: { date: string, onSaved: () => void, initial?: any }) {
+export default function JournalEditor({ date, onSaved, initial }: { date: string, onSaved?: (entry?: any) => void, initial?: any }) {
   const [title, setTitle] = useState(initial?.title ?? '')
   const [content, setContent] = useState(initial?.content ?? '')
   const [progress, setProgress] = useState(initial?.progress ?? ('' as number | ''))
@@ -29,17 +29,18 @@ export default function JournalEditor({ date, onSaved, initial }: { date: string
       const body: any = { title, content }
       if (date) body.entry_date = date
       if (progress !== '') body.progress = Number(progress)
+      let res: any = null
       if (editingId) {
-        await updateJournal(editingId, body)
+        res = await updateJournal(editingId, body)
       } else {
-        await createJournal(body)
+        res = await createJournal(body)
       }
       setStatus('Saved')
       setTitle('')
       setContent('')
       setProgress('')
       setEditingId(null)
-      onSaved()
+      try { onSaved && onSaved(res) } catch (e) {}
     } catch (e) {
       console.error(e)
       setStatus('Save failed')
@@ -55,7 +56,7 @@ export default function JournalEditor({ date, onSaved, initial }: { date: string
       setContent('')
       setProgress('')
       setEditingId(null)
-      onSaved()
+      try { onSaved && onSaved(null) } catch (e) {}
     } catch (e) {
       console.error(e)
       setStatus('Delete failed')

@@ -2,25 +2,37 @@ import React, { useEffect, useState } from 'react'
 import '../styles/theme.css'
 import JournalEditor from './JournalEditor'
 
-function Donut({ percent = 78 }: { percent?: number }) {
+function AnimatedDonut({ percent = 78, duration = 900 }: { percent?: number, duration?: number }) {
   const radius = 60
   const stroke = 12
-  const cx = radius + stroke
-  const cy = radius + stroke
   const r = radius
-  const c = 2 * Math.PI * r
-  const filled = (percent / 100) * c
-  const gap = c - filled
+  const circumference = 2 * Math.PI * r
+  const [offset, setOffset] = React.useState(circumference)
+  const [display, setDisplay] = React.useState(0)
+
+  React.useEffect(() => {
+    // animate stroke-dashoffset from full to target
+    const target = circumference * (1 - Math.min(Math.max(percent, 0), 100) / 100)
+    const start = circumference
+    const startTime = performance.now()
+    function frame(now: number) {
+      const t = Math.min(1, (now - startTime) / duration)
+      const eased = 1 - Math.pow(1 - t, 3)
+      setOffset(start + (target - start) * eased)
+      setDisplay(Math.round(eased * percent))
+      if (t < 1) requestAnimationFrame(frame)
+      else setDisplay(percent)
+    }
+    requestAnimationFrame(frame)
+  }, [percent, circumference, duration])
+
   return (
     <svg width={(r + stroke) * 2} height={(r + stroke) * 2} viewBox={`0 0 ${(r + stroke) * 2} ${(r + stroke) * 2}`}>
-      <g transform={`translate(${cx},${cy})`}>
+      <g transform={`translate(${r + stroke},${r + stroke})`}>
         <circle r={r} fill="none" stroke="#eef2ff" strokeWidth={stroke} />
-        {/* three colored arcs using stroke-dasharray hack by overlaying segments */}
-        <circle r={r} fill="none" stroke="#fbcfe8" strokeWidth={stroke} strokeDasharray={`${c * 0.25} ${c}`} strokeDashoffset={-c * 0.0} transform="rotate(-90)" />
-        <circle r={r} fill="none" stroke="#fef08a" strokeWidth={stroke} strokeDasharray={`${c * 0.28} ${c}`} strokeDashoffset={-c * 0.25} transform="rotate(-90)" />
-        <circle r={r} fill="none" stroke="#bfdbfe" strokeWidth={stroke} strokeDasharray={`${c * 0.47} ${c}`} strokeDashoffset={-c * 0.53} transform="rotate(-90)" />
+        <circle r={r} fill="none" stroke="#60a5fa" strokeWidth={stroke} strokeDasharray={`${circumference}`} strokeDashoffset={offset} transform="rotate(-90)" style={{ transition: 'stroke-dashoffset 280ms linear' }} />
         <circle r={r - 6} fill="white" />
-        <text x="0" y="6" textAnchor="middle" fontSize={22} fontWeight={700} fill="#0f172a">{percent}%</text>
+        <text x="0" y="6" textAnchor="middle" fontSize={22} fontWeight={700} fill="#0f172a">{display}%</text>
       </g>
     </svg>
   )
@@ -112,11 +124,12 @@ export default function HomeView() {
 
             <div className="donut-row">
               <div className="fade-up">
-                <Donut percent={78} />
+                <AnimatedDonut percent={78} />
               </div>
               <div style={{ flex: 1 }}>
-                <div className="card">Sometimes it feels like no matter what we do, things only get worse.</div>
-                <div style={{ textAlign: 'right', color: 'var(--muted)', fontSize: 12, marginTop: 6 }}>68/240</div>
+                <div className="card">{latest ? latest.content : 'Sometimes it feels like no matter what we do, things only get worse.'}</div>
+                <div style={{ textAlign: 'right', color: 'var(--muted)', fontSize: 12, marginTop: 6 }}>{latest ? `${(latest.content || '').length}/240` : '68/240'}</div>
+                {latest && <div style={{ marginTop: 8 }}><button className="card" onClick={() => setEditing(latest)}>Quick Edit</button></div>}
               </div>
             </div>
           </div>
@@ -127,7 +140,19 @@ export default function HomeView() {
         <>
           <div className="overlay" onClick={() => setEditing(null)} />
           <div className="modal fade-up">
-            <JournalEditor date={(editing.entry_date || '').slice(0, 10)} onSaved={() => { setEditing(null); window.location.reload() }} initial={editing} />
+            <JournalEditor
+              date={(editing.entry_date || '').slice(0, 10)}
+              initial={editing}
+              onSaved={(entry?: any) => {
+                // entry === null means deleted
+                if (entry === null) {
+                  setLatest(null)
+                } else if (entry) {
+                  setLatest(entry)
+                }
+                setEditing(null)
+              }}
+            />
           </div>
         </>
       )}
