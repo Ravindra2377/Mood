@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/soft_teal</item>
+        <item name="colorPrimaryVariant">@color/pastel_blue</item>
+        <item name="colorAccent">@color/warm_coral</item>
+        <item name="android:statusBarColor">@color/pastel_blue</item>
+        <item name="android:navigationBarColor">@color/soft_teal</item>
+        <item name="android:textColorPrimary">@color/dark_gray</item>
+    </style>
+</resources>

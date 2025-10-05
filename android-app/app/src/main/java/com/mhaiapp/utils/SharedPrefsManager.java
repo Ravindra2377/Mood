@@ -10,6 +10,14 @@ public class SharedPrefsManager {
     private static final String KEY_ACCESS = "access_token";
     private static final String KEY_REFRESH = "refresh_token";
     private SharedPreferences prefs;
+    private static SharedPrefsManager INSTANCE;
+
+    public static synchronized SharedPrefsManager getInstance(Context ctx) {
+        if (INSTANCE == null) {
+            INSTANCE = new SharedPrefsManager(ctx.getApplicationContext());
+        }
+        return INSTANCE;
+    }
 
     public SharedPrefsManager(Context ctx) {
         try {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mhaiapp">
+
+    <application
+        android:name="com.mhaiapp.MoodSyncApplication"
+        android:allowBackup="true"
+        android:label="MoodApp"
+        android:icon="@mipmap/ic_launcher">
+        <activity android:name="com.mhaiapp.activities.MainActivity"/>
+        <activity android:name="com.mhaiapp.activities.LoginActivity"/>
+        <activity android:name="com.mhaiapp.activities.SignupActivity"/>
+        <activity android:name="com.mhaiapp.activities.MoodTrackingActivity"/>
+    </application>
+
+</manifest>
