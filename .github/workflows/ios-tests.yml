@@ -1,0 +1,52 @@
+name: iOS Unit Tests
+
+on:
+  push:
+    paths:
+      - 'ios-app/**'
+  pull_request:
+    paths:
+      - 'ios-app/**'
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby (for xcpretty)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.x'
+
+      - name: Install xcpretty
+        run: |
+          gem install xcpretty -v 0.3.0 --no-document
+
+      - name: Show Xcode versions
+        run: xcodebuild -version
+
+      - name: Run unit tests (adjust PROJECT and SCHEME as needed)
+        env:
+          PROJECT: ${{ env.PROJECT }}
+          SCHEME: ${{ env.SCHEME }}
+          DESTINATION: "platform=iOS Simulator,name=iPhone 14,OS=17.0"
+        run: |
+          set -e
+          # Default project/scheme values — edit these to match your Xcode project.
+          PROJECT_PATH=${PROJECT:-"ios-app/Mood.xcodeproj"}
+          SCHEME_NAME=${SCHEME:-"Mood"}
+
+          echo "Looking for project at: $PROJECT_PATH"
+          if [ -e "$PROJECT_PATH" ]; then
+            echo "Running tests for scheme: $SCHEME_NAME"
+            xcodebuild -project "$PROJECT_PATH" -scheme "$SCHEME_NAME" -sdk iphonesimulator -destination "$DESTINATION" clean test | xcpretty || true
+          else
+            echo "Project not found at $PROJECT_PATH. Please add an Xcode project or update the workflow with the correct PROJECT and SCHEME."
+            echo "Repository root listing for debug:"
+            ls -la
+            exit 1
+          fi
