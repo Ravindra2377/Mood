@@ -10,6 +10,18 @@ public protocol TokenProvider {
     func refreshToken(completion: @escaping (Result<String, Error>) -> Void)
 }
 
+// Provide a Combine publisher wrapper for existing callback-based TokenProvider implementations.
+public extension TokenProvider {
+    func refreshPublisher() -> AnyPublisher<String, Error> {
+        return Future { promise in
+            self.refreshToken { result in
+                promise(result)
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+}
+
 public struct APIClient {
     public let baseURL: URL
     public let session: URLSession
@@ -46,6 +58,11 @@ public struct APIClient {
                 throw APIError.serverError(status: http.statusCode)
             }
             .eraseToAnyPublisher()
+    }
+
+    /// Expose a Combine publisher that attempts to refresh the token via the configured TokenProvider.
+    public func refreshPublisher() -> AnyPublisher<String, Error> {
+        return tokenProvider.refreshPublisher()
     }
 
     public enum APIError: Error {

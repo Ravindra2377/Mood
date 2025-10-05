@@ -13,6 +13,7 @@ public class SyncManager {
     private let refreshQueue = DispatchQueue(label: "SyncManager.refresh")
     private var isRefreshing = false
     private var refreshWaiters: [(Result<String, Error>) -> Void] = []
+    private var refreshCancellable: AnyCancellable?
 
     /// Max attempts per entry (including initial try)
     private let maxAttempts = 3
@@ -126,21 +127,38 @@ public class SyncManager {
                 return
             }
 
-            // Start a refresh and collect waiters
             self.isRefreshing = true
             self.refreshWaiters.append(completion)
 
-            self.api.tokenProvider.refreshToken { result in
-                self.refreshQueue.async {
+            // Start the Combine publisher for refresh
+            self.refreshCancellable = self.api.refreshPublisher()
+                .receive(on: self.refreshQueue)
+                .sink(receiveCompletion: { completionResult in
+                    let result: Result<String, Error>
+                    switch completionResult {
+                    case .finished:
+                        // In this code path we don't have the token string; rely on tokenProvider.getToken() callers
+                        if let t = self.api.tokenProvider.getToken() {
+                            result = .success(t)
+                        } else {
+                            result = .failure(URLError(.userAuthenticationRequired))
+                        }
+                    case .failure(let err):
+                        result = .failure(err)
+                    }
+
+                    // Notify waiters and clean up
                     self.isRefreshing = false
                     let waiters = self.refreshWaiters
                     self.refreshWaiters.removeAll()
-                    // Notify all waiting callers
+                    self.refreshCancellable = nil
                     for waiter in waiters {
                         waiter(result)
                     }
-                }
-            }
+                }, receiveValue: { newToken in
+                    // publish the received token to primary waiter consumers if needed
+                    // (actual notifications are done in receiveCompletion above)
+                })
         }
     }
 }
