@@ -31,7 +31,8 @@ struct MoodApp: App {
         scheduleNextSync() // schedule the next one early
 
         let bgContext = PersistenceController.shared.container.newBackgroundContext()
-        let api = APIClient(baseURL: URL(string: "https://api.example.com")!, tokenProvider: DefaultTokenProvider())
+    let tokenProvider = KeychainTokenProvider()
+    let api = APIClient(baseURL: URL(string: "https://api.example.com")!, tokenProvider: tokenProvider)
         let syncManager = SyncManager(context: bgContext, api: api)
 
         let workQueue = OperationQueue()
