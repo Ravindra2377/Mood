@@ -1,6 +1,6 @@
 # SOUL Web (PWA) - Minimal scaffold
 
-This folder contains a minimal React + Vite scaffold and a service worker + Dexie queue implementation for offline-first mood entry sync for the SOUL app.
+This folder contains a minimal React + Vite scaffold and a service worker + Dexie queue implementation for offline-first SOUL entry sync for the SOUL app.
 
 Quick start (requires Node.js):
 

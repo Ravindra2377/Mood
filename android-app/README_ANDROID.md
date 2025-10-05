@@ -21,9 +21,9 @@ Auth scaffold included in this commit:
 - `AuthViewModel` (basic LiveData-based ViewModel)
 - `SignupActivity` and `MainActivity` stubs
 
-Mood feature:
-- `MoodTrackingActivity` — pastel-themed mood logging UI (emoji slider, note, save FAB).
+SOUL feature:
+- `MoodTrackingActivity` — pastel-themed SOUL logging UI (emoji slider, note, save FAB).
 - Room cache: `AppDatabase`, `MoodEntryEntity`, `MoodDao` in `com.mhaiapp.models`.
 - ViewModel & repo: `MoodViewModel` and `MoodRepository` in `com.mhaiapp.viewmodels` / `com.mhaiapp.repositories`.
 
-Run the app and select the Mood tab in the bottom navigation to open the mood screen.
+Run the app and select the SOUL tab in the bottom navigation to open the SOUL screen.

@@ -19,6 +19,6 @@
   "verify_account_text": "Verifica tu cuenta: {verify_link}"
   ,
   "scheduled_checkin_subject": "Te echamos de menos — una pequeña comprobación",
-  "scheduled_checkin_html": "<p>Hola — hemos notado que no has registrado tu estado recientemente. ¿Quieres hacer un chequeo rápido de tu estado de ánimo?</p>",
-  "scheduled_checkin_text": "Hemos notado que no has registrado tu estado recientemente. ¿Quieres hacer un chequeo rápido de tu estado de ánimo?"
+  "scheduled_checkin_html": "<p>Hola — hemos notado que no has registrado tu estado recientemente. ¿Quieres hacer un chequeo rápido en SOUL?</p>",
+  "scheduled_checkin_text": "Hemos notado que no has registrado tu estado recientemente. ¿Quieres hacer un chequeo rápido en SOUL?"
 }

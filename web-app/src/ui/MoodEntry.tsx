@@ -45,7 +45,7 @@ export default function MoodEntry() {
     <div>
       <div style={{ marginBottom: 8 }}>Rating:</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div role="radiogroup" aria-label="Daily mood" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+  <div role="radiogroup" aria-label="Daily SOUL rating" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           {[1, 2, 3, 4, 5].map((i) => {
           const isSelected = rating === i
           return (
@@ -132,9 +132,9 @@ export default function MoodEntry() {
           </span>
         </div>
       </div>
-      <div>
-  <textarea value={note} onChange={(e: Event) => setNote((e.target as HTMLTextAreaElement).value)} />
-      </div>
+    <div>
+  <textarea value={note} onChange={(e) => setNote((e.target as HTMLTextAreaElement).value)} />
+    </div>
       <button onClick={save} style={{ marginTop: 8 }}>Save</button>
       <div role="status" aria-live="polite" style={{ marginTop: 8, minHeight: 18 }}>{status}</div>
       {/* toast handled by ToastProvider */}
