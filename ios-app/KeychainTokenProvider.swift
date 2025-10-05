@@ -28,10 +28,11 @@ public class KeychainTokenProvider: TokenProvider {
     ///   - refreshTokenKey: key name used in Keychain for refresh token (defaults to com.mood.token.refresh)
     ///   - accessTokenJSONKey: JSON property name for access token in refresh response (defaults to access_token)
     ///   - refreshTokenJSONKey: JSON property name for refresh token in refresh response (defaults to refresh_token)
+    /// Note: default refreshEndpoint points to localhost for development. Override in production.
     public init(service: String = Bundle.main.bundleIdentifier ?? "com.mood",
                 accessGroup: String? = nil,
                 session: URLSession = .shared,
-                refreshEndpoint: URL = URL(string: "https://api.example.com/auth/refresh")!,
+                refreshEndpoint: URL = URL(string: "http://localhost:8000/api/auth/refresh")!,
                 accessTokenKey: String = "com.mood.token.access",
                 refreshTokenKey: String = "com.mood.token.refresh",
                 accessTokenJSONKey: String = "access_token",
@@ -72,7 +73,8 @@ public class KeychainTokenProvider: TokenProvider {
         var req = URLRequest(url: refreshEndpoint)
         req.httpMethod = "POST"
         req.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body = ["refresh_token": refreshToken]
+    // Backend expects the refresh payload under the key `old_refresh_token` (rotation flow)
+    let body = ["old_refresh_token": refreshToken]
         do {
             req.httpBody = try JSONEncoder().encode(body)
         } catch {
