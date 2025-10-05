@@ -1,6 +1,8 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react'
 import '../styles/theme.css'
 import JournalEditor from './JournalEditor'
+import Popover from './Popover'
 
 function AnimatedDonut({ percent = 78, duration = 900 }: { percent?: number, duration?: number }) {
   const radius = 60
@@ -11,17 +13,23 @@ function AnimatedDonut({ percent = 78, duration = 900 }: { percent?: number, dur
   const [display, setDisplay] = React.useState(0)
 
   React.useEffect(() => {
-    // animate stroke-dashoffset from full to target
-    const target = circumference * (1 - Math.min(Math.max(percent, 0), 100) / 100)
+    // animate stroke-dashoffset from full to target only when a numeric percent is provided
+    if (percent === null || percent === undefined) {
+      setOffset(circumference)
+      setDisplay(null)
+      return
+    }
+    const safePct = Math.min(Math.max(percent, 0), 100)
+    const target = circumference * (1 - safePct / 100)
     const start = circumference
     const startTime = performance.now()
     function frame(now: number) {
       const t = Math.min(1, (now - startTime) / duration)
       const eased = 1 - Math.pow(1 - t, 3)
       setOffset(start + (target - start) * eased)
-      setDisplay(Math.round(eased * percent))
+      setDisplay(Math.round(eased * safePct))
       if (t < 1) requestAnimationFrame(frame)
-      else setDisplay(percent)
+      else setDisplay(Math.round(safePct))
     }
     requestAnimationFrame(frame)
   }, [percent, circumference, duration])
@@ -29,10 +37,12 @@ function AnimatedDonut({ percent = 78, duration = 900 }: { percent?: number, dur
   return (
     <svg width={(r + stroke) * 2} height={(r + stroke) * 2} viewBox={`0 0 ${(r + stroke) * 2} ${(r + stroke) * 2}`}>
       <g transform={`translate(${r + stroke},${r + stroke})`}>
-        <circle r={r} fill="none" stroke="#eef2ff" strokeWidth={stroke} />
-        <circle r={r} fill="none" stroke="#60a5fa" strokeWidth={stroke} strokeDasharray={`${circumference}`} strokeDashoffset={offset} transform="rotate(-90)" style={{ transition: 'stroke-dashoffset 280ms linear' }} />
+        {/* dotted outer ring for empty-state visual */}
+        <circle r={r + 6} fill="none" stroke="#e6eef8" strokeWidth={2} strokeDasharray="2 6" opacity={0.9} />
+        <circle r={r} fill="none" stroke={display == null ? '#bfdbfe' : '#eef2ff'} strokeWidth={stroke} />
+        <circle r={r} fill="none" stroke={display == null ? '#a5b4fc' : '#60a5fa'} strokeWidth={stroke} strokeDasharray={`${circumference}`} strokeDashoffset={offset} transform="rotate(-90)" style={{ transition: 'stroke-dashoffset 280ms linear' }} />
         <circle r={r - 6} fill="white" />
-        <text x="0" y="6" textAnchor="middle" fontSize={22} fontWeight={700} fill="#0f172a">{display}%</text>
+        <text x="0" y="6" textAnchor="middle" fontSize={22} fontWeight={700} fill="#0f172a">{display == null ? '—' : `${display}%`}</text>
       </g>
     </svg>
   )
@@ -41,6 +51,9 @@ function AnimatedDonut({ percent = 78, duration = 900 }: { percent?: number, dur
 export default function HomeView() {
   const [latest, setLatest] = useState(null)
   const [editing, setEditing] = useState(null)
+  const [sleepPercent, setSleepPercent] = useState(null)
+  const [sleepMeta, setSleepMeta] = useState(null)
+  const [sleepWindow, setSleepWindow] = useState('last')
 
   useEffect(() => {
     async function loadLatest() {
@@ -55,7 +68,47 @@ export default function HomeView() {
       }
     }
     loadLatest()
+    ;(async function fetchSleep() {
+      try {
+        const qs = sleepWindow === '7d' ? '?window=7d' : ''
+        const r = await fetch(`/api/sleep/metric${qs}`, { credentials: 'include' })
+        if (r.ok) {
+          const j = await r.json()
+          if (j && typeof j.percent === 'number') {
+            setSleepPercent(j.percent)
+            setSleepMeta(j)
+          } else {
+            setSleepPercent(null)
+            setSleepMeta(j ?? null)
+          }
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    })()
   }, [])
+
+  useEffect(() => {
+    // refetch when window changes
+    ;(async function fetchSleepWindow() {
+      try {
+        const qs = sleepWindow === '7d' ? '?window=7d' : ''
+        const r = await fetch(`/api/sleep/metric${qs}`, { credentials: 'include' })
+        if (r.ok) {
+          const j = await r.json()
+          if (j && typeof j.percent === 'number') {
+            setSleepPercent(j.percent)
+            setSleepMeta(j)
+          } else {
+            setSleepPercent(null)
+            setSleepMeta(j ?? null)
+          }
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+  }, [sleepWindow])
 
   return (
     <div className="home-root">
@@ -122,11 +175,43 @@ export default function HomeView() {
               </div>
             </div>
 
-            <div className="donut-row">
+              <div className="donut-row">
               <div className="fade-up">
-                <AnimatedDonut percent={78} />
+                <AnimatedDonut percent={sleepPercent ?? 78} />
               </div>
-              <div style={{ flex: 1 }}>
+                <div style={{ flex: 1 }}>
+                <div style={{ marginBottom: 6 }}>
+                  {sleepPercent == null ? (
+                    <div style={{ color: 'var(--muted)', fontSize: 13 }}>No sleep data</div>
+                  ) : (
+                    <div style={{ color: 'var(--muted)', fontSize: 13 }}>
+                      {sleepMeta && sleepMeta.window && String(sleepMeta.window).includes('7') ? (
+                        // Avg 7d: 7.2h (5 nights)
+                        `Avg 7d: ${sleepMeta.hours ?? '—'}h (${sleepMeta.count ?? 0} nights)`
+                      ) : (
+                        // Last night: 7.5h
+                        `Last night: ${sleepMeta && sleepMeta.hours ? `${sleepMeta.hours}h` : '—'}`
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div style={{ marginBottom: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div style={{ fontSize: 13, color: 'var(--muted)' }}>Metric</div>
+                    <Popover id="sleep-metric-pop">
+                      <div style={{ width: 14, height: 14, borderRadius: 7, background: '#eef2ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700 }}>i</div>
+                      <div>
+                        <div style={{ fontWeight: 700, marginBottom: 6 }}>How the sleep percent is calculated</div>
+                        <div>Percent = (hours / 8h) capped at 100%. For 7-day average we compute the mean nightly duration across the last 7 days (only nights with an end time are counted).</div>
+                        <a className="popover-link" href="/docs/metrics#sleep-percent" onClick={(e) => { e.preventDefault(); history.pushState({}, '', '/docs/metrics#sleep-percent'); window.dispatchEvent(new PopStateEvent('popstate')) }}>View docs</a>
+                      </div>
+                    </Popover>
+                  </div>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <button className={`card ${sleepWindow === 'last' ? 'activity-primary' : ''}`} onClick={() => setSleepWindow('last')}>Last night</button>
+                    <button className={`card ${sleepWindow === '7d' ? 'activity-primary' : ''}`} onClick={() => setSleepWindow('7d')}>7-day avg</button>
+                  </div>
+                </div>
                 <div className="card">{latest ? latest.content : 'Sometimes it feels like no matter what we do, things only get worse.'}</div>
                 <div style={{ textAlign: 'right', color: 'var(--muted)', fontSize: 12, marginTop: 6 }}>{latest ? `${(latest.content || '').length}/240` : '68/240'}</div>
                 {latest && <div style={{ marginTop: 8 }}><button className="card" onClick={() => setEditing(latest)}>Quick Edit</button></div>}

@@ -12,6 +12,7 @@ from app.models.symptom_entry import SymptomEntry
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import func
+from app.models.sleep_entry import SleepEntry
 
 router = APIRouter()
 
@@ -350,5 +351,51 @@ def journals_progress_summary(start: str | None = None, end: str | None = None, 
         rows = q.all()
         result = [{'day': r.day.isoformat(), 'avg_progress': float(r.avg_progress) if r.avg_progress is not None else None, 'count': int(r.count)} for r in rows]
         return {'start': start_dt.isoformat(), 'end': end_dt.isoformat(), 'daily': result}
+    finally:
+        db.close()
+
+
+@router.get('/sleep/metric')
+def sleep_metric(window: str | None = None, user: User = Depends(get_current_user)):
+    """Return a simple sleep metric.
+
+    Query parameter `window` controls which metric is returned:
+      - omitted or 'last' (default): use the latest completed sleep entry
+      - '7d' : compute the average sleep duration across the last 7 days (entries with sleep_end)
+
+    Response includes percent (0-100) and hours (float). For multi-day windows, also returns count.
+    """
+    from app.main import SessionLocal
+    db = SessionLocal()
+    try:
+        now = datetime.now(timezone.utc)
+        # support simple window values
+        if window and window.lower() in ('7d', '7', '7-day', 'week'):
+            days = 7
+        else:
+            days = None
+
+        if days is None:
+            # Find the latest sleep entry with an end timestamp
+            s = db.query(SleepEntry).filter(SleepEntry.user_id == user.id, SleepEntry.sleep_end != None).order_by(SleepEntry.sleep_end.desc()).first()
+            if not s or not s.sleep_end or not s.sleep_start:
+                return {'percent': None, 'hours': None}
+            dur = s.sleep_end - s.sleep_start
+            hours = dur.total_seconds() / 3600.0
+            percent = int(min(100, round((hours / 8.0) * 100)))
+            return {'percent': percent, 'hours': round(hours, 2), 'window': 'last', 'count': 1}
+        else:
+            start = now - timedelta(days=days)
+            rows = db.query(SleepEntry).filter(SleepEntry.user_id == user.id, SleepEntry.sleep_end != None, SleepEntry.sleep_end >= start).all()
+            valid = [r for r in rows if getattr(r, 'sleep_start', None) and getattr(r, 'sleep_end', None)]
+            if not valid:
+                return {'percent': None, 'hours': None, 'window': f'last_{days}_days', 'count': 0}
+            total_seconds = 0.0
+            for r in valid:
+                dur = r.sleep_end - r.sleep_start
+                total_seconds += max(0.0, dur.total_seconds())
+            avg_hours = (total_seconds / len(valid)) / 3600.0
+            percent = int(min(100, round((avg_hours / 8.0) * 100)))
+            return {'percent': percent, 'hours': round(avg_hours, 2), 'window': f'last_{days}_days', 'count': len(valid)}
     finally:
         db.close()
