@@ -1,19 +1,40 @@
 import Foundation
 import Combine
 
+/// Abstraction for token management so callers (SyncManager) can request refreshes when 401 occurs.
+public protocol TokenProvider {
+    /// Return current token or nil if not available
+    func getToken() -> String?
+
+    /// Attempt to refresh token. Calls completion with the new token or error.
+    func refreshToken(completion: @escaping (Result<String, Error>) -> Void)
+}
+
+// Provide a Combine publisher wrapper for existing callback-based TokenProvider implementations.
+public extension TokenProvider {
+    func refreshPublisher() -> AnyPublisher<String, Error> {
+        return Future { promise in
+            self.refreshToken { result in
+                promise(result)
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+}
+
 public struct APIClient {
     public let baseURL: URL
     public let session: URLSession
-    public let tokenProvider: () -> String?
+    public let tokenProvider: TokenProvider
 
-    public init(baseURL: URL, session: URLSession = .shared, tokenProvider: @escaping () -> String? ) {
+    public init(baseURL: URL, session: URLSession = .shared, tokenProvider: TokenProvider) {
         self.baseURL = baseURL
         self.session = session
         self.tokenProvider = tokenProvider
     }
 
     public func upload(mood: MoodUpload) -> AnyPublisher<Void, Error> {
-        guard let token = tokenProvider() else {
+        guard let token = tokenProvider.getToken() else {
             return Fail(error: URLError(.userAuthenticationRequired)).eraseToAnyPublisher()
         }
 
@@ -37,6 +58,11 @@ public struct APIClient {
                 throw APIError.serverError(status: http.statusCode)
             }
             .eraseToAnyPublisher()
+    }
+
+    /// Expose a Combine publisher that attempts to refresh the token via the configured TokenProvider.
+    public func refreshPublisher() -> AnyPublisher<String, Error> {
+        return tokenProvider.refreshPublisher()
     }
 
     public enum APIError: Error {

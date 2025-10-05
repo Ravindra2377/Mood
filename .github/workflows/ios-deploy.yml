@@ -1,0 +1,42 @@
+name: iOS Deploy (Fastlane)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - release/**
+
+jobs:
+  build-and-deploy:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.x'
+
+      - name: Install fastlane
+        run: gem install fastlane --no-document
+
+      - name: Decrypt and setup App Store Connect API key
+        env:
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} # JSON content expected
+        run: |
+          if [ -z "$APP_STORE_CONNECT_API_KEY" ]; then
+            echo "APP_STORE_CONNECT_API_KEY not set. Please add as a repository secret containing the JSON key from App Store Connect."
+            exit 1
+          fi
+          echo "$APP_STORE_CONNECT_API_KEY" > ./asc_key.json
+          export APP_STORE_CONNECT_API_KEY_JSON=./asc_key.json
+
+      - name: Run Fastlane beta
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY: ./asc_key.json
+        run: |
+          cd ios-app
+          bundle exec fastlane beta || fastlane beta

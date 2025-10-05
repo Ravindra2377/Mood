@@ -2,9 +2,13 @@ name: iOS Unit Tests
 
 on:
   push:
+    branches:
+      - feature/ios-scaffold
     paths:
       - 'ios-app/**'
   pull_request:
+    branches:
+      - feature/ios-scaffold
     paths:
       - 'ios-app/**'
 

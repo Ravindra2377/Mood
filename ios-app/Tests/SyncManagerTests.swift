@@ -1,7 +1,7 @@
 import XCTest
 import CoreData
 import Combine
-@testable import ios_app // Replace with the module name if different
+@testable import Mood
 
 final class SyncManagerTests: XCTestCase {
     var persistence: InMemoryPersistence!

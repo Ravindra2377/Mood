@@ -29,15 +29,20 @@ public struct MoodView: View {
                 .font(.title2)
                 .bold()
 
-            Text(emoji).font(.system(size: 64))
+            Text(emoji).font(.system(size: 64)).accessibilityIdentifier("emojiLabel")
 
             Slider(value: $vm.rating, in: 1...5, step: 1)
+                .accessibilityIdentifier("moodSlider")
                 .padding(.horizontal)
 
-            TextEditor(text: $vm.note)
-                .frame(height: 120)
-                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
-                .padding(.horizontal)
+            // Wrap TextEditor in a container and expose an accessibility identifier for UI tests
+            VStack {
+                TextEditor(text: $vm.note)
+                    .frame(height: 120)
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
+                    .accessibilityIdentifier("moodNote")
+            }
+            .padding(.horizontal)
 
             HStack {
                 Button(action: {
@@ -48,6 +53,7 @@ public struct MoodView: View {
                     Label("Sync Now", systemImage: "arrow.triangle.2.circlepath")
                 }
                 .padding()
+                .accessibilityIdentifier("syncNowButton")
 
                 Spacer()
 
@@ -61,6 +67,7 @@ public struct MoodView: View {
                         .foregroundColor(.white)
                         .cornerRadius(8)
                 }
+                .accessibilityIdentifier("saveButton")
                 .disabled(vm.isSaving)
             }
             .padding(.horizontal)
