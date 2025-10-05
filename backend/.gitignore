@@ -1,3 +1,27 @@
+# Python
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Local DB and temp files
+test_db.sqlite3
+*.sqlite3
+tmp/
+app/tmp/
+backend/tmp/
+
+# Scheduler passthroughs
+.tmp_scheduler_*.sqlite3
+
+# Editor files
+*.swp
+.vscode/
+.idea/
+
+# Env
+.env
+.env.local
+.env.*.local
 .env
 __pycache__/
 *.py[cod]
