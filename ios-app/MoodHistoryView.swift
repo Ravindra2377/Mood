@@ -30,6 +30,7 @@ public struct MoodHistoryView: View {
                             Spacer()
                             if !entry.synced { Text("Unsynced").font(.caption).foregroundColor(.orange) }
                         }
+                        .accessibilityIdentifier("historyRow_\(entry.id.uuidString)")
                     }
                     .onAppear {
                         // pagination trigger
