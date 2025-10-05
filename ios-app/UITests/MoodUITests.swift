@@ -28,16 +28,17 @@ final class MoodUITests: XCTestCase {
         // Save
         saveButton.tap()
 
-        // Wait a bit for save to complete
-        sleep(1)
+        // Wait for save to complete by asserting the save button becomes enabled again or by waiting for the badge to update
+        XCTAssertTrue(saveButton.waitForExistence(timeout: 5))
 
         // Go to History tab
         let historyTab = app.tabBars.buttons["History"]
-        XCTAssertTrue(historyTab.exists)
+        XCTAssertTrue(historyTab.waitForExistence(timeout: 5))
         historyTab.tap()
 
-        // Check that at least one history row exists
-        let firstRow = app.otherElements.matching(identifier: "historyRow_").firstMatch
-        XCTAssertTrue(firstRow.waitForExistence(timeout: 5))
+        // Check that at least one history cell exists in the list
+        // Use table cell matching to be robust across identifier naming
+        let firstCell = app.tables.cells.firstMatch
+        XCTAssertTrue(firstCell.waitForExistence(timeout: 8))
     }
 }

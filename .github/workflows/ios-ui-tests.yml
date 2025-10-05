@@ -32,13 +32,15 @@ jobs:
       - name: Show Xcode versions
         run: xcodebuild -version
 
-      - name: Run UI tests (scheme Mood)
-        env:
-          DESTINATION: "platform=iOS Simulator,name=iPhone 14,OS=17.0"
+      - name: Run UI tests (try multiple destinations)
         run: |
           set -e
           PROJECT_PATH="ios-app/Mood.xcodeproj"
           SCHEME="Mood"
+          DESTINATIONS=(
+            "platform=iOS Simulator,name=iPhone 14,OS=17.0"
+            "platform=iOS Simulator,name=iPhone 14,OS=16.4"
+          )
 
           if [ ! -e "$PROJECT_PATH" ]; then
             echo "Project not found at $PROJECT_PATH"
@@ -46,10 +48,14 @@ jobs:
             exit 1
           fi
 
-          # Boot the simulator (best-effort)
           xcrun simctl list devices
 
-          xcodebuild -project "$PROJECT_PATH" -scheme "$SCHEME" -sdk iphonesimulator -destination "$DESTINATION" clean test | xcpretty || true
+          for DEST in "${DESTINATIONS[@]}"; do
+            echo "Trying destination: $DEST"
+            xcodebuild -project "$PROJECT_PATH" -scheme "$SCHEME" -sdk iphonesimulator -destination "$DEST" clean test | xcpretty && exit 0 || echo "Attempt failed for $DEST"
+          done
+          echo "All destinations failed; exiting with failure"
+          exit 1
 
       - name: Upload test results
         if: always()
