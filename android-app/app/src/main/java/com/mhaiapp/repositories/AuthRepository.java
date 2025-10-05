@@ -28,7 +28,17 @@ public class AuthRepository {
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String token = response.body().access_token;
-                    prefs.saveToken(token);
+                    String refresh = null;
+                    if (response.body().user != null) {
+                        // backend returns refresh token in top-level field in some flows
+                        try {
+                            java.lang.reflect.Field f = response.body().getClass().getField("refresh_token");
+                            Object rv = f.get(response.body());
+                            if (rv != null) refresh = rv.toString();
+                        } catch (Exception e) { /* ignore */ }
+                    }
+                    prefs.saveAccessToken(token);
+                    if (refresh != null) prefs.saveRefreshToken(refresh);
                     cb.onSuccess(response.body());
                 } else {
                     cb.onError("Login failed: " + response.code());
@@ -49,7 +59,14 @@ public class AuthRepository {
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String token = response.body().access_token;
-                    prefs.saveToken(token);
+                    String refresh = null;
+                    try {
+                        java.lang.reflect.Field f = response.body().getClass().getField("refresh_token");
+                        Object rv = f.get(response.body());
+                        if (rv != null) refresh = rv.toString();
+                    } catch (Exception e) { /* ignore */ }
+                    prefs.saveAccessToken(token);
+                    if (refresh != null) prefs.saveRefreshToken(refresh);
                     cb.onSuccess(response.body());
                 } else {
                     cb.onError("Signup failed: " + response.code());
@@ -66,5 +83,9 @@ public class AuthRepository {
     public interface AuthCallback {
         void onSuccess(AuthResponse resp);
         void onError(String err);
+    }
+
+    public void logout() {
+        prefs.clear();
     }
 }

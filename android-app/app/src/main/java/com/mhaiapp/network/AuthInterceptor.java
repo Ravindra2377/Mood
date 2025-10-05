@@ -22,7 +22,7 @@ public class AuthInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request req = chain.request();
-        String token = prefs.getToken();
+        String token = prefs.getAccessToken();
         Request.Builder builder = req.newBuilder();
         if (token != null && !req.url().toString().contains("/api/auth/")) {
             builder.addHeader("Authorization", "Bearer " + token);
@@ -32,7 +32,7 @@ public class AuthInterceptor implements Interceptor {
 
         if (response.code() == 401) {
             // Attempt silent refresh (synchronous) - simplistic approach
-            String refreshToken = prefs.getToken(); // placeholder: in real app store refresh separately
+            String refreshToken = prefs.getRefreshToken();
             if (refreshToken != null) {
                 try {
                     java.util.Map<String, String> payload = new java.util.HashMap<>();
@@ -40,7 +40,7 @@ public class AuthInterceptor implements Interceptor {
                     retrofit2.Response<com.mhaiapp.models.AuthResponse> rf = apiService.refresh(payload).execute();
                     if (rf.isSuccessful() && rf.body() != null) {
                         String newAccess = rf.body().access_token;
-                        prefs.saveToken(newAccess);
+                        prefs.saveAccessToken(newAccess);
                         Request newReq = req.newBuilder().header("Authorization", "Bearer " + newAccess).build();
                         response.close();
                         return chain.proceed(newReq);
