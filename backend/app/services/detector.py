@@ -8,7 +8,14 @@ _model = None
 def _load_model():
     global _model
     try:
-        from transformers import pipeline
+        try:
+            import importlib
+            mod = importlib.import_module('transformers')
+            pipeline = getattr(mod, 'pipeline')
+        except Exception:
+            log.exception('transformers not available; model detector disabled')
+            _model = None
+            return
         _model = pipeline('text-classification', model=settings.DETECTOR_MODEL_NAME)
         log.info('Loaded detector model %s', settings.DETECTOR_MODEL_NAME)
     except Exception:

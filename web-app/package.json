@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "echo \"no lint configured\""
+    "lint": "echo \"no lint configured\"",
+    "crop:moods": "node tools/crop_moods.js"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -19,6 +20,7 @@
     "typescript": "^5.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "vite-plugin-pwa": "^0.18.0"
+    "vite-plugin-pwa": "^0.18.0",
+    "jimp": "^0.16.1"
   }
 }

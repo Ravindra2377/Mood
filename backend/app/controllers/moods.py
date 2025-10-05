@@ -169,6 +169,87 @@ def list_journals(date: str | None = None, start: str | None = None, end: str | 
         db.close()
 
 
+@router.put('/journals/{journal_id}', response_model=JournalRead)
+def update_journal(journal_id: int, payload: JournalCreate, user: User = Depends(get_current_user)):
+    """Update an existing journal entry. Only the owner may update."""
+    from app.main import SessionLocal
+    from app.models.journal_entry import JournalEntry
+    db = SessionLocal()
+    try:
+        j = db.query(JournalEntry).filter(JournalEntry.id == journal_id, JournalEntry.user_id == user.id).first()
+        if not j:
+            raise HTTPException(status_code=404, detail='Journal not found')
+
+        # encrypt content similarly to create_journal
+        from app.services.crypto import encrypt_text
+        content_enc = encrypt_text(payload.content) if payload.content else ''
+        encryption_key = None
+        try:
+            import json
+            doc = json.loads(content_enc)
+            if isinstance(doc, dict) and 'ct' in doc and 'ek' in doc:
+                ciphertext = doc['ct']
+                encryption_key = doc['ek']
+            else:
+                ciphertext = content_enc
+        except Exception:
+            ciphertext = content_enc
+
+        j.title = payload.title
+        j.content = ciphertext
+        j.encryption_key = encryption_key
+        # handle entry_date and progress if provided
+        try:
+            if getattr(payload, 'entry_date', None):
+                ed = payload.entry_date
+                if isinstance(ed, str):
+                    j.entry_date = datetime.fromisoformat(ed).date()
+                elif hasattr(ed, 'date'):
+                    j.entry_date = ed.date()
+            else:
+                j.entry_date = j.entry_date or None
+        except Exception:
+            pass
+        if getattr(payload, 'progress', None) is not None:
+            j.progress = payload.progress
+
+        db.add(j)
+        db.commit()
+        db.refresh(j)
+
+        # decrypt for response
+        try:
+            if getattr(j, 'encryption_key', None):
+                from app.services.envelope_crypto import decrypt_from_kms
+                j.content = decrypt_from_kms(j.content, j.encryption_key)
+            else:
+                from app.services.crypto import decrypt_text
+                j.content = decrypt_text(j.content) if j.content else j.content
+        except Exception:
+            pass
+
+        return j
+    finally:
+        db.close()
+
+
+@router.delete('/journals/{journal_id}')
+def delete_journal(journal_id: int, user: User = Depends(get_current_user)):
+    """Delete a journal entry owned by the user."""
+    from app.main import SessionLocal
+    from app.models.journal_entry import JournalEntry
+    db = SessionLocal()
+    try:
+        j = db.query(JournalEntry).filter(JournalEntry.id == journal_id, JournalEntry.user_id == user.id).first()
+        if not j:
+            raise HTTPException(status_code=404, detail='Journal not found')
+        db.delete(j)
+        db.commit()
+        return {'status': 'deleted'}
+    finally:
+        db.close()
+
+
 @router.post('/symptoms', response_model=SymptomRead)
 def create_symptom(payload: SymptomCreate, user: User = Depends(get_current_user)):
     from app.main import SessionLocal

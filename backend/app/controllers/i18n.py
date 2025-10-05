@@ -66,6 +66,7 @@ def get_bundle(locale: str = 'en'):
 
 @router.get('/admin/translations', dependencies=[Depends(require_role('admin'))])
 def list_translations(locale: str | None = None):
+    from app.main import SessionLocal
     db = SessionLocal()
     try:
         q = db.query(Translation)
@@ -78,6 +79,7 @@ def list_translations(locale: str | None = None):
 
 @router.post('/admin/translations', dependencies=[Depends(require_role('admin'))])
 def upsert_translation(locale: str, key: str, value: str):
+    from app.main import SessionLocal
     db = SessionLocal()
     try:
         tr = db.query(Translation).filter(Translation.locale == locale, Translation.key == key).first()
@@ -93,6 +95,7 @@ def upsert_translation(locale: str, key: str, value: str):
 
 @router.delete('/admin/translations/{translation_id}', dependencies=[Depends(require_role('admin'))])
 def delete_translation(translation_id: int):
+    from app.main import SessionLocal
     db = SessionLocal()
     try:
         tr = db.query(Translation).filter(Translation.id == translation_id).first()

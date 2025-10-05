@@ -34,7 +34,9 @@ def _job_export_and_upload():
 
 def start_scheduler():
     try:
-        from apscheduler.schedulers.background import BackgroundScheduler
+        import importlib
+        mod = importlib.import_module('apscheduler.schedulers.background')
+        BackgroundScheduler = getattr(mod, 'BackgroundScheduler')
     except Exception:
         log.exception('APScheduler not available; analytics scheduler will not start')
         return

@@ -1,30 +1,64 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 type AnyEvent = any
 
-export default function JournalEditor({ date, onSaved }: { date: string, onSaved: () => void }) {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [progress, setProgress] = useState('' as number | '')
+import { createJournal, updateJournal, deleteJournal } from '../api/journals'
+
+export default function JournalEditor({ date, onSaved, initial }: { date: string, onSaved: () => void, initial?: any }) {
+  const [title, setTitle] = useState(initial?.title ?? '')
+  const [content, setContent] = useState(initial?.content ?? '')
+  const [progress, setProgress] = useState(initial?.progress ?? ('' as number | ''))
   const [status, setStatus] = useState('')
+  const [editingId, setEditingId] = useState(initial?.id ?? null)
+
+  useEffect(() => {
+    if (initial) {
+      setTitle(initial.title ?? '')
+      setContent(initial.content ?? '')
+      setProgress(initial.progress ?? '')
+      setEditingId(initial.id ?? null)
+    } else {
+      setTitle('')
+      setContent('')
+      setProgress('')
+      setEditingId(null)
+    }
+  }, [initial])
 
   async function save() {
     try {
       const body: any = { title, content }
       if (date) body.entry_date = date
       if (progress !== '') body.progress = Number(progress)
-      const res = await fetch('/api/journals', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(body) })
-      if (res.ok) {
-        setStatus('Saved')
-        setTitle('')
-        setContent('')
-        setProgress('')
-        onSaved()
+      if (editingId) {
+        await updateJournal(editingId, body)
       } else {
-        setStatus('Save failed')
+        await createJournal(body)
       }
+      setStatus('Saved')
+      setTitle('')
+      setContent('')
+      setProgress('')
+      setEditingId(null)
+      onSaved()
     } catch (e) {
       console.error(e)
       setStatus('Save failed')
+    }
+  }
+
+  async function doDelete() {
+    if (!editingId) return
+    try {
+      await deleteJournal(editingId)
+      setStatus('Deleted')
+      setTitle('')
+      setContent('')
+      setProgress('')
+      setEditingId(null)
+      onSaved()
+    } catch (e) {
+      console.error(e)
+      setStatus('Delete failed')
     }
   }
 
@@ -41,7 +75,8 @@ export default function JournalEditor({ date, onSaved }: { date: string, onSaved
           <input type="number" min={0} max={100} value={progress === '' ? '' : progress} onChange={(e: AnyEvent) => setProgress((e.target as HTMLInputElement).value === '' ? '' : Number((e.target as HTMLInputElement).value))} />
         </label>
       </div>
-      <button onClick={save}>Save</button>
+  <button onClick={save}>{editingId ? 'Update' : 'Save'}</button>
+  {editingId && <button onClick={doDelete} style={{ marginLeft: 8 }}>Delete</button>}
       <div>{status}</div>
     </div>
   )

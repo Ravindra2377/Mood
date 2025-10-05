@@ -31,10 +31,13 @@ def purge_old_data():
 
 def start_retention_scheduler():
     try:
-        from apscheduler.schedulers.background import BackgroundScheduler
+        import importlib
+        mod = importlib.import_module('apscheduler.schedulers.background')
+        BackgroundScheduler = getattr(mod, 'BackgroundScheduler')
     except Exception:
         log.exception('APScheduler not available; retention scheduler will not start')
         return
+
     sched = BackgroundScheduler()
     interval_minutes = getattr(settings, 'RETENTION_CHECK_INTERVAL_MINUTES', 24 * 60)
     sched.add_job(purge_old_data, 'interval', minutes=interval_minutes)
