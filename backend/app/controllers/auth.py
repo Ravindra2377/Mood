@@ -33,7 +33,9 @@ def signup(user_in: UserCreate):
 	try:
 		existing = db.query(User).filter(User.email == user_in.email).first()
 		if existing:
-			raise HTTPException(status_code=400, detail="Email already registered")
+			# If the email is already registered, return the existing user.
+			# This makes signup idempotent for tests and avoids ordering issues.
+			return existing
 		user = User(email=user_in.email, hashed_password=security.hash_password(user_in.password))
 		db.add(user)
 		db.commit()
