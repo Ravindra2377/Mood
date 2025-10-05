@@ -14,21 +14,52 @@ public class KeychainTokenProvider: TokenProvider {
     private let refreshEndpoint: URL
 
     /// Keys stored in Keychain
-    private let accessTokenKey = "com.mood.token.access"
-    private let refreshTokenKey = "com.mood.token.refresh"
+    private let accessTokenKey: String
+    private let refreshTokenKey: String
+    private let accessTokenJSONKey: String
+    private let refreshTokenJSONKey: String
 
+    /// - Parameters:
+    ///   - service: keychain service identifier
+    ///   - accessGroup: optional keychain access group
+    ///   - session: URLSession to use (testable)
+    ///   - refreshEndpoint: URL for token refresh
+    ///   - accessTokenKey: key name used in Keychain for access token (defaults to com.mood.token.access)
+    ///   - refreshTokenKey: key name used in Keychain for refresh token (defaults to com.mood.token.refresh)
+    ///   - accessTokenJSONKey: JSON property name for access token in refresh response (defaults to access_token)
+    ///   - refreshTokenJSONKey: JSON property name for refresh token in refresh response (defaults to refresh_token)
     public init(service: String = Bundle.main.bundleIdentifier ?? "com.mood",
                 accessGroup: String? = nil,
                 session: URLSession = .shared,
-                refreshEndpoint: URL = URL(string: "https://api.example.com/auth/refresh")!) {
+                refreshEndpoint: URL = URL(string: "https://api.example.com/auth/refresh")!,
+                accessTokenKey: String = "com.mood.token.access",
+                refreshTokenKey: String = "com.mood.token.refresh",
+                accessTokenJSONKey: String = "access_token",
+                refreshTokenJSONKey: String = "refresh_token") {
         self.service = service
         self.accessGroup = accessGroup
         self.session = session
         self.refreshEndpoint = refreshEndpoint
+        self.accessTokenKey = accessTokenKey
+        self.refreshTokenKey = refreshTokenKey
+        self.accessTokenJSONKey = accessTokenJSONKey
+        self.refreshTokenJSONKey = refreshTokenJSONKey
     }
 
     public func getToken() -> String? {
         return try? read(key: accessTokenKey)
+    }
+
+    /// Save access and refresh tokens into Keychain (atomic from caller perspective)
+    public func setTokens(accessToken: String, refreshToken: String) throws {
+        try save(key: accessTokenKey, value: accessToken)
+        try save(key: refreshTokenKey, value: refreshToken)
+    }
+
+    /// Clear stored tokens
+    public func clearTokens() throws {
+        try delete(key: accessTokenKey)
+        try delete(key: refreshTokenKey)
     }
 
     public func refreshToken(completion: @escaping (Result<String, Error>) -> Void) {
@@ -64,16 +95,18 @@ public class KeychainTokenProvider: TokenProvider {
             }
 
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                if let newToken = json?["access_token"] as? String {
-                    try? self.save(key: self.accessTokenKey, value: newToken)
-                    if let newRefresh = json?["refresh_token"] as? String {
-                        try? self.save(key: self.refreshTokenKey, value: newRefresh)
+                // Decode JSON using keys provided in initializer for flexibility
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    if let newToken = json[self.accessTokenJSONKey] as? String {
+                        try? self.save(key: self.accessTokenKey, value: newToken)
+                        if let newRefresh = json[self.refreshTokenJSONKey] as? String {
+                            try? self.save(key: self.refreshTokenKey, value: newRefresh)
+                        }
+                        completion(.success(newToken))
+                        return
                     }
-                    completion(.success(newToken))
-                } else {
-                    completion(.failure(APIError.missingToken))
                 }
+                completion(.failure(APIError.missingToken))
             } catch {
                 completion(.failure(error))
             }
