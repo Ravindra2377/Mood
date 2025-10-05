@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import '../styles/theme.css'
+import JournalEditor from './JournalEditor'
 
 function Donut({ percent = 78 }: { percent?: number }) {
   const radius = 60
@@ -25,17 +27,35 @@ function Donut({ percent = 78 }: { percent?: number }) {
 }
 
 export default function HomeView() {
+  const [latest, setLatest] = useState(null)
+  const [editing, setEditing] = useState(null)
+
+  useEffect(() => {
+    async function loadLatest() {
+      try {
+        const res = await fetch('/api/journals?limit=1', { credentials: 'include' })
+        if (res.ok) {
+          const data = await res.json()
+          setLatest(data && data.length ? data[0] : null)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    loadLatest()
+  }, [])
+
   return (
-    <div style={{ display: 'flex', height: '100vh', background: 'linear-gradient(135deg,#f3f7ff,#f6f3ff)', padding: 20, boxSizing: 'border-box' }}>
+    <div className="home-root">
       {/* left skinny nav */}
-      <div style={{ width: 72, background: 'white', borderRadius: 16, padding: 12, boxShadow: '0 6px 20px rgba(2,6,23,0.06)', marginRight: 16 }}>
+      <div className="nav-slab">
         <div style={{ height: 48, width: 48, borderRadius: 12, background: '#111827', marginBottom: 12 }} />
         <div style={{ height: 48, width: 48, borderRadius: 12, background: '#fff', border: '1px solid #e6eef8', marginBottom: 8 }} />
         <div style={{ height: 48, width: 48, borderRadius: 12, background: '#fff', border: '1px solid #e6eef8' }} />
       </div>
 
       {/* main content area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
+  <div className="main">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <div style={{ fontSize: 20, color: '#0f172a', fontWeight: 700 }}>Hi, Olivia</div>
@@ -52,9 +72,9 @@ export default function HomeView() {
             {/* Activities */}
             <div>
               <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>Activities</div>
-              <div style={{ display: 'flex', gap: 12 }}>
+              <div className="activities-row">
                 {['Yoga', 'Journal', 'Practices', 'Journal'].map((t, i) => (
-                  <div key={t} style={{ padding: 18, borderRadius: 12, minWidth: 120, background: i === 0 ? '#fce7f3' : '#eef2ff', boxShadow: '0 6px 16px rgba(2,6,23,0.04)' }}>
+                  <div key={t} className={`activity-card ${i === 0 ? 'activity-primary' : 'activity-secondary'} fade-up`}>
                     <div style={{ fontWeight: 700 }}>{t}</div>
                   </div>
                 ))}
@@ -69,21 +89,13 @@ export default function HomeView() {
               </div>
 
               <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
-                <button style={{ flex: 1, padding: 12, borderRadius: 12, border: '1px solid #e6eef8', background: 'white' }}>Journal</button>
-                <button style={{ flex: 1, padding: 12, borderRadius: 12, border: '1px solid #e6eef8', background: 'white' }}>Practices</button>
+                <button className="card">Journal</button>
+                <button className="card">Practices</button>
               </div>
 
-              <div style={{ marginTop: 12 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 12, borderRadius: 12, background: 'white', border: '1px solid #e6eef8' }}>
-                    <div>How to find balance in life despite...</div>
-                    <div style={{ fontSize: 12, color: '#94a3b8' }}>Article • 4 min</div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 12, borderRadius: 12, background: 'white', border: '1px solid #e6eef8' }}>
-                    <div>It's okay to ask for help, you're not alone</div>
-                    <div style={{ fontSize: 12, color: '#94a3b8' }}>Video • 8 min</div>
-                  </div>
-                </div>
+              <div style={{ marginTop: 12 }} className="content-list">
+                <div className="card">How to find balance in life despite... <span style={{ float: 'right', color: 'var(--muted)' }}>Article • 4 min</span></div>
+                <div className="card">It's okay to ask for help, you're not alone <span style={{ float: 'right', color: 'var(--muted)' }}>Video • 8 min</span></div>
               </div>
             </div>
           </div>
@@ -98,16 +110,28 @@ export default function HomeView() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-              <Donut percent={78} />
+            <div className="donut-row">
+              <div className="fade-up">
+                <Donut percent={78} />
+              </div>
               <div style={{ flex: 1 }}>
-                <div style={{ background: 'white', border: '1px solid #e6eef8', padding: 12, borderRadius: 12 }}>Sometimes it feels like no matter what we do, things only get worse.</div>
-                <div style={{ textAlign: 'right', color: '#94a3b8', fontSize: 12, marginTop: 6 }}>68/240</div>
+                <div className="card">Sometimes it feels like no matter what we do, things only get worse.</div>
+                <div style={{ textAlign: 'right', color: 'var(--muted)', fontSize: 12, marginTop: 6 }}>68/240</div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {editing && (
+        <>
+          <div className="overlay" onClick={() => setEditing(null)} />
+          <div className="modal fade-up">
+            <JournalEditor date={(editing.entry_date || '').slice(0, 10)} onSaved={() => { setEditing(null); window.location.reload() }} initial={editing} />
+          </div>
+        </>
+      )}
+
     </div>
   )
 }
