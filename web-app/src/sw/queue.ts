@@ -24,4 +24,10 @@ export const markSynced = async (id: number) => {
   return await db.table('moods').update(id, { synced: true })
 }
 
+export const incrementAttempts = async (id: number) => {
+  const rec: any = await db.table('moods').get(id)
+  const attempts = (rec?.attempts || 0) + 1
+  return await db.table('moods').update(id, { attempts })
+}
+
 export default db

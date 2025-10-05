@@ -2,7 +2,7 @@
 
 /* eslint-disable no-restricted-globals */
 
-import { getPending, markSynced } from './queue'
+import { getPending, markSynced, incrementAttempts } from './queue'
 
 // Simple fetch wrapper inside SW to post moods
 async function postMood(mood: any, token?: string) {
@@ -16,6 +16,8 @@ async function postMood(mood: any, token?: string) {
   })
   return resp
 }
+
+declare const self: any
 
 self.addEventListener('install', (event: any) => {
   self.skipWaiting()
@@ -62,7 +64,7 @@ async function processQueue() {
     } catch (e) {
       // increment attempts — simplistic
       if (item.id) {
-        await db.table('moods').update(item.id, { attempts: (item.attempts || 0) + 1 })
+        await incrementAttempts(item.id)
       }
     }
   }
