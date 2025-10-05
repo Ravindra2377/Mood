@@ -1,4 +1,5 @@
 import SwiftUI
+import BackgroundTasks
 
 @main
 struct MoodApp: App {
@@ -16,27 +17,40 @@ struct MoodApp: App {
 
     func registerBackgroundTasks() {
         // Register BG processing task
-        #if canImport(BackgroundTasks)
-        import BackgroundTasks
-        #endif
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.mood.sync", using: nil) { task in
-            handleSyncTask(task: task as! BGProcessingTask)
+            // Ensure we handle expiration and perform work on a background context
+            if let bgTask = task as? BGProcessingTask {
+                handleSyncTask(task: bgTask)
+            } else {
+                task.setTaskCompleted(success: false)
+            }
         }
     }
 
     func handleSyncTask(task: BGProcessingTask) {
-        scheduleNextSync()
-        let syncManager = SyncManager(api: APIClient(baseURL: URL(string: "https://api.example.com")!, tokenProvider: { nil }))
-        let sem = DispatchSemaphore(value: 0)
-        syncManager.syncPending { _ in sem.signal() }
+        scheduleNextSync() // schedule the next one early
 
-        task.expirationHandler = {
-            // Cancel if needed
+        let bgContext = PersistenceController.shared.container.newBackgroundContext()
+        let api = APIClient(baseURL: URL(string: "https://api.example.com")!, tokenProvider: DefaultTokenProvider())
+        let syncManager = SyncManager(context: bgContext, api: api)
+
+        let workQueue = OperationQueue()
+        workQueue.maxConcurrentOperationCount = 1
+
+        let op = BlockOperation {
+            let sem = DispatchSemaphore(value: 0)
+            syncManager.syncPending { _ in sem.signal() }
+            _ = sem.wait(timeout: .now() + 25)
         }
 
-        DispatchQueue.global().async {
-            _ = sem.wait(timeout: .now() + 25)
-            task.setTaskCompleted(success: true)
+        task.expirationHandler = {
+            // Cancel operation if it hasn't completed
+            workQueue.cancelAllOperations()
+        }
+
+        workQueue.addOperation(op)
+        op.completionBlock = {
+            task.setTaskCompleted(success: !op.isCancelled)
         }
     }
 
@@ -44,6 +58,23 @@ struct MoodApp: App {
         let request = BGProcessingTaskRequest(identifier: "com.mood.sync")
         request.requiresNetworkConnectivity = true
         request.earliestBeginDate = Date(timeIntervalSinceNow: 60*15)
-        try? BGTaskScheduler.shared.submit(request)
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("Failed to submit BGProcessingTaskRequest: \(error)")
+        }
+    }
+}
+
+// Simple default token provider placeholder. Replace with secure storage + refresh logic.
+public class DefaultTokenProvider: TokenProvider {
+    public init() {}
+    public func getToken() -> String? {
+        // Read from Keychain/secure store in production
+        return nil
+    }
+    public func refreshToken(completion: @escaping (Result<String, Error>) -> Void) {
+        // Trigger refresh flow (network call). For now, return failure.
+        completion(.failure(URLError(.userAuthenticationRequired)))
     }
 }
