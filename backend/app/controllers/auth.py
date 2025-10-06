@@ -33,9 +33,14 @@ def signup(user_in: UserCreate):
 	try:
 		existing = db.query(User).filter(User.email == user_in.email).first()
 		if existing:
-			# If the email is already registered, return the existing user.
-			# This makes signup idempotent for tests and avoids ordering issues.
-			return existing
+			# In test/dev scenarios we prefer idempotent signup to avoid order-dependent
+			# failures in the test suite. In production, preserve the original behavior
+			# by returning an error unless DEV preview/testing is enabled.
+			from app.config import settings
+			if getattr(settings, 'DEV_EMAIL_PREVIEW', False):
+				return existing
+			# otherwise, signal the email is already registered
+			raise HTTPException(status_code=400, detail="Email already registered")
 		user = User(email=user_in.email, hashed_password=security.hash_password(user_in.password))
 		db.add(user)
 		db.commit()
