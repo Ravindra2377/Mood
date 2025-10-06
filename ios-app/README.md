@@ -1,8 +1,8 @@
-iOS Module Scaffold — Mood (SwiftUI)
+iOS Module Scaffold — SOUL (SwiftUI)
 
 Overview
 
-This folder contains a lightweight scaffold for a native iOS app module that implements an offline-first Mood tracking screen and sync logic. The code is intentionally Xcode-friendly: copy these files into an Xcode SwiftUI project (recommended) or use them as a reference when creating your iOS app target.
+This folder contains a lightweight scaffold for a native iOS app module that implements an offline-first SOUL tracking screen and sync logic. The code is intentionally Xcode-friendly: copy these files into an Xcode SwiftUI project (recommended) or use them as a reference when creating your iOS app target.
 
 What is included
 
@@ -28,7 +28,7 @@ How to use
 
 ```swift
 @main
-struct MoodApp: App {
+struct SOULApp: App {
     let persistenceController = PersistenceController.shared
     var body: some Scene {
         WindowGroup {

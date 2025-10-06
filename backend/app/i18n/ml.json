@@ -16,6 +16,6 @@
   "verify_account_html": "<p>Hi {email},</p><p>Click the link to verify your account:</p><p><a href=\"{verify_link}\">Verify account</a></p>",
   "verify_account_text": "Verify your account: {verify_link}",
   "scheduled_checkin_subject": "We miss you — quick check-in",
-  "scheduled_checkin_html": "<p>Hi — we noticed you haven't checked in recently. Want to do a quick mood check?</p>",
-  "scheduled_checkin_text": "We noticed you haven't checked in recently. Want to do a quick mood check?"
+  "scheduled_checkin_html": "<p>Hi — we noticed you haven't checked in recently. Want to do a quick SOUL check?</p>",
+  "scheduled_checkin_text": "We noticed you haven't checked in recently. Want to do a quick SOUL check?"
 }

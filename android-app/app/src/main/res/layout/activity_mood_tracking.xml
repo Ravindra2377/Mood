@@ -82,7 +82,7 @@
         android:id="@+id/fabSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Save Mood"
+    android:contentDescription="Save SOUL"
         app:srcCompat="@drawable/ic_check"
         app:backgroundTint="@color/warm_coral"
         app:layout_constraintBottom_toBottomOf="parent"

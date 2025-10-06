@@ -12,7 +12,7 @@ public struct MainTabView: View {
             MoodView(viewModel: moodVM)
                 .tabItem {
                     Image(systemName: "face.smiling")
-                    Text("Mood")
+                    Text("SOUL")
                 }
                 .overlay(
                     Group {

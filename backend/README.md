@@ -1,6 +1,6 @@
-# Mood — Backend
+# SOUL — Backend
 
-This repository contains the backend for the Mood app (FastAPI-based prototype). It provides endpoints for mood tracking, journals, community, crisis detection, analytics, and admin utilities.
+This repository contains the backend for the SOUL app (FastAPI-based prototype). It provides endpoints for mood tracking, journals, community, crisis detection, analytics, and admin utilities.
 
 Quick start (development)
 

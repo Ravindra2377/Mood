@@ -318,7 +318,7 @@ def mood_analytics_daily(start: str | None = None, end: str | None = None, user:
         q = q.filter(MoodEntry.user_id == user.id, MoodEntry.created_at >= start_dt, MoodEntry.created_at <= end_dt)
         q = q.group_by(func.date(MoodEntry.created_at)).order_by(func.date(MoodEntry.created_at).asc())
         rows = q.all()
-        result = [{'day': r.day.isoformat(), 'average': float(r.avg_score) if r.avg_score is not None else None, 'count': int(r.count)} for r in rows]
+        result = [{'day': r.day.isoformat() if hasattr(r.day, 'isoformat') else str(r.day), 'average': float(r.avg_score) if r.avg_score is not None else None, 'count': int(r.count)} for r in rows]
         return {'start': start_dt.isoformat(), 'end': end_dt.isoformat(), 'daily': result}
     finally:
         db.close()
@@ -349,7 +349,7 @@ def journals_progress_summary(start: str | None = None, end: str | None = None, 
         q = q.filter(JournalEntry.user_id == user.id, JournalEntry.entry_date != None, JournalEntry.entry_date >= start_dt.date(), JournalEntry.entry_date <= end_dt.date())
         q = q.group_by(func.date(JournalEntry.entry_date)).order_by(func.date(JournalEntry.entry_date).asc())
         rows = q.all()
-        result = [{'day': r.day.isoformat(), 'avg_progress': float(r.avg_progress) if r.avg_progress is not None else None, 'count': int(r.count)} for r in rows]
+        result = [{'day': r.day.isoformat() if hasattr(r.day, 'isoformat') else str(r.day), 'avg_progress': float(r.avg_progress) if r.avg_progress is not None else None, 'count': int(r.count)} for r in rows]
         return {'start': start_dt.isoformat(), 'end': end_dt.isoformat(), 'daily': result}
     finally:
         db.close()

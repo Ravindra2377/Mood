@@ -5,7 +5,7 @@
     <application
         android:name="com.mhaiapp.MoodSyncApplication"
         android:allowBackup="true"
-        android:label="MoodApp"
+        android:label="SOUL"
         android:icon="@mipmap/ic_launcher">
         <activity android:name="com.mhaiapp.activities.MainActivity"/>
         <activity android:name="com.mhaiapp.activities.LoginActivity"/>
