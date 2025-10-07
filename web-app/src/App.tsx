@@ -4,6 +4,7 @@ import { registerServiceWorker } from './sw/register'
 import MoodEntry from './ui/MoodEntry'
 import DiaryView from './ui/DiaryView'
 import HomeView from './ui/HomeView'
+import Meditation from './ui/Meditation'
 import MetricsDocs from './pages/MetricsDocs'
 import DocsIndex from './pages/DocsIndex'
 import ToastProvider from './ui/Toast'
@@ -46,11 +47,13 @@ export default function App() {
           </div>
           <nav style={{ display: 'flex', gap: 12 }}>
             <a href="/" onClick={(e) => { e.preventDefault(); navigate('/'); }}>Home</a>
+            <a href="/meditation" onClick={(e) => { e.preventDefault(); navigate('/meditation'); }}>Meditation</a>
+            <a href="/timer" onClick={(e) => { e.preventDefault(); navigate('/timer'); }}>Timer</a>
             <a href="/docs" onClick={(e) => { e.preventDefault(); navigate('/docs'); }}>Docs</a>
           </nav>
         </header>
 
-        {isDocsMetrics ? <MetricsDocs /> : isDocsIndex ? <DocsIndex /> : <HomeView />}
+        {isDocsMetrics ? <MetricsDocs /> : isDocsIndex ? <DocsIndex /> : currentPath === '/meditation' || currentPath === '/timer' ? <Meditation /> : <HomeView />}
       </div>
     </ToastProvider>
   )

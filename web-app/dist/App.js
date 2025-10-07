@@ -3,6 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { registerServiceWorker } from './sw/register';
 import HomeView from './ui/HomeView';
+import Meditation from './ui/Meditation';
 import MetricsDocs from './pages/MetricsDocs';
 import DocsIndex from './pages/DocsIndex';
 import ToastProvider from './ui/Toast';
@@ -29,5 +30,5 @@ export default function App() {
             window.dispatchEvent(new PopStateEvent('popstate'));
         }
     }
-    return (_jsx(ToastProvider, { children: _jsxs("div", { style: { padding: 24 }, children: [_jsxs("header", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }, children: [_jsxs("div", { children: [_jsx("h1", { style: { margin: 0 }, children: "SOUL" }), _jsx("div", { style: { color: 'var(--muted)' }, children: "your mental health companion" })] }), _jsxs("nav", { style: { display: 'flex', gap: 12 }, children: [_jsx("a", { href: "/", onClick: (e) => { e.preventDefault(); navigate('/'); }, children: "Home" }), _jsx("a", { href: "/docs", onClick: (e) => { e.preventDefault(); navigate('/docs'); }, children: "Docs" })] })] }), isDocsMetrics ? _jsx(MetricsDocs, {}) : isDocsIndex ? _jsx(DocsIndex, {}) : _jsx(HomeView, {})] }) }));
+    return (_jsx(ToastProvider, { children: _jsxs("div", { style: { padding: 24 }, children: [_jsxs("header", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }, children: [_jsxs("div", { children: [_jsx("h1", { style: { margin: 0 }, children: "SOUL" }), _jsx("div", { style: { color: 'var(--muted)' }, children: "your mental health companion" })] }), _jsxs("nav", { style: { display: 'flex', gap: 12 }, children: [_jsx("a", { href: "/", onClick: (e) => { e.preventDefault(); navigate('/'); }, children: "Home" }), _jsx("a", { href: "/meditation", onClick: (e) => { e.preventDefault(); navigate('/meditation'); }, children: "Meditation" }), _jsx("a", { href: "/timer", onClick: (e) => { e.preventDefault(); navigate('/timer'); }, children: "Timer" }), _jsx("a", { href: "/docs", onClick: (e) => { e.preventDefault(); navigate('/docs'); }, children: "Docs" })] })] }), isDocsMetrics ? _jsx(MetricsDocs, {}) : isDocsIndex ? _jsx(DocsIndex, {}) : currentPath === '/meditation' || currentPath === '/timer' ? _jsx(Meditation, {}) : _jsx(HomeView, {})] }) }));
 }
