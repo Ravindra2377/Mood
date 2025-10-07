@@ -2,24 +2,27 @@ import React, { useEffect, useRef, useState } from 'react'
 import BottomNav from './BottomNav'
 import '../styles/meditation.css'
 
-const formatTime = (s: number) => {
+const formatTime = (s: number): string => {
   const mm = Math.floor(s / 60).toString().padStart(2, '0')
   const ss = Math.floor(s % 60).toString().padStart(2, '0')
   return `${mm}:${ss}`
 }
 
-export default function Meditation() {
+export default function Meditation(): JSX.Element {
   const [seconds, setSeconds] = useState(300)
   const [running, setRunning] = useState(false)
-  const intervalRef = useRef<number | null>(null)
+  const intervalRef = useRef(null as number | null)
 
   useEffect(() => {
     if (running && intervalRef.current === null) {
       intervalRef.current = window.setInterval(() => {
-        setSeconds(prev => {
+        setSeconds((prev: number) => {
           if (prev <= 1) {
             setRunning(false)
-            if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null }
+            if (intervalRef.current) {
+              clearInterval(intervalRef.current)
+              intervalRef.current = null
+            }
             return 0
           }
           return prev - 1
@@ -27,14 +30,26 @@ export default function Meditation() {
       }, 1000)
     }
     if (!running && intervalRef.current !== null) {
-      clearInterval(intervalRef.current); intervalRef.current = null
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
     }
-    return () => { if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null } }
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+    }
   }, [running])
 
-  const onToggle = () => setRunning(r => !r)
-  const onReset = () => { setRunning(false); setSeconds(300) }
-  const onShort = (mins: number) => { setSeconds(mins * 60); setRunning(true) }
+  const onToggle = (): void => setRunning((r: boolean) => !r)
+  const onReset = (): void => {
+    setRunning(false)
+    setSeconds(300)
+  }
+  const onShort = (mins: number): void => {
+    setSeconds(mins * 60)
+    setRunning(true)
+  }
 
   return (
     <div className="soul-app-root">
@@ -74,67 +89,12 @@ export default function Meditation() {
             <div className="med-action-row">
               <button className="med-action secondary" onClick={onReset} aria-label="Reset timer">Reset</button>
               <button className={`med-action center ${running ? 'pause' : 'play'}`} onClick={onToggle} aria-pressed={running} aria-label={running ? 'Pause meditation' : 'Start meditation'}>{running ? '❚❚' : '▶'}</button>
-              <button className="med-action secondary" onClick={() => setSeconds(s => Math.max(30, s - 30))} aria-label="Skip back 30 seconds">-30s</button>
+              <button className="med-action secondary" onClick={() => setSeconds((s: number) => Math.max(30, s - 30))} aria-label="Skip back 30 seconds">-30s</button>
             </div>
 
             <p className="med-note">Follow the breath: inhale 4s, hold 4s, exhale 6s.</p>
           </div>
         </section>
-      </main>
-
-      <BottomNav />
-    </div>
-  )
-}
-import React from 'react'
-import BottomNav from './BottomNav'
-
-export default function Meditation() {
-  const [running, setRunning] = React.useState(false)
-  const [seconds, setSeconds] = React.useState(90)
-
-  React.useEffect(() => {
-    let id: number | undefined
-    if (running) {
-      id = window.setInterval(() => setSeconds(s => Math.max(0, s - 1)), 1000)
-    }
-    return () => { if (id) window.clearInterval(id) }
-  }, [running])
-
-  function toggle() {
-    setRunning(r => !r)
-  }
-
-  function reset() {
-    setRunning(false)
-    setSeconds(90)
-  }
-
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-
-  return (
-    <div style={{ paddingBottom: 110 }}>
-      <header className="app-header">
-        <div>
-          <div className="app-title">SOUL</div>
-          <div className="app-subtitle">Breathing meditation</div>
-        </div>
-        <div aria-hidden style={{ width: 40, height: 40 }} />
-      </header>
-
-      <main style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}>
-        <div style={{ width: '100%', maxWidth: 420, background: 'linear-gradient(180deg,#fbf8ff,#f2f8ff)', borderRadius: 16, padding: 20, textAlign: 'center', boxShadow: '0 8px 28px rgba(2,6,23,0.06)' }}>
-          <div style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 12 }}>5 minutes</div>
-          <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Breathing meditation</div>
-          <div style={{ width: 180, height: 180, borderRadius: 90, background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px auto', boxShadow: '0 8px 24px rgba(2,6,23,0.08)' }}>
-            <div style={{ fontSize: 28, fontWeight: 700 }}>{`${mins}:${secs.toString().padStart(2, '0')}`}</div>
-          </div>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-            <button onClick={toggle} style={{ padding: '10px 18px', borderRadius: 12, border: 'none', background: running ? '#f3f4f6' : 'var(--soul-accent)', color: running ? '#111' : '#fff', cursor: 'pointer' }}>{running ? 'Pause' : 'Start'}</button>
-            <button onClick={reset} style={{ padding: '10px 18px', borderRadius: 12, border: '1px solid #e6eef8', background: '#fff' }}>Reset</button>
-          </div>
-        </div>
       </main>
 
       <BottomNav />
