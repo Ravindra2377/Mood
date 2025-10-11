@@ -2,10 +2,10 @@ package com.mhaiapp.models;
 
 public class MoodRequest {
     public int score;
-    public String notes;
+    public String note;
 
-    public MoodRequest(int score, String notes) {
+    public MoodRequest(int score, String note) {
         this.score = score;
-        this.notes = notes;
+        this.note = note;
     }
 }
