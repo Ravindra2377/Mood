@@ -1,0 +1,122 @@
+name: Android Build APK (No Wrapper)
+
+on:
+  workflow_dispatch:
+    inputs:
+      gradle_version:
+        description: 'Gradle version to install'
+        required: false
+        default: '7.6'
+  push:
+    paths:
+      - 'android-app/**'
+      - '.github/workflows/android-build-apk.yml'
+  pull_request:
+    paths:
+      - 'android-app/**'
+      - '.github/workflows/android-build-apk.yml'
+
+concurrency:
+  group: android-build-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-apk:
+    name: Assemble APKs (staging/prod) without Gradle wrapper
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    env:
+      ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+      GRADLE_VERSION: ${{ inputs.gradle_version || '7.6' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            platform-tools
+            platforms;android-33
+            build-tools;33.0.2
+
+      - name: Cache Gradle caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/daemon
+          key: ${{ runner.os }}-gradle-${{ hashFiles('android-app/**/build.gradle*', 'android-app/**/settings.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Install Gradle (no wrapper)
+        run: |
+          set -e
+          GV="${GRADLE_VERSION:-7.6}"
+          echo "Installing Gradle ${GV}..."
+          curl -sSL -o /tmp/gradle.zip "https://services.gradle.org/distributions/gradle-${GV}-bin.zip"
+          sudo mkdir -p /opt/gradle
+          sudo unzip -q /tmp/gradle.zip -d /opt/gradle
+          echo "/opt/gradle/gradle-${GV}/bin" >> $GITHUB_PATH
+          gradle -v
+
+      - name: Point local.properties to CI Android SDK
+        working-directory: android-app
+        run: |
+          echo "sdk.dir=${ANDROID_SDK_ROOT}" > local.properties
+          echo "Wrote local.properties with sdk.dir=${ANDROID_SDK_ROOT}"
+
+      - name: Show project structure (debug)
+        run: |
+          ls -la
+          echo "---- android-app ----"
+          ls -la android-app
+          echo "---- app module ----"
+          ls -la android-app/app
+
+      - name: Assemble debug APKs (staging + prod)
+        run: |
+          gradle -p android-app :app:assembleStagingDebug :app:assembleProdDebug --stacktrace --no-daemon
+
+      - name: Assemble prod release APK (unsigned if no signing config)
+        run: |
+          gradle -p android-app :app:assembleProdRelease --stacktrace --no-daemon
+
+      - name: Collect APKs
+        id: collect
+        run: |
+          echo "Staging debug:"
+          ls -la android-app/app/build/outputs/apk/staging/debug || true
+          echo "Prod debug:"
+          ls -la android-app/app/build/outputs/apk/prod/debug || true
+          echo "Prod release:"
+          ls -la android-app/app/build/outputs/apk/prod/release || true
+
+      - name: Upload debug APKs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apks
+          path: |
+            android-app/app/build/outputs/apk/staging/debug/*.apk
+            android-app/app/build/outputs/apk/prod/debug/*.apk
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Upload prod release APK
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-prod-release-apk
+          path: android-app/app/build/outputs/apk/prod/release/*.apk
+          if-no-files-found: warn
+          retention-days: 7
