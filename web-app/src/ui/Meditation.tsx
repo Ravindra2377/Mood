@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import BottomNav from './BottomNav'
 import '../styles/meditation.css'
 
+const sounds = ['Ocean breeze', 'Forest sounds', 'Rain drops', 'White noise']
+
 const formatTime = (s: number): string => {
   const mm = Math.floor(s / 60).toString().padStart(2, '0')
   const ss = Math.floor(s % 60).toString().padStart(2, '0')
@@ -9,8 +11,9 @@ const formatTime = (s: number): string => {
 }
 
 export default function Meditation(): JSX.Element {
-  const [seconds, setSeconds] = useState(300)
+  const [seconds, setSeconds] = useState(5 * 60)
   const [running, setRunning] = useState(false)
+  const [selectedSound, setSelectedSound] = useState<string>(sounds[0])
   const intervalRef = useRef(null as number | null)
 
   useEffect(() => {
@@ -51,6 +54,9 @@ export default function Meditation(): JSX.Element {
     setRunning(true)
   }
 
+  const mins = Math.floor(seconds / 60)
+  const secs = seconds % 60
+
   return (
     <div className="soul-app-root">
       <header className="app-header">
@@ -64,21 +70,24 @@ export default function Meditation(): JSX.Element {
 
       <main className="meditation-main">
         <section className="med-card" role="region" aria-label="Meditation session">
-          <div className="med-visual" aria-hidden>
-            <svg width="220" height="220" viewBox="0 0 220 220" className="med-svg" focusable="false">
-              <defs>
-                <radialGradient id="g1" cx="50%" cy="40%">
-                  <stop offset="0%" stopColor="#fef7ff" />
-                  <stop offset="100%" stopColor="#f3eafe" />
-                </radialGradient>
-              </defs>
-              <circle cx="110" cy="90" r="80" fill="url(#g1)" />
-              <circle cx="110" cy="90" r="44" fill="#fff" />
-            </svg>
+          <div className="med-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>{Math.floor((5 * 60) / 60)} minutes</div>
+            <div className="sound-selector" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <select value={selectedSound} onChange={(e) => setSelectedSound(e.target.value)}>
+                {sounds.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
           </div>
 
-          <div className="med-info">
-            <div className="med-time" aria-live="polite">{formatTime(seconds)}</div>
+          <div className="med-stage" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+            <div className="med-character card" aria-hidden>
+              {/* Decorative character area - can be replaced with animated SVG */}
+              <div style={{ width: 200, height: 200, borderRadius: 100, background: 'rgba(240,236,255,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ fontSize: 48 }}>🧘</div>
+              </div>
+            </div>
+
+            <div className="med-time-large" aria-live="polite" style={{ fontSize: 36, fontWeight: 700 }}>{`${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`}</div>
 
             <div className="med-controls" role="toolbar" aria-label="Preset durations">
               <button className="control-btn" onClick={() => onShort(1)} aria-label="1 minute session">1m</button>

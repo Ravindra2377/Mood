@@ -1,0 +1,1251 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SOUL - Your Mental Health Companion</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            :root {
+                --bg-color: 255 255 255;
+                --text-color: 17 24 39;
+                --text-muted-color: 75 85 99;
+                --card-bg: 255 255 255;
+                --gradient-from: #f3e7ff;
+                --gradient-to: #e5efff;
+            }
+            html.dark {
+                --bg-color: 17 24 39;
+                --text-color: 243 244 246;
+                --text-muted-color: 156 163 175;
+                --card-bg: 31 41 55;
+                --gradient-from: #1e1b4b;
+                --gradient-to: #1e3a8a;
+            }
+            body {
+                font-family: "Inter", sans-serif;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                background-color: rgb(var(--bg-color));
+                color: rgb(var(--text-color));
+            }
+            .app-container {
+                max-width: 420px;
+                height: 890px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            }
+            .main-gradient {
+                background: linear-gradient(160deg, #e0c3fc 0%, #8ec5fc 100%);
+            }
+            .calm-gradient {
+                background: linear-gradient(
+                    180deg,
+                    var(--gradient-from) 0%,
+                    var(--gradient-to) 100%
+                );
+            }
+            .card {
+                background-color: rgba(var(--card-bg), 0.7);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(var(--card-bg), 0.3);
+            }
+            .nav-icon.active svg,
+            .nav-icon.active span {
+                color: #3b82f6;
+            }
+            html.dark .nav-icon.active svg,
+            html.dark .nav-icon.active span {
+                color: #60a5fa;
+            }
+            .screen {
+                display: none;
+            }
+            .screen.active {
+                display: flex;
+            }
+            .mood-emoji {
+                transition: transform 0.2s ease-in-out;
+                cursor: pointer;
+            }
+            .mood-emoji.selected {
+                transform: scale(1.2);
+                border: 2px solid #3b82f6;
+            }
+            .insight-button {
+                background: linear-gradient(45deg, #a855f7, #60a5fa);
+            }
+            .loader {
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #60a5fa;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            /* Toggle Switch */
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 50px;
+                height: 28px;
+            }
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                transition: 0.4s;
+                border-radius: 34px;
+            }
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 20px;
+                width: 20px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: 0.4s;
+                border-radius: 50%;
+            }
+            input:checked + .slider {
+                background-color: #2196f3;
+            }
+            input:checked + .slider:before {
+                transform: translateX(22px);
+            }
+        </style>
+    </head>
+    <body class="bg-gray-200 flex items-center justify-center min-h-screen">
+        <div
+            class="app-container w-full h-full bg-white rounded-[40px] overflow-hidden flex flex-col relative"
+        >
+            <!-- ===== Splash Screen ===== -->
+            <div
+                id="splash-screen"
+                class="screen active flex-col justify-center items-center calm-gradient w-full h-full p-8 text-center"
+            >
+                <div class="flex flex-col items-center animate-pulse">
+                    <span class="text-5xl font-bold">SOUL</span>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">
+                        Your mental health companion
+                    </p>
+                </div>
+            </div>
+
+            <!-- ===== Login Screen ===== -->
+            <div
+                id="login-screen"
+                class="screen flex-col justify-center calm-gradient w-full h-full p-8"
+            >
+                <div class="w-full max-w-sm mx-auto">
+                    <h1 class="text-3xl font-bold text-center mb-2">
+                        Welcome Back
+                    </h1>
+                    <p
+                        class="text-gray-600 dark:text-gray-300 text-center mb-8"
+                    >
+                        Login to continue your journey.
+                    </p>
+                    <div class="space-y-4">
+                        <input
+                            type="tel"
+                            placeholder="Phone Number"
+                            class="w-full bg-white/80 dark:bg-gray-700/80 py-3 px-4 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            class="w-full bg-white/80 dark:bg-gray-700/80 py-3 px-4 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                    </div>
+                    <a
+                        href="#"
+                        class="block text-right text-sm text-blue-500 hover:underline mt-2"
+                        >Forgot Password?</a
+                    >
+                    <button
+                        onclick="handleLogin()"
+                        class="w-full bg-gray-900 dark:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-gray-800 dark:hover:bg-blue-500 transition mt-6"
+                    >
+                        Login
+                    </button>
+                    <p class="text-center text-sm mt-6">
+                        Don't have an account?
+                        <a
+                            href="#"
+                            onclick="navigateTo('signup-screen')"
+                            class="font-semibold text-blue-500 hover:underline"
+                            >Sign Up</a
+                        >
+                    </p>
+                </div>
+            </div>
+
+            <!-- ===== Signup Screen ===== -->
+            <div
+                id="signup-screen"
+                class="screen flex-col justify-center calm-gradient w-full h-full p-8"
+            >
+                <div class="w-full max-w-sm mx-auto">
+                    <h1 class="text-3xl font-bold text-center mb-2">
+                        Create Account
+                    </h1>
+                    <p
+                        class="text-gray-600 dark:text-gray-300 text-center mb-8"
+                    >
+                        Start your journey with us today.
+                    </p>
+                    <div class="space-y-4">
+                        <input
+                            id="signup-username"
+                            type="text"
+                            placeholder="Username"
+                            class="w-full bg-white/80 dark:bg-gray-700/80 py-3 px-4 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        <input
+                            id="signup-phone"
+                            type="tel"
+                            placeholder="Phone Number (e.g., +16505551234)"
+                            class="w-full bg-white/80 dark:bg-gray-700/80 py-3 px-4 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        <input
+                            id="signup-age"
+                            type="number"
+                            placeholder="Age"
+                            class="w-full bg-white/80 dark:bg-gray-700/80 py-3 px-4 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        <input
+                            id="signup-password"
+                            type="password"
+                            placeholder="Password"
+                            class="w-full bg-white/80 dark:bg-gray-700/80 py-3 px-4 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                    </div>
+                    <button
+                        id="signup-btn"
+                        onclick="handleSignup()"
+                        class="w-full bg-gray-900 dark:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-gray-800 dark:hover:bg-blue-500 transition mt-6"
+                    >
+                        Sign Up
+                    </button>
+                    <div id="recaptcha-container" class="mt-4"></div>
+                    <p class="text-center text-sm mt-6">
+                        Already have an account?
+                        <a
+                            href="#"
+                            onclick="navigateTo('login-screen')"
+                            class="font-semibold text-blue-500 hover:underline"
+                            >Login</a
+                        >
+                    </p>
+                </div>
+            </div>
+
+            <!-- ===== OTP Screen ===== -->
+            <div
+                id="otp-screen"
+                class="screen flex-col justify-center calm-gradient w-full h-full p-8"
+            >
+                <div class="w-full max-w-sm mx-auto text-center">
+                    <h1 class="text-3xl font-bold">Verify Phone</h1>
+                    <p class="text-gray-600 dark:text-gray-300 mt-2 mb-8">
+                        Enter the OTP sent to your phone.
+                    </p>
+                    <input
+                        id="otp-input"
+                        type="text"
+                        placeholder="6-digit code"
+                        class="w-full text-center tracking-[1em] text-2xl bg-white/80 dark:bg-gray-700/80 py-3 px-4 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                    <button
+                        onclick="verifyOtp()"
+                        class="w-full bg-gray-900 dark:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-gray-800 dark:hover:bg-blue-500 transition mt-6"
+                    >
+                        Verify
+                    </button>
+                    <a
+                        href="#"
+                        class="block text-sm text-blue-500 hover:underline mt-4"
+                        >Resend OTP</a
+                    >
+                </div>
+            </div>
+
+            <!-- ===== Home Screen ===== -->
+            <div
+                id="home-screen"
+                class="screen flex-col w-full h-full calm-gradient p-6 overflow-y-auto"
+            >
+                <header class="flex justify-between items-center pt-8">
+                    <div>
+                        <h2 id="user-greeting" class="text-3xl font-bold">
+                            Hi, there
+                        </h2>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            How are you doing today?
+                        </p>
+                    </div>
+                    <div
+                        class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden"
+                    >
+                        <img
+                            src="https://i.pravatar.cc/100?u=olivia"
+                            alt="User Avatar"
+                            class="w-full h-full object-cover"
+                        />
+                    </div>
+                </header>
+
+                <div class="relative mt-8">
+                    <input
+                        type="text"
+                        placeholder="Search entries, practices..."
+                        class="w-full bg-white/80 dark:bg-gray-700/80 py-3 pl-12 pr-4 rounded-full border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                    <svg
+                        class="w-6 h-6 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        ></path>
+                    </svg>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold">Daily mood</h3>
+                    <div class="flex justify-between mt-4">
+                        <span
+                            class="mood-emoji text-4xl p-2 rounded-full"
+                            onclick="selectMood(this)"
+                            >😡</span
+                        >
+                        <span
+                            class="mood-emoji text-4xl p-2 rounded-full"
+                            onclick="selectMood(this)"
+                            >😔</span
+                        >
+                        <span
+                            class="mood-emoji text-4xl p-2 rounded-full"
+                            onclick="selectMood(this)"
+                            >😐</span
+                        >
+                        <span
+                            class="mood-emoji text-4xl p-2 rounded-full"
+                            onclick="selectMood(this)"
+                            >🙂</span
+                        >
+                        <span
+                            class="mood-emoji text-4xl p-2 rounded-full"
+                            onclick="selectMood(this)"
+                            >😄</span
+                        >
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold">Activities</h3>
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div
+                            class="p-4 rounded-2xl bg-pink-200/80 text-pink-800 cursor-pointer"
+                            onclick="navigateTo('breathing-screen')"
+                        >
+                            <span class="text-3xl">🧘‍♀️</span>
+                            <p class="font-semibold mt-2">Meditation</p>
+                        </div>
+                        <div
+                            class="p-4 rounded-2xl bg-blue-200/80 text-blue-800 cursor-pointer"
+                            onclick="navigateTo('expression-screen')"
+                        >
+                            <span class="text-3xl">📓</span>
+                            <p class="font-semibold mt-2">Journal</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quote-card" class="mt-6 card p-4 rounded-2xl">
+                    <p class="font-semibold">✨ Quote of the Day</p>
+                    <p
+                        id="quote-text"
+                        class="text-gray-600 dark:text-gray-300 mt-2"
+                    >
+                        "A wise woman wishes to be no one's enemy; a wise woman
+                        refuses to be anyone's victim."
+                    </p>
+                    <span
+                        id="quote-author"
+                        class="text-xs text-gray-500 dark:text-gray-400 text-right block"
+                        >- Maya Angelou -</span
+                    >
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-3">
+                        Content and Guidance
+                    </h3>
+                    <div class="space-y-3">
+                        <div
+                            class="card p-4 rounded-2xl flex items-center space-x-4"
+                        >
+                            <div
+                                class="w-16 h-16 rounded-xl bg-purple-200 flex items-center justify-center text-3xl"
+                            >
+                                🎨
+                            </div>
+                            <div>
+                                <p class="font-semibold">
+                                    How to find balance in life
+                                </p>
+                                <p
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    Article • 4 min
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="card p-4 rounded-2xl flex items-center space-x-4"
+                        >
+                            <div
+                                class="w-16 h-16 rounded-xl bg-green-200 flex items-center justify-center text-3xl"
+                            >
+                                🎬
+                            </div>
+                            <div>
+                                <p class="font-semibold">
+                                    It's okay to ask for help
+                                </p>
+                                <p
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    Video • 8 min
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-24"></div>
+            </div>
+
+            <!-- ===== Breathing Screen ===== -->
+            <div
+                id="breathing-screen"
+                class="screen flex-col items-center justify-between w-full h-full calm-gradient p-6"
+            >
+                <header class="w-full flex justify-between items-center pt-8">
+                    <button
+                        onclick="navigateTo('home-screen')"
+                        class="p-2 rounded-full bg-white/50 dark:bg-gray-800/50"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 19l-7-7 7-7"
+                            ></path>
+                        </svg>
+                    </button>
+                    <select
+                        class="bg-white/50 dark:bg-gray-800/50 rounded-full px-4 py-1 text-sm font-semibold focus:outline-none"
+                    >
+                        <option>Ocean Breeze</option>
+                        <option>Rainfall</option>
+                        <option>Forest</option>
+                    </select>
+                    <div class="w-10"></div>
+                </header>
+                <div
+                    class="flex flex-col items-center justify-center flex-grow text-center"
+                >
+                    <p
+                        class="text-sm font-semibold text-gray-500 dark:text-gray-400"
+                    >
+                        5 minutes
+                    </p>
+                    <p class="text-xl font-bold">Breathing meditation</p>
+                    <div
+                        class="w-64 h-64 rounded-full main-gradient opacity-30 relative mt-8 flex items-center justify-center"
+                    >
+                        <svg viewBox="0 0 100 100" class="w-48 h-48">
+                            <g transform="translate(5,5) scale(0.9)">
+                                <path
+                                    d="M45,20 a5,5 0 1,1 10,0 a5,5 0 1,1 -10,0"
+                                    fill="#4A5568"
+                                />
+                                <path
+                                    d="M30 40 C 30 30, 70 30, 70 40"
+                                    fill="#FEEBC8"
+                                />
+                                <path
+                                    d="M35 40 Q 50 50, 65 40"
+                                    fill="none"
+                                    stroke="#4A5568"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                />
+                                <path
+                                    d="M42 45 a2 2 0 1 1 0.1 0"
+                                    fill="#4A5568"
+                                />
+                                <path
+                                    d="M58 45 a2 2 0 1 1 0.1 0"
+                                    fill="#4A5568"
+                                />
+                                <path
+                                    d="M40 60 H 60"
+                                    fill="none"
+                                    stroke="#4A5568"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                />
+                                <path
+                                    d="M20 70 Q 50 50, 80 70 L 70 90 H 30 Z"
+                                    fill="#FBBF24"
+                                />
+                                <path
+                                    d="M30 70 L 10 75"
+                                    fill="none"
+                                    stroke="#4A5568"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                />
+                                <path
+                                    d="M70 70 L 90 75"
+                                    fill="none"
+                                    stroke="#4A5568"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                />
+                            </g>
+                        </svg>
+                    </div>
+                    <p id="breathing-text" class="text-2xl font-semibold mt-8">
+                        Inhale...
+                    </p>
+                </div>
+                <div class="flex items-center justify-center space-x-8 mb-12">
+                    <p id="timer" class="font-mono text-2xl font-semibold">
+                        05:00
+                    </p>
+                    <button
+                        id="play-pause-btn"
+                        class="w-16 h-16 bg-gray-900 dark:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg text-3xl"
+                    >
+                        <svg
+                            id="pause-icon"
+                            class="w-8 h-8"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                        <svg
+                            id="play-icon"
+                            class="w-8 h-8 hidden"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== Expression Screen ===== -->
+            <div
+                id="expression-screen"
+                class="screen flex-col w-full h-full calm-gradient p-6"
+            >
+                <header class="w-full flex justify-between items-center pt-8">
+                    <button
+                        onclick="navigateTo('home-screen')"
+                        class="p-2 rounded-full bg-white/50 dark:bg-gray-800/50"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 19l-7-7 7-7"
+                            ></path>
+                        </svg>
+                    </button>
+                    <div class="w-10"></div>
+                </header>
+                <div class="flex-grow flex flex-col pt-8">
+                    <h2 class="text-2xl font-bold">Your expression</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-2">
+                        Feel free to jot down whatever comes to mind.
+                    </p>
+                    <div class="relative flex-grow mt-6">
+                        <textarea
+                            id="journal-entry"
+                            class="w-full h-full p-4 bg-white/60 dark:bg-gray-800/60 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Sometimes it feels like..."
+                        ></textarea>
+                        <span
+                            id="char-count"
+                            class="absolute bottom-4 right-4 text-xs text-gray-500 dark:text-gray-400"
+                            >0/240</span
+                        >
+                    </div>
+                    <div id="insight-container" class="mt-4"></div>
+                    <button
+                        id="get-insight-btn"
+                        onclick="showInsight()"
+                        class="w-full insight-button text-white font-semibold py-3 px-6 rounded-full shadow-md mt-4 flex items-center justify-center"
+                    >
+                        Get Insight ✨
+                    </button>
+                    <button
+                        class="w-full bg-gray-200 dark:bg-gray-700 font-semibold py-3 px-6 rounded-full mt-2"
+                    >
+                        Use voice instead 🎙️
+                    </button>
+                </div>
+                <div class="h-24"></div>
+            </div>
+
+            <!-- ===== Insights/Stats Screen ===== -->
+            <div
+                id="insights-screen"
+                class="screen flex-col w-full h-full calm-gradient p-6 overflow-y-auto"
+            >
+                <header class="flex justify-between items-center pt-8">
+                    <h2 class="text-3xl font-bold">Your Insights</h2>
+                    <div
+                        class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden"
+                    >
+                        <img
+                            src="https://i.pravatar.cc/100?u=olivia"
+                            alt="User Avatar"
+                            class="w-full h-full object-cover"
+                        />
+                    </div>
+                </header>
+                <div class="mt-8">
+                    <div
+                        class="flex justify-between items-center text-center text-sm font-medium"
+                    >
+                        <div class="flex flex-col items-center">
+                            <p>M</p>
+                            <p>21</p>
+                        </div>
+                        <div
+                            class="flex flex-col items-center bg-blue-500 text-white rounded-full w-8 h-8 justify-center"
+                        >
+                            <p>T</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <p>W</p>
+                            <p>23</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <p>T</p>
+                            <p>24</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <p>F</p>
+                            <p>25</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <p>S</p>
+                            <p>26</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <p>S</p>
+                            <p>27</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded-2xl p-6 mt-8">
+                    <h3 class="text-lg font-semibold">Physical state</h3>
+                    <div class="flex items-center justify-between mt-4">
+                        <div class="w-32 h-32 relative">
+                            <canvas id="physicalStateChart"></canvas>
+                            <div
+                                class="absolute inset-0 flex items-center justify-center"
+                            >
+                                <p class="text-3xl font-bold">78%</p>
+                            </div>
+                        </div>
+                        <div class="text-sm space-y-3">
+                            <div>
+                                <p class="font-semibold">Sleep Goal</p>
+                                <p class="text-gray-500 dark:text-gray-400">
+                                    8h Target
+                                </p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Last Night</p>
+                                <p class="text-gray-500 dark:text-gray-400">
+                                    7.5h Achieved
+                                </p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-red-500">
+                                    Deficit
+                                </p>
+                                <p class="text-gray-500 dark:text-gray-400">
+                                    0.5h Missing
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded-2xl p-6 mt-6">
+                    <h3 class="text-lg font-semibold">
+                        Mood Trends (Last 7 Days)
+                    </h3>
+                    <canvas id="moodTrendChart" class="mt-4"></canvas>
+                </div>
+                <div class="h-24"></div>
+            </div>
+
+            <!-- ===== Profile Screen ===== -->
+            <div
+                id="profile-screen"
+                class="screen flex-col w-full h-full calm-gradient p-6 overflow-y-auto"
+            >
+                <header class="pt-8 text-center relative">
+                    <h2 class="text-2xl font-bold">Profile</h2>
+                </header>
+                <div class="flex flex-col items-center mt-8">
+                    <div
+                        class="w-24 h-24 rounded-full bg-gray-200 overflow-hidden"
+                    >
+                        <img
+                            src="https://i.pravatar.cc/100?u=olivia"
+                            alt="User Avatar"
+                            class="w-full h-full object-cover"
+                        />
+                    </div>
+                    <h3 id="profile-username" class="text-2xl font-bold mt-4">
+                        Olivia
+                    </h3>
+                    <p class="text-gray-500 dark:text-gray-400">
+                        Joined November 2023
+                    </p>
+                </div>
+                <div class="mt-10 space-y-4">
+                    <h4 class="text-lg font-semibold">Settings</h4>
+                    <div
+                        class="card rounded-2xl p-4 flex justify-between items-center"
+                    >
+                        <span>Daily Check-in Reminder</span>
+                        <label class="switch">
+                            <input type="checkbox" checked />
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div
+                        class="card rounded-2xl p-4 flex justify-between items-center"
+                    >
+                        <span>Evening Journaling Nudge</span>
+                        <label class="switch">
+                            <input type="checkbox" />
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div
+                        class="card rounded-2xl p-4 flex justify-between items-center"
+                    >
+                        <span>Dark Mode</span>
+                        <label class="switch">
+                            <input type="checkbox" id="dark-mode-toggle" />
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <button
+                    onclick="handleSignOut()"
+                    class="w-full bg-red-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-red-600 transition mt-8"
+                >
+                    Sign Out
+                </button>
+                <div class="h-24"></div>
+            </div>
+
+            <!-- ===== Bottom Navigation ===== -->
+            <nav
+                id="bottom-nav"
+                class="absolute bottom-0 left-0 right-0 bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg border-t border-gray-200/80 dark:border-gray-700/80 rounded-t-[32px] px-8 py-4 hidden"
+            >
+                <div
+                    class="flex justify-between items-center text-gray-500 dark:text-gray-400"
+                >
+                    <button
+                        onclick="navigateTo('home-screen')"
+                        class="nav-icon active flex flex-col items-center w-16"
+                    >
+                        <svg
+                            class="w-7 h-7"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                            ></path>
+                        </svg>
+                        <span class="text-xs mt-1">Home</span>
+                    </button>
+                    <button
+                        onclick="navigateTo('expression-screen')"
+                        class="nav-icon flex flex-col items-center w-16"
+                    >
+                        <svg
+                            class="w-7 h-7"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                            ></path>
+                        </svg>
+                        <span class="text-xs mt-1">Journal</span>
+                    </button>
+                    <button
+                        onclick="navigateTo('insights-screen')"
+                        class="nav-icon flex flex-col items-center w-16"
+                    >
+                        <svg
+                            class="w-7 h-7"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                            ></path>
+                        </svg>
+                        <span class="text-xs mt-1">Insights</span>
+                    </button>
+                    <button
+                        onclick="navigateTo('profile-screen')"
+                        class="nav-icon flex flex-col items-center w-16"
+                    >
+                        <svg
+                            class="w-7 h-7"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                            ></path>
+                        </svg>
+                        <span class="text-xs mt-1">Profile</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+
+        <script>
+            const screens = document.querySelectorAll(".screen");
+            const navIcons = document.querySelectorAll(".nav-icon");
+            const bottomNav = document.getElementById("bottom-nav");
+
+            let breathingInterval,
+                timerInterval,
+                physicalStateChart,
+                moodTrendChart;
+            let isPlaying = false,
+                totalSeconds = 300,
+                breathIndex = 0;
+            const breathCycle = [
+                "Inhale...",
+                "Hold...",
+                "Exhale...",
+                "Hold...",
+            ];
+
+            const ui = {
+                signup: {
+                    u: document.getElementById("signup-username"),
+                    p: document.getElementById("signup-phone"),
+                    a: document.getElementById("signup-age"),
+                    pw: document.getElementById("signup-password"),
+                },
+                otp: document.getElementById("otp-input"),
+                journal: {
+                    entry: document.getElementById("journal-entry"),
+                    count: document.getElementById("char-count"),
+                },
+                breathing: {
+                    playPause: document.getElementById("play-pause-btn"),
+                    play: document.getElementById("play-icon"),
+                    pause: document.getElementById("pause-icon"),
+                    timer: document.getElementById("timer"),
+                    text: document.getElementById("breathing-text"),
+                },
+                insight: {
+                    container: document.getElementById("insight-container"),
+                    btn: document.getElementById("get-insight-btn"),
+                },
+                quote: {
+                    text: document.getElementById("quote-text"),
+                    author: document.getElementById("quote-author"),
+                },
+                profile: {
+                    name: document.getElementById("profile-username"),
+                    greeting: document.getElementById("user-greeting"),
+                },
+                darkModeToggle: document.getElementById("dark-mode-toggle"),
+            };
+
+            let tempUserData = {};
+
+            // Static insights for journal entries
+            const staticInsights = [
+                "It's completely natural to feel overwhelmed sometimes. Remember that difficult moments are temporary, and you have the strength to navigate through them.",
+                "Your feelings are valid and important. Taking time to acknowledge them through writing is a powerful step toward understanding yourself better.",
+                "Every challenge you face is an opportunity to grow stronger. You've overcome difficulties before, and you can do it again.",
+                "Being gentle with yourself during tough times is not a weakness—it's wisdom. You deserve the same compassion you'd give a good friend.",
+                "Your journey is unique, and it's okay to take things one day at a time. Progress doesn't always have to be big leaps forward.",
+            ];
+
+            // --- GLOBAL FUNCTIONS ---
+            window.navigateTo = navigateTo;
+            window.selectMood = (el) => {
+                document
+                    .querySelectorAll(".mood-emoji")
+                    .forEach((e) => e.classList.remove("selected"));
+                el.classList.add("selected");
+            };
+            window.showInsight = showInsight;
+            window.handleSignup = handleSignup;
+            window.verifyOtp = verifyOtp;
+            window.handleLogin = () =>
+                alert(
+                    "Login with password is not implemented. Please use Sign Up.",
+                );
+            window.handleSignOut = () => {
+                navigateTo("login-screen");
+                bottomNav.style.display = "none";
+            };
+
+            // Mock authentication functions
+            function handleSignup() {
+                tempUserData = {
+                    u: ui.signup.u.value,
+                    a: ui.signup.a.value,
+                    p: ui.signup.p.value,
+                    pw: ui.signup.pw.value,
+                };
+                if (
+                    !tempUserData.u ||
+                    !tempUserData.p ||
+                    !tempUserData.a ||
+                    !tempUserData.pw
+                ) {
+                    return alert("Please fill all fields.");
+                }
+                // Simulate OTP sending
+                setTimeout(() => {
+                    navigateTo("otp-screen");
+                }, 1000);
+            }
+
+            function verifyOtp() {
+                const code = ui.otp.value;
+                if (code.length !== 6)
+                    return alert("Please enter a valid 6-digit OTP.");
+
+                // Simulate successful verification
+                ui.profile.name.textContent = tempUserData.u;
+                ui.profile.greeting.textContent = `Hi, ${tempUserData.u}`;
+
+                navigateTo("home-screen");
+                bottomNav.style.display = "block";
+            }
+
+            // Show static insight
+            function showInsight() {
+                const entryText = ui.journal.entry.value;
+                if (entryText.trim().length < 10) {
+                    ui.insight.container.innerHTML = `<div class="card p-3 rounded-xl bg-yellow-100 text-yellow-800"><p>Please write a bit more for an insightful reflection.</p></div>`;
+                    return;
+                }
+
+                const randomInsight =
+                    staticInsights[
+                        Math.floor(Math.random() * staticInsights.length)
+                    ];
+
+                ui.insight.container.innerHTML = `<div class="card p-4 rounded-2xl bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200 transition-opacity duration-500 opacity-0"><p class="font-semibold mb-1">A Gentle Reflection:</p><p>${randomInsight}</p></div>`;
+                setTimeout(() => {
+                    ui.insight.container
+                        .querySelector(".card")
+                        .classList.remove("opacity-0");
+                }, 10);
+            }
+
+            // --- UI & NAVIGATION ---
+            function navigateTo(screenId) {
+                screens.forEach((s) => s.classList.remove("active"));
+                document.getElementById(screenId)?.classList.add("active");
+                updateNav(screenId);
+
+                if (screenId === "insights-screen") {
+                    renderPhysicalStateChart();
+                    renderMoodTrendChart();
+                }
+                if (screenId === "breathing-screen") {
+                    resetTimer();
+                } else {
+                    stopBreathing();
+                }
+            }
+
+            function updateNav(screenId) {
+                navIcons.forEach((icon) => {
+                    const onclick = icon.getAttribute("onclick");
+                    if (onclick) {
+                        const match = onclick.match(/'([^']+)'/);
+                        if (match) {
+                            const associatedScreen = match[1];
+                            icon.classList.toggle(
+                                "active",
+                                associatedScreen === screenId,
+                            );
+                        }
+                    }
+                });
+            }
+
+            // --- THEME ---
+            ui.darkModeToggle.addEventListener("change", () => {
+                document.documentElement.classList.toggle(
+                    "dark",
+                    ui.darkModeToggle.checked,
+                );
+                renderPhysicalStateChart();
+                renderMoodTrendChart();
+            });
+
+            // --- BREATHING MEDITATION ---
+            function resetTimer() {
+                totalSeconds = 300; // Reset to 5:00
+                ui.breathing.timer.textContent = "05:00";
+                ui.breathing.text.textContent = "Inhale...";
+                breathIndex = 0;
+                isPlaying = false;
+                ui.breathing.play.classList.remove("hidden");
+                ui.breathing.pause.classList.add("hidden");
+            }
+
+            function updateTimer() {
+                if (--totalSeconds < 0) {
+                    stopBreathing();
+                    ui.breathing.timer.textContent = "00:00";
+                    return;
+                }
+                ui.breathing.timer.textContent = `${String(Math.floor(totalSeconds / 60)).padStart(2, "0")}:${String(totalSeconds % 60).padStart(2, "0")}`;
+            }
+
+            function startBreathing() {
+                if (isPlaying && timerInterval) return;
+                isPlaying = true;
+                ui.breathing.play.classList.add("hidden");
+                ui.breathing.pause.classList.remove("hidden");
+                breathingInterval = setInterval(() => {
+                    ui.breathing.text.textContent =
+                        breathCycle[breathIndex++ % breathCycle.length];
+                }, 4000);
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+
+            function stopBreathing() {
+                isPlaying = false;
+                ui.breathing.play.classList.remove("hidden");
+                ui.breathing.pause.classList.add("hidden");
+                clearInterval(breathingInterval);
+                clearInterval(timerInterval);
+                breathingInterval = timerInterval = null;
+            }
+
+            ui.breathing.playPause.addEventListener("click", () =>
+                isPlaying ? stopBreathing() : startBreathing(),
+            );
+
+            // Journal character counter
+            ui.journal.entry.addEventListener("input", () => {
+                ui.journal.count.textContent = `${ui.journal.entry.value.length}/240`;
+                ui.insight.container.innerHTML = "";
+            });
+
+            // --- CHARTS ---
+            function renderPhysicalStateChart() {
+                const ctx = document
+                    .getElementById("physicalStateChart")
+                    ?.getContext("2d");
+                if (!ctx) return;
+                if (physicalStateChart) physicalStateChart.destroy();
+                physicalStateChart = new Chart(ctx, {
+                    type: "doughnut",
+                    data: {
+                        datasets: [
+                            {
+                                data: [78, 22],
+                                backgroundColor: [
+                                    "#FBBF24",
+                                    document.documentElement.classList.contains(
+                                        "dark",
+                                    )
+                                        ? "#4B5563"
+                                        : "#F3F4F6",
+                                ],
+                                borderWidth: 0,
+                                cutout: "80%",
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false },
+                        },
+                    },
+                });
+            }
+
+            function renderMoodTrendChart() {
+                const ctx = document
+                    .getElementById("moodTrendChart")
+                    ?.getContext("2d");
+                if (!ctx) return;
+                const isDark =
+                    document.documentElement.classList.contains("dark");
+                const gridColor = isDark
+                    ? "rgba(255, 255, 255, 0.2)"
+                    : "rgba(0, 0, 0, 0.1)";
+                const fontColor = isDark ? "#E5E7EB" : "#374151";
+                if (moodTrendChart) moodTrendChart.destroy();
+                moodTrendChart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: [
+                            "Mon",
+                            "Tue",
+                            "Wed",
+                            "Thu",
+                            "Fri",
+                            "Sat",
+                            "Sun",
+                        ],
+                        datasets: [
+                            {
+                                label: "Mood",
+                                data: [3, 4, 3, 5, 4, 4, 5],
+                                backgroundColor: "rgba(59, 130, 246, 0.2)",
+                                borderColor: "rgba(59, 130, 246, 1)",
+                                borderWidth: 2,
+                                tension: 0.4,
+                                fill: true,
+                            },
+                        ],
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                min: 1,
+                                max: 5,
+                                ticks: {
+                                    stepSize: 1,
+                                    color: fontColor,
+                                },
+                                grid: {
+                                    color: gridColor,
+                                },
+                            },
+                            x: {
+                                ticks: {
+                                    color: fontColor,
+                                },
+                                grid: {
+                                    color: gridColor,
+                                },
+                            },
+                        },
+                        plugins: {
+                            legend: { display: false },
+                        },
+                    },
+                });
+            }
+
+            // --- INITIAL LOAD ---
+            function startApp() {
+                setTimeout(() => {
+                    document
+                        .getElementById("splash-screen")
+                        ?.classList.remove("active");
+                    navigateTo("login-screen");
+                }, 2500);
+            }
+
+            startApp();
+        </script>
+    </body>
+</html>

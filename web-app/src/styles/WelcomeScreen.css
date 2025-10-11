@@ -1,0 +1,18 @@
+.welcome-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--gradient-main);
+}
+
+.welcome-content { width: 100%; max-width: 420px; text-align: center; padding: 36px; border-radius: 28px; background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,250,255,0.95)); box-shadow: var(--shadow-card) }
+.brand-header { display:flex; align-items:center; gap:0.5rem; justify-content:center; margin-bottom:18px }
+.brand-name { font-size:20px; font-weight:700; color:var(--text-primary); letter-spacing:0.2px }
+.brand-dot { width:8px; height:8px; background:var(--soul-accent); border-radius:50% }
+.character-container { margin:16px auto; width:220px; height:220px; display:flex; align-items:center; justify-content:center }
+.brain-character { width:170px; height:170px }
+.brain-body { background:var(--soul-pink) }
+.cta-button { background: var(--cta-gradient); color: #fff; border: none; padding: 14px 26px; border-radius: 28px; font-size: 16px; font-weight:700; cursor:pointer; box-shadow: var(--shadow-button) }
+.cta-button:hover { transform: translateY(-2px) }
