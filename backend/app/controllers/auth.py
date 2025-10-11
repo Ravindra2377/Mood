@@ -245,9 +245,136 @@ def verify_confirm(token: str):
 		user = db.query(User).filter(User.id == user_id).first()
 		if not user:
 			raise HTTPException(status_code=400, detail="User not found")
-		user.is_verified = True
-		db.add(user)
-		db.commit()
-		return {"status": "ok"}
-	finally:
-		db.close()
+
+				user.is_verified = True
+
+				db.add(user)
+
+				db.commit()
+
+				return {"status": "ok"}
+
+			finally:
+
+				db.close()
+
+		# --- OTP endpoints (per-phone, best-effort in-memory limits) ---
+
+		from app.services import sms
+		from app.services.sms import SmsError
+
+		# Simple in-memory per-phone rate limiter (process-local; best-effort)
+		_OTP_REQ_WINDOW = timedelta(minutes=15)
+		_OTP_REQ_MAX = 5
+		_OTP_VER_WINDOW = timedelta(hours=1)
+		_OTP_VER_MAX = 10
+
+		_phone_req_hits = {}
+		_phone_ver_hits = {}
+
+		def _allow_phone_hit(store, phone: str, window: timedelta, limit: int) -> bool:
+			now = datetime.now(timezone.utc)
+			hits = store.get(phone, [])
+			# prune old hits
+			hits = [t for t in hits if (now - t) <= window]
+			if len(hits) >= limit:
+				store[phone] = hits  # keep pruned state
+				return False
+			hits.append(now)
+			store[phone] = hits
+			return True
+
+
+		@router.post("/otp/request")
+		def otp_request(payload: dict = Body(...)):
+			"""Send OTP via Twilio Verify (prod) or return preview code in dev mode."""
+			phone = payload.get("phone")
+			if not phone:
+				raise HTTPException(status_code=400, detail="phone required")
+			try:
+				normalized = sms.normalize_phone(phone)
+			except Exception:
+				raise HTTPException(status_code=400, detail="Invalid phone number")
+
+			# Per-phone rate limit: 5 requests per 15 minutes
+			if not _allow_phone_hit(_phone_req_hits, normalized, _OTP_REQ_WINDOW, _OTP_REQ_MAX):
+				raise HTTPException(status_code=429, detail="Too Many Requests")
+
+			try:
+				result = sms.send_otp(normalized)
+				return result
+			except SmsError:
+				# Do not leak provider/internal errors to clients
+				raise HTTPException(status_code=500, detail="Failed to send verification code")
+
+
+		@router.post("/verify-otp")
+		def verify_otp(payload: dict = Body(...)):
+			"""Verify OTP (Twilio in prod, dev fallback otherwise), then create/login user and issue tokens."""
+			from app.main import SessionLocal
+
+			phone = payload.get("phone")
+			otp = payload.get("otp")
+			if not phone or not otp:
+				raise HTTPException(status_code=400, detail="phone and otp required")
+
+			# Normalize and validate the phone to E.164
+			try:
+				normalized = sms.normalize_phone(phone)
+			except Exception:
+				raise HTTPException(status_code=400, detail="Invalid phone number")
+
+			# Per-phone rate limit: 10 verifies per hour
+			if not _allow_phone_hit(_phone_ver_hits, normalized, _OTP_VER_WINDOW, _OTP_VER_MAX):
+				raise HTTPException(status_code=429, detail="Too Many Requests")
+
+			# Verify the OTP (Twilio in prod, dev fallback otherwise)
+			try:
+				approved = sms.verify_otp(normalized, otp)
+			except SmsError:
+				raise HTTPException(status_code=500, detail="Failed to verify code")
+
+			if not approved:
+				raise HTTPException(status_code=400, detail="Invalid OTP")
+
+			email = f"{normalized}@example.com"
+			db: Session = SessionLocal()
+			try:
+				user = db.query(User).filter(User.email == email).first()
+				if not user:
+					rnd = secrets.token_urlsafe(16)
+					user = User(
+						email=email,
+						hashed_password=security.hash_password(rnd),
+						is_verified=True,
+					)
+					db.add(user)
+					db.commit()
+					db.refresh(user)
+					try:
+						record_event("signup", user_id=user.id, props={"method": "otp"})
+					except Exception:
+						pass
+
+				access_token = security.create_access_token({"sub": str(user.id), "role": user.role})
+				refresh_plain = secrets.token_urlsafe(48)
+				refresh_hash = hashlib.sha256(refresh_plain.encode("utf-8")).hexdigest()
+				expires = datetime.now(timezone.utc) + timedelta(days=30)
+				rt = RefreshToken(user_id=user.id, token_hash=refresh_hash, expires_at=expires)
+				db.add(rt)
+				db.commit()
+				db.refresh(rt)
+
+				try:
+					record_event("login", user_id=user.id, props={"method": "otp"})
+				except Exception:
+					pass
+
+				return {
+					"access_token": access_token,
+					"token_type": "bearer",
+					"refresh_token": refresh_plain,
+					"user": {"id": user.id, "email": user.email},
+				}
+			finally:
+				db.close()
