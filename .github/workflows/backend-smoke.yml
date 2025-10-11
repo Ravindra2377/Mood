@@ -1,0 +1,99 @@
+name: Backend Smoke and Headers
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - "Caddyfile"
+      - "scripts/**"
+      - ".github/workflows/backend-smoke.yml"
+      - "railway/**"
+  schedule:
+    - cron: "0 5 * * *" # Daily at 05:00 UTC
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Base URL to test (default: https://api-staging.soulapp.app)"
+        required: false
+        default: "https://api-staging.soulapp.app"
+      origin:
+        description: "CORS Origin to validate in preflight (optional)"
+        required: false
+        default: ""
+      strict_ready:
+        description: 'Fail when /readyz != "ready"'
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+concurrency:
+  group: backend-smoke-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke-and-headers:
+    name: Backend Smoke + Headers
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: Mood
+
+    env:
+      DEFAULT_BASE: https://api-staging.soulapp.app
+      INPUT_BASE: ${{ inputs.base_url }}
+      INPUT_ORIGIN: ${{ inputs.origin }}
+      INPUT_STRICT_READY: ${{ inputs.strict_ready }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine BASE and STRICT_READY
+        id: cfg
+        run: |
+          # Resolve base URL (workflow_dispatch input or default)
+          BASE="${INPUT_BASE:-}"
+          if [ -z "$BASE" ] || [ "$BASE" = "null" ]; then
+            BASE="$DEFAULT_BASE"
+          fi
+
+          STRICT_READY="${INPUT_STRICT_READY:-false}"
+          if [ -z "$STRICT_READY" ] || [ "$STRICT_READY" = "null" ]; then
+            STRICT_READY="false"
+          fi
+
+          ORIGIN="${INPUT_ORIGIN:-}"
+          if [ "$ORIGIN" = "null" ]; then
+            ORIGIN=""
+          fi
+
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "strict_ready=$STRICT_READY" >> "$GITHUB_OUTPUT"
+          echo "origin=$ORIGIN" >> "$GITHUB_OUTPUT"
+
+          echo "Using configuration:"
+          echo "  BASE=$BASE"
+          echo "  STRICT_READY=$STRICT_READY"
+          echo "  ORIGIN=$ORIGIN"
+
+      - name: Install jq (optional pretty printing)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y jq
+
+      - name: Smoke check (/healthz and /readyz)
+        run: |
+          BASE='${{ steps.cfg.outputs.base }}' \
+          STRICT_READY='${{ steps.cfg.outputs.strict_ready }}' \
+          bash Mood/scripts/smoke.sh
+
+      - name: Security headers validation
+        run: |
+          # ORIGIN is optional; script will skip CORS preflight when empty
+          BASE='${{ steps.cfg.outputs.base }}' \
+          ORIGIN='${{ steps.cfg.outputs.origin }}' \
+          bash Mood/scripts/headers.sh
