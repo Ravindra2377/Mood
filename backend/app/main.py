@@ -178,6 +178,27 @@ app.include_router(timers_controller.router, prefix="/api", tags=["timers"])
 @app.get("/healthz")
 def healthz():
     # Database check
+
+    db_ok = True
+
+    try:
+        with engine.connect() as conn:
+            conn.exec_driver_sql("SELECT 1")
+
+    except Exception:
+        db_ok = False
+
+    # Redis check (true if REDIS_URL configured; adjust to actual ping if desired)
+
+    redis_ok = True if getattr(settings, "REDIS_URL", None) else False
+
+    return {"status": "ok", "db": db_ok, "redis": redis_ok}
+
+
+@app.get("/readyz")
+def readyz():
+    # Readiness implies dependencies are available and configured
+    # DB check
     db_ok = True
     try:
         with engine.connect() as conn:
@@ -185,10 +206,30 @@ def healthz():
     except Exception:
         db_ok = False
 
-    # Redis check (true if REDIS_URL configured; adjust to actual ping if desired)
+    # Redis readiness: consider "ready" when configured (adjust to actual ping if desired)
     redis_ok = True if getattr(settings, "REDIS_URL", None) else False
 
-    return {"status": "ok", "db": db_ok, "redis": redis_ok}
+    # Twilio readiness: if DEV_MODE is false, require Twilio credentials
+    twilio_ok = True
+    try:
+        if not getattr(settings, "DEV_MODE", True):
+            twilio_ok = all(
+                [
+                    getattr(settings, "TWILIO_ACCOUNT_SID", None),
+                    getattr(settings, "TWILIO_AUTH_TOKEN", None),
+                    getattr(settings, "TWILIO_VERIFY_SERVICE_SID", None),
+                ]
+            )
+    except Exception:
+        twilio_ok = False
+
+    overall = db_ok and redis_ok and twilio_ok
+    return {
+        "status": "ready" if overall else "degraded",
+        "db": db_ok,
+        "redis": redis_ok,
+        "twilio": twilio_ok,
+    }
 
 
 @app.get("/")
