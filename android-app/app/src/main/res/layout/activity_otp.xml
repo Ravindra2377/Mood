@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/otp_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/otp_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Verify your phone"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Phone number input (E.164) -->
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="+14155550123"
+        android:inputType="phone"
+        android:autofillHints="phone"
+        android:maxLines="1"
+        app:layout_constraintTop_toBottomOf="@id/otp_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Request OTP button -->
+    <Button
+        android:id="@+id/btn_request_otp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Request OTP"
+        app:layout_constraintTop_toBottomOf="@id/phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <!-- OTP code input -->
+    <EditText
+        android:id="@+id/otp_code"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter 6-digit code"
+        android:inputType="number"
+        android:maxLength="6"
+        android:maxLines="1"
+        app:layout_constraintTop_toBottomOf="@id/btn_request_otp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Verify button -->
+    <Button
+        android:id="@+id/btn_verify_otp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Verify"
+        app:layout_constraintTop_toBottomOf="@id/otp_code"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <!-- Resend / status text -->
+    <TextView
+        android:id="@+id/otp_status"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/btn_verify_otp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <!-- Progress indicator (show/hide from code) -->
+    <ProgressBar
+        android:id="@+id/otp_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/otp_status"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

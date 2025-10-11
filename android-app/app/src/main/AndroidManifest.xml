@@ -7,10 +7,15 @@
         android:allowBackup="true"
         android:label="SOUL"
         android:icon="@mipmap/ic_launcher">
-        <activity android:name="com.mhaiapp.activities.MainActivity"/>
-        <activity android:name="com.mhaiapp.activities.LoginActivity"/>
-        <activity android:name="com.mhaiapp.activities.SignupActivity"/>
-        <activity android:name="com.mhaiapp.activities.MoodTrackingActivity"/>
+
+                <activity android:name="com.mhaiapp.activities.MainActivity"/>
+
+                <activity android:name="com.mhaiapp.activities.LoginActivity"/>
+
+                <activity android:name="com.mhaiapp.activities.OtpActivity"/>
+                <activity android:name="com.mhaiapp.activities.SignupActivity"/>
+                <activity android:name="com.mhaiapp.activities.MoodTrackingActivity"/>
+
     </application>
 
 </manifest>
