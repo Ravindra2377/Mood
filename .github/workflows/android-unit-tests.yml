@@ -3,10 +3,10 @@ name: Android JVM Unit Tests
 on:
   push:
     paths:
-      - 'android-app/**'
+      - "android-app/**"
   pull_request:
     paths:
-      - 'android-app/**'
+      - "android-app/**"
 
 jobs:
   test:
@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: '11'
+          java-version: "11"
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
@@ -32,7 +32,10 @@ jobs:
         run: ./gradlew testDebugUnitTest --info
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+
+        uses: actions/upload-artifact@v4
         with:
           name: unit-test-results
+
           path: app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn
