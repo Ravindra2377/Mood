@@ -18,8 +18,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // TODO: replace with your backend base URL
-        String baseUrl = "http://10.0.2.2:8000/"; // emulator -> host machine
+
+        // Staging API base URL
+        String baseUrl = "https://api-staging.soulapp.app/";
+
         authRepo = new AuthRepository(this, baseUrl);
 
         EditText email = findViewById(R.id.email);
