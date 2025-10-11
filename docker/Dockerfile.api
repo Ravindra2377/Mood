@@ -1,0 +1,52 @@
+# syntax=docker/dockerfile:1.6
+# Multi-stage Dockerfile for the SOUL API service (FastAPI + Gunicorn/Uvicorn)
+
+###############################
+# Builder stage: install deps #
+###############################
+FROM python:3.11-slim AS builder
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+WORKDIR /app
+
+# System deps for building wheels (psycopg2, etc.)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends build-essential libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies into a staging path we can copy into the runtime layer
+COPY backend/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r /app/requirements.txt
+
+
+#################################
+# Runtime stage: minimal image  #
+#################################
+FROM python:3.11-slim AS runtime
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PORT=8000
+WORKDIR /app
+
+# Runtime system libs only (no compilers)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libpq5 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Bring in pre-installed Python packages from builder
+COPY --from=builder /install /usr/local
+
+# Copy backend application code
+COPY backend /app
+
+# Create non-root user and switch
+RUN adduser --disabled-password --gecos "" appuser && chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8000
+
+# Gunicorn (Uvicorn workers) with our production config
+# - app/gunicorn_conf.py is included in the backend copy above
+CMD ["gunicorn", "-c", "app/gunicorn_conf.py", "app.main:app"]

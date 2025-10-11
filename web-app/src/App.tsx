@@ -15,6 +15,11 @@ import ProfileScreen from "./screens/ProfileScreen";
 import BottomNavigation from "./components/BottomNavigation";
 import ToastProvider from "./ui/Toast";
 
+// Import legal/consent pages
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import ConsentPage from "./pages/Consent";
+
 // Types
 interface User {
   id: number;
@@ -43,6 +48,18 @@ export default function App() {
 
   useEffect(() => {
     registerServiceWorker();
+
+    // If user is navigating directly to legal/consent routes, show those immediately
+    const path = window.location.pathname;
+    const legalRoutes = ["/privacy-policy", "/terms-of-service", "/consent"];
+    if (legalRoutes.includes(path)) {
+      setState((prev) => ({
+        ...prev,
+        currentScreen: path.slice(1), // remove leading '/'
+        isLoading: false,
+      }));
+      return;
+    }
 
     // Check for existing auth token
     const token = localStorage.getItem("auth_token");
@@ -106,8 +123,18 @@ export default function App() {
   const navigateTo = (screen: string) => {
     setState((prev) => ({ ...prev, currentScreen: screen }));
 
-    // Update browser history for main screens
-    if (["home", "journal", "insights", "profile"].includes(screen)) {
+    // Update browser history for main screens and legal pages
+    if (
+      [
+        "home",
+        "journal",
+        "insights",
+        "profile",
+        "privacy-policy",
+        "terms-of-service",
+        "consent",
+      ].includes(screen)
+    ) {
       const path = screen === "home" ? "/" : `/${screen}`;
       if (window.location.pathname !== path) {
         window.history.pushState({}, "", path);
@@ -255,7 +282,16 @@ export default function App() {
         navigateTo("home");
       } else if (path.startsWith("/")) {
         const screen = path.slice(1);
-        if (["journal", "insights", "profile"].includes(screen)) {
+        if (
+          [
+            "journal",
+            "insights",
+            "profile",
+            "privacy-policy",
+            "terms-of-service",
+            "consent",
+          ].includes(screen)
+        ) {
           navigateTo(screen);
         }
       }
@@ -263,6 +299,7 @@ export default function App() {
 
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderScreen = () => {
@@ -306,6 +343,15 @@ export default function App() {
             onUpdateUser={updateUser}
           />
         );
+
+      case "privacy-policy":
+        return <PrivacyPolicy />;
+
+      case "terms-of-service":
+        return <TermsOfService />;
+
+      case "consent":
+        return <ConsentPage />;
 
       default:
         return <HomeScreen {...commonProps} />;
