@@ -69,6 +69,20 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </div>
         </div>
       </div>
+
+      <div className="legal-links card" style={{ marginTop: 16, padding: 12 }}>
+        <div className="flex flex-col gap-2">
+          <a href="/privacy-policy" className="text-accent underline">
+            Privacy Policy
+          </a>
+          <a href="/terms-of-service" className="text-accent underline">
+            Terms of Service
+          </a>
+          <a href="/consent" className="text-accent underline">
+            Data Consent & Privacy
+          </a>
+        </div>
+      </div>
       <button
         className="sign-out-button"
         onClick={onSignOut}
@@ -76,6 +90,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
       >
         Sign Out
       </button>
+
       <div style={{ height: "96px" }} />
     </div>
   );

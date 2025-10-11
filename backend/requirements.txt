@@ -1,5 +1,5 @@
-﻿
-# Use a FastAPI and Pydantic combination compatible with modern Python
+# SOUL Backend requirements
+# Base web stack, database, auth, and tooling
 fastapi==0.116.1
 uvicorn[standard]==0.22.0
 SQLAlchemy==1.4.49
@@ -11,3 +11,13 @@ psycopg2-binary==2.9.6
 requests==2.31.0
 pytest==7.4.2
 pydantic-settings
+
+# Additions for PR #1 and PR #2
+# - Twilio Verify (SMS OTP)
+# - SlowAPI (rate limiting)
+# - Redis client (prod limiter backend)
+# - Phone number parsing/validation (E.164)
+twilio==9.3.1
+slowapi==0.1.9
+redis==5.0.1
+phonenumbers==8.13.36

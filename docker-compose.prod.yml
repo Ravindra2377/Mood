@@ -1,0 +1,90 @@
+version: "3.9"
+
+# Production-parity stack: Caddy (TLS/Proxy) -> FastAPI (Gunicorn) -> Postgres + Redis
+# Notes:
+# - Set environment variables in a .env file or your CI/CD environment.
+# - DATABASE_URL example: postgresql+psycopg2://mh_user:mh_pass@db:5432/mh_db
+# - REDIS_URL example: redis://redis:6379/0
+# - CORS_ORIGINS example: https://api-staging.soulapp.app,https://api.soulapp.app
+# - SECRET_KEY is required in production.
+# - DEV_MODE=false in production; may be true for staging/local.
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    environment:
+      PORT: "8000"
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://mh_user:mh_pass@db:5432/mh_db}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY must be set}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://api-staging.soulapp.app,https://api.soulapp.app}
+      DEV_MODE: ${DEV_MODE:-false}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+      TWILIO_VERIFY_SERVICE_SID: ${TWILIO_VERIFY_SERVICE_SID:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    # Migrate DB on startup, then run Gunicorn with Uvicorn workers
+    command: >
+      sh -c "python -m alembic upgrade head &&
+             gunicorn -c app/gunicorn_conf.py app.main:app"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://127.0.0.1:8000/healthz').getcode()==200 else sys.exit(1)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.7.6-alpine
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Persist certificates and configs (recommended by Caddy)
+      - caddy_data:/data
+      - caddy_config:/config
+      # Mount Caddyfile from repo root
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${PGUSER:-mh_user}
+      POSTGRES_PASSWORD: ${PGPASSWORD:-mh_pass}
+      POSTGRES_DB: ${PGDATABASE:-mh_db}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER:-mh_user} -d ${PGDATABASE:-mh_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

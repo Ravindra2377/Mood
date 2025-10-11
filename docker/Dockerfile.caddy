@@ -1,0 +1,20 @@
+# Minimal Dockerfile for Caddy reverse proxy
+# Uses the official lightweight Caddy image and copies the Caddyfile into place.
+# Ensure a Caddyfile exists at the build context root (../Caddyfile relative to this Dockerfile).
+
+FROM caddy:2.7.6-alpine
+
+# Caddy looks for /etc/caddy/Caddyfile by default
+WORKDIR /etc/caddy
+
+# Copy the Caddyfile from the repository root into the container
+# Adjust the source path if your Caddyfile lives elsewhere
+COPY ../../Caddyfile /etc/caddy/Caddyfile
+
+# Expose HTTP and HTTPS (Railway or your platform may map these automatically)
+EXPOSE 80
+EXPOSE 443
+
+# The default entrypoint/cmd of the caddy image runs:
+# caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+# No need to override CMD for a minimal setup.

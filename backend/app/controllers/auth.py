@@ -21,9 +21,16 @@ import secrets
 import hashlib
 
 
+from app.services.sms import sms, normalize_phone
+
+
+from app.limits import limiter, get_phone_key
+
+
 router = APIRouter()
 
 
+@limiter.limit("5/minute")
 @router.post("/signup", response_model=UserRead)
 def signup(user_in: UserCreate):
     """Create a new user (minimal implementation)."""
@@ -102,6 +109,7 @@ def token(form_data: OAuth2PasswordRequestForm = Depends()):
         db.close()
 
 
+@limiter.limit("3/minute")
 @router.post("/password-reset/request")
 def password_reset_request(
     payload: PasswordResetRequest, locale: str = Depends(get_locale)
@@ -142,6 +150,7 @@ def password_reset_request(
         db.close()
 
 
+@limiter.limit("3/minute")
 @router.post("/password-reset/confirm")
 def password_reset_confirm(
     payload: PasswordResetConfirm, locale: str = Depends(get_locale)
@@ -306,6 +315,7 @@ def verify_confirm(token: str):
         db.close()
 
 
+@limiter.limit("10/minute")
 @router.post("/login")
 def login_json(payload: dict = Body(...)):
     """JSON-based login: accepts {email, password} or {username, password}.
@@ -383,69 +393,112 @@ def me(authorization: str | None = Header(None)):
         db.close()
 
 
+@limiter.limit("5 per 15 minutes", key_func=get_phone_key)
 @router.post("/otp/request")
 def otp_request(payload: dict = Body(...)):
-    """Mock OTP request: accepts {phone}. In dev preview returns preview_code."""
+    """Send OTP via Twilio Verify or return preview in dev mode."""
     phone = payload.get("phone")
+
     if not phone:
         raise HTTPException(status_code=400, detail="phone required")
-    resp = {"status": "ok"}
-    if settings.DEV_EMAIL_PREVIEW:
-        resp["preview_code"] = "123456"
-    return resp
+
+    try:
+        normalized = normalize_phone(phone)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid phone number")
+    try:
+        result = sms.send_otp(normalized)
+        return result
+    except Exception:
+        # Do not leak provider/internal errors to clients
+        raise HTTPException(status_code=500, detail="Failed to send verification code")
 
 
+@limiter.limit("10 per hour", key_func=get_phone_key)
 @router.post("/verify-otp")
 def verify_otp(payload: dict = Body(...)):
-    """Mock OTP verification: accepts {phone, otp}. If otp == '123456', logs in or creates a user."""
+    """Verify OTP via Twilio Verify (or dev fallback) then create/login user and issue tokens."""
     from app.main import SessionLocal
 
     phone = payload.get("phone")
+
     otp = payload.get("otp")
+
     if not phone or not otp:
         raise HTTPException(status_code=400, detail="phone and otp required")
-    if otp != "123456":
+
+    # Normalize and validate the phone to E.164
+    try:
+        normalized = normalize_phone(phone)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid phone number")
+
+    # Verify the OTP (Twilio in prod, dev fallback otherwise)
+    try:
+        approved = sms.verify_otp(normalized, otp)
+    except Exception:
+        raise HTTPException(status_code=500, detail="Failed to verify code")
+
+    if not approved:
         raise HTTPException(status_code=400, detail="Invalid OTP")
 
-    email = f"{phone}@example.com"
+    email = f"{normalized}@example.com"
     db: Session = SessionLocal()
+
     try:
         user = db.query(User).filter(User.email == email).first()
+
         if not user:
-            # Create a new verified user with a random password
             rnd = secrets.token_urlsafe(16)
+
             user = User(
                 email=email,
                 hashed_password=security.hash_password(rnd),
                 is_verified=True,
             )
+
             db.add(user)
+
             db.commit()
+
             db.refresh(user)
+
             try:
                 record_event("signup", user_id=user.id, props={"method": "otp"})
+
             except Exception:
                 pass
 
         access_token = security.create_access_token(
             {"sub": str(user.id), "role": user.role}
         )
+
         refresh_plain = secrets.token_urlsafe(48)
+
         refresh_hash = hashlib.sha256(refresh_plain.encode("utf-8")).hexdigest()
+
         expires = datetime.now(timezone.utc) + timedelta(days=30)
+
         rt = RefreshToken(user_id=user.id, token_hash=refresh_hash, expires_at=expires)
+
         db.add(rt)
+
         db.commit()
+
         db.refresh(rt)
+
         try:
             record_event("login", user_id=user.id, props={"method": "otp"})
+
         except Exception:
             pass
+
         return {
             "access_token": access_token,
             "token_type": "bearer",
             "refresh_token": refresh_plain,
             "user": {"id": user.id, "email": user.email},
         }
+
     finally:
         db.close()

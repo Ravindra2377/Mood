@@ -1,3 +1,33 @@
-from . import auth, moods, profile, chat, gamification, personalization
+from . import (
+    auth,
+    moods,
+    profile,
+    chat,
+    gamification,
+    personalization,
+    community,
+    crisis,
+    i18n,
+    analytics,
+    admin,
+    privacy,
+    timers,
+    consent,
+)
 
-__all__ = ["auth", "moods", "profile", "chat", "gamification", "personalization"]
+__all__ = [
+    "auth",
+    "moods",
+    "profile",
+    "chat",
+    "gamification",
+    "personalization",
+    "community",
+    "crisis",
+    "i18n",
+    "analytics",
+    "admin",
+    "privacy",
+    "timers",
+    "consent",
+]

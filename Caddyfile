@@ -1,0 +1,53 @@
+# Caddyfile for SOUL API reverse proxy
+#
+# Domains:
+# - Staging:    api-staging.soulapp.app
+# - Production: api.soulapp.app
+#
+# This configuration:
+# - Terminates TLS with automatic HTTPS
+# - Adds strict security headers
+# - Proxies all requests to the API service at api:8000
+# - Enables gzip/zstd compression
+# - Sets conservative upstream timeouts suitable for FastAPI/Gunicorn
+
+api-staging.soulapp.app, api.soulapp.app {
+	encode gzip zstd
+
+	# Security and caching headers (API-friendly defaults)
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Content-Security-Policy "default-src 'none'; connect-src 'self'; frame-ancestors 'none'"
+		Referrer-Policy "strict-origin-when-cross-origin"
+
+		# Prevent intermediaries from caching API responses by default
+		-Cache-Control
+		Cache-Control "no-store"
+	}
+
+	# Optional access log configuration (stdout by default)
+	log {
+		output stdout
+		level INFO
+	}
+
+	# Reverse proxy to FastAPI service (Docker service name: api)
+	route {
+		reverse_proxy api:8000 {
+			# Propagate client details to the upstream
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Forwarded-For {remote}
+			header_up X-Forwarded-Host {host}
+
+			# Tuned connection and I/O timeouts for API workloads
+			transport http {
+				dial_timeout 10s
+				read_timeout 90s
+				write_timeout 90s
+				keepalive 5s
+			}
+		}
+	}
+}

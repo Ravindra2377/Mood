@@ -18,4 +18,18 @@ from app.models import translation  # noqa: F401
 from app.models import analytics  # noqa: F401
 
 # expose for main.py
-__all_models__ = [user, mood_entry, profile, conversation, gamification, refresh_token, consent_audit, journal_entry, symptom_entry, community, crisis, translation, analytics]
+__all_models__ = [
+    user,
+    mood_entry,
+    profile,
+    conversation,
+    gamification,
+    refresh_token,
+    consent_audit,
+    journal_entry,
+    symptom_entry,
+    community,
+    crisis,
+    translation,
+    analytics,
+]
