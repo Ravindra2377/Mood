@@ -1,14 +1,6 @@
-declare module 'react'
-declare module 'react-dom/client'
+// Keep shims for libraries without types
 declare module 'workbox-window'
 declare module 'dexie'
-declare module 'react/jsx-runtime'
 
-// Basic JSX fallback for the editor - real projects should install @types/react
-declare namespace JSX {
-  interface IntrinsicElements {
-    [elemName: string]: any
-  }
-}
-
+// Local shim for editor integration only
 declare module './App'

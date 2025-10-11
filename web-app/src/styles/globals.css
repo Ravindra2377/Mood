@@ -1,0 +1,32 @@
+/* Minimal design tokens used by new components */
+:root {
+  --soul-pink: #FAD1E6;
+  --soul-blue: #E8F4FD;
+  --soul-lilac: #F0E6FF;
+  --soul-mint: #E6F8F0;
+
+  --gradient-main: radial-gradient(circle at 10% 10%, #F8FBFF 0%, #EEF4FF 40%, #F7F2FF 100%);
+  --card-gradient: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,250,255,0.9));
+  --cta-gradient: linear-gradient(90deg,#111111 0%, #0a0a0a 100%);
+
+  --bg-primary: #F6FAFF;
+  --soul-accent: #D9A6F0;
+
+  --text-primary: #071029;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+
+  --shadow-card: 0 10px 30px rgba(2,6,23,0.06);
+  --shadow-button: 0 8px 22px rgba(2,6,23,0.08);
+}
+
+* { box-sizing: border-box }
+body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--gradient-main); color:var(--text-primary); -webkit-font-smoothing:antialiased }
+
+.app-shell { min-height:100vh; display:flex; flex-direction:column }
+
+.card { background: var(--card-gradient); border-radius: 20px; box-shadow: var(--shadow-card); }
+
+/* small helpers */
+.floating-element { animation: float 3s ease-in-out infinite }
+@keyframes float { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-8px) } }
