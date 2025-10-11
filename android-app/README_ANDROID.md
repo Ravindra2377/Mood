@@ -1,6 +1,8 @@
 [![Android JVM Unit Tests](https://github.com/Ravindra2377/Mood/actions/workflows/android-unit-tests.yml/badge.svg)](https://github.com/Ravindra2377/Mood/actions/workflows/android-unit-tests.yml)
 
-Android app starter
+
+Android app starter — build note: trigger CI
+
 
 Open this folder in Android Studio.
 
