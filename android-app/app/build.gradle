@@ -2,16 +2,14 @@ plugins {
     id 'com.android.application'
 }
 
-
 android {
-
     namespace "com.mhaiapp"
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.mhaiapp"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -41,7 +39,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
 
-    // Set Lifecycle to 2.6.2 to satisfy compileSdk 33
+    // Lifecycle (2.6.2 works with compileSdk 34)
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.6.2'
     implementation 'androidx.lifecycle:lifecycle-livedata:2.6.2'
 
