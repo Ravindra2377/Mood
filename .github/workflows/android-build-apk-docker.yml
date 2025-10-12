@@ -41,7 +41,7 @@ jobs:
             artifact_name: "app-prod-debug.apk"
           - variant: prodRelease
             build_task: ":app:assembleProdRelease"
-            # Signed inside Dockerfile.android using a debug-style key
+            # Signed inside Dockerfile with a debug-style key
             apk_path: "/app/app/build/outputs/apk/prod/release/app-prod-release.apk"
             artifact_name: "app-prod-release.apk"
 
@@ -49,7 +49,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Skip non-requested variants when workflow_dispatch specifies a single one
       - name: Determine if this matrix item should run
         id: should_run
         run: |
@@ -63,18 +62,82 @@ jobs:
         if: steps.should_run.outputs.run == 'true'
         uses: docker/setup-buildx-action@v3
 
-      # Build using plain docker build from the android-app directory to avoid path resolution issues
+      # Create Dockerfile.android on-the-fly if it isn't committed in this branch
+      - name: Ensure Dockerfile.android exists
+        if: steps.should_run.outputs.run == 'true'
+        working-directory: android-app
+        run: |
+          set -euo pipefail
+          if [ ! -f Dockerfile.android ]; then
+            echo "Dockerfile.android not found; creating it for this run..."
+            cat > Dockerfile.android <<'EOF'
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y \
+    openjdk-11-jdk wget curl unzip zip git ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="$JAVA_HOME/bin:${PATH}"
+
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+RUN mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools" \
+ && curl -sSL -o /tmp/cmdtools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip \
+ && unzip -q /tmp/cmdtools.zip -d "${ANDROID_SDK_ROOT}/cmdline-tools" \
+ && rm -f /tmp/cmdtools.zip \
+ && mv "${ANDROID_SDK_ROOT}/cmdline-tools/cmdline-tools" "${ANDROID_SDK_ROOT}/cmdline-tools/latest"
+ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools"
+RUN mkdir -p /root/.android && touch /root/.android/repositories.cfg \
+ && yes | sdkmanager --licenses > /dev/null
+RUN sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+
+ENV GRADLE_HOME=/opt/gradle/gradle-7.6
+RUN curl -sSL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-7.6-bin.zip \
+ && mkdir -p /opt/gradle \
+ && unzip -q /tmp/gradle.zip -d /opt/gradle \
+ && rm -f /tmp/gradle.zip
+ENV PATH="${PATH}:${GRADLE_HOME}/bin"
+
+WORKDIR /app
+COPY . /app
+
+RUN printf "sdk.dir=%s\n" "${ANDROID_SDK_ROOT}" > /app/local.properties
+RUN gradle -v && java -version
+RUN ( [ -f ./gradlew ] && ./gradlew --version ) || gradle wrapper --gradle-version 7.6
+RUN chmod +x ./gradlew
+
+ARG BUILD_TASK=":app:assembleStagingDebug"
+ENV BUILD_TASK=${BUILD_TASK}
+
+RUN set -e; \
+    ./gradlew ${BUILD_TASK} --stacktrace --no-daemon; \
+    unsigned="/app/app/build/outputs/apk/prod/release/app-prod-release-unsigned.apk"; \
+    if [ -f "$unsigned" ]; then \
+      echo "Generating debug-style keystore for signing..."; \
+      keytool -genkeypair -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 \
+        -dname "CN=Android Debug,O=Android,C=US" \
+        -keystore /tmp/debug.keystore -storepass android -keypass android; \
+      echo "Signing prod release APK..."; \
+      "$ANDROID_SDK_ROOT/build-tools/33.0.2/apksigner" sign \
+        --ks /tmp/debug.keystore \
+        --ks-pass pass:android \
+        --key-pass pass:android \
+        --ks-key-alias androiddebugkey \
+        --out /app/app/build/outputs/apk/prod/release/app-prod-release.apk \
+        "$unsigned"; \
+      "$ANDROID_SDK_ROOT/build-tools/33.0.2/apksigner" verify /app/app/build/outputs/apk/prod/release/app-prod-release.apk; \
+      echo "Signed APK at /app/app/build/outputs/apk/prod/release/app-prod-release.apk"; \
+    fi
+EOF
+          fi
+          echo "Using Dockerfile.android:"
+          head -n 40 Dockerfile.android
+
       - name: Build Docker image for ${{ matrix.variant }}
         if: steps.should_run.outputs.run == 'true'
         working-directory: android-app
         run: |
           set -euo pipefail
           echo "Building Docker image for task: ${{ matrix.build_task }}"
-          echo "PWD: $(pwd)"
-          echo "Listing android-app contents:"
-          ls -la
-          test -f Dockerfile.android
-          docker version
           docker build \
             -f Dockerfile.android \
             --build-arg BUILD_TASK="${{ matrix.build_task }}" \
