@@ -1,4 +1,4 @@
-name: Android Build APK (Hosted)
+name: Android Build APK (Hosted, direct SDK install)
 
 on:
   workflow_dispatch:
@@ -22,20 +22,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # sdkmanager 16.0 requires JDK 17+, so we use JDK 17 for the whole job.
+      # cmdline-tools 16+ requires JDK 17+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up Android SDK (API 33)
-        uses: android-actions/setup-android@v3
-        with:
-          packages: |
-            platform-tools
-            platforms;android-33
-            build-tools;33.0.2
+      # Install Android SDK without relying on android-actions/setup-android
+      - name: Install Android SDK and packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          ANDROID_SDK_ROOT="${HOME}/android-sdk"
+          mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools"
+          curl -sSL -o /tmp/cmdtools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip -q /tmp/cmdtools.zip -d "${ANDROID_SDK_ROOT}/cmdline-tools"
+          mv "${ANDROID_SDK_ROOT}/cmdline-tools/cmdline-tools" "${ANDROID_SDK_ROOT}/cmdline-tools/latest"
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}" >> "$GITHUB_ENV"
+          echo "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          echo "${ANDROID_SDK_ROOT}/platform-tools" >> "$GITHUB_PATH"
+
+          # Accept licenses
+          yes | "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
+
+          # Install required packages explicitly (each as its own arg)
+          "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" \
+            "platform-tools" \
+            "platforms;android-33" \
+            "build-tools;33.0.2"
 
       - name: Cache Gradle caches
         uses: actions/cache@v4
@@ -48,6 +63,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Install Gradle 7.6 (no wrapper)
+        shell: bash
         run: |
           set -e
           curl -sSL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-7.6-bin.zip
@@ -57,11 +73,12 @@ jobs:
           gradle -v
           java -version
 
-      - name: Point local.properties to CI Android SDK
+      - name: Configure local.properties to use CI SDK
         working-directory: android-app
+        shell: bash
         run: |
           echo "sdk.dir=${ANDROID_SDK_ROOT}" > local.properties
-          echo "Wrote local.properties with sdk.dir=${ANDROID_SDK_ROOT}"
+          cat local.properties
 
       - name: Select build variant and paths
         id: sel
@@ -93,7 +110,7 @@ jobs:
         run: |
           gradle -p android-app ${{ steps.sel.outputs.build_task }} --stacktrace --no-daemon
 
-      # Sign prodRelease if an unsigned APK is produced
+      # Auto-sign prodRelease if only an unsigned APK is present
       - name: Auto-sign prodRelease (debug-style key)
         if: steps.sel.outputs.variant == 'prodRelease'
         shell: bash
@@ -107,7 +124,7 @@ jobs:
             exit 0
           fi
           if [ ! -f "$unsigned" ]; then
-            echo "No unsigned APK found at $unsigned"
+            echo "No unsigned APK found at $unsigned (AGP may have already signed)."
             exit 0
           fi
           echo "Generating debug-style keystore..."
@@ -125,7 +142,7 @@ jobs:
           "$ANDROID_SDK_ROOT/build-tools/33.0.2/apksigner" verify "$signed"
           echo "Signed APK at: $signed"
 
-      - name: Show built APKs (debug)
+      - name: Show built APKs
         run: |
           echo "Listing ${{ steps.sel.outputs.apk_dir }}"
           ls -la "${{ steps.sel.outputs.apk_dir }}" || true
@@ -134,7 +151,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.sel.outputs.artifact_name }}
-          path: |
-            ${{ steps.sel.outputs.apk_dir }}/*.apk
+          path: ${{ steps.sel.outputs.apk_dir }}/*.apk
           if-no-files-found: error
           retention-days: 7
