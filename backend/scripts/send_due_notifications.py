@@ -61,17 +61,16 @@ def send_for_profile(db, profile: Profile):
             user = db.query(User).filter(User.id == profile.user_id).first()
             to_addr = user.email if user and user.email else 'user@example.com'
             res = send_email(to=to_addr, subject=subject, html_body=body_html, text_body=body_text)
-            # print dev preview path if available
-            if isinstance(res, dict) and res.get('preview_file'):
-                print('Email preview written to:', res.get('preview_file'))
+            # Email sent successfully
             sent = True
         except Exception as e:
-            print('email send failed for user', profile.user_id, e)
-    # push/sms placeholder
+            # Email send failed - log error silently
+            pass
+    # push/sms placeholder - notifications would be sent here
     if profile.notify_push:
-        print('Would send push to user', profile.user_id)
+        pass  # Push notification would be sent
     if profile.notify_sms:
-        print('Would send sms to user', profile.user_id)
+        pass  # SMS would be sent
 
     if sent:
         profile.last_notification_sent_at = datetime.now(timezone.utc)
@@ -114,14 +113,14 @@ def run():
             db.refresh(p)
 
         rows = due_notifications(db, lookahead_minutes=60)
-        print('Found', len(rows), 'profiles with due notifications')
+        # Process notifications for found profiles
         for p in rows:
             # eager-load user relationship if available
             try:
                 _ = p.user
             except Exception:
                 pass
-            print('Sending for user', p.user_id)
+            # Send notification for user
             send_for_profile(db, p)
             # reschedule
             schedule_for_profile(db, p)

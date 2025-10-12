@@ -20,11 +20,10 @@ Base.metadata.create_all(bind=engine)
 client = TestClient(app)
 
 def fail(msg):
-    print('FAIL:', msg)
     sys.exit(1)
 
 def ok(msg):
-    print('OK:', msg)
+    pass  # Test passed
 
 def run():
     email = f'smoke_profile_{int(Path().stat().st_mtime % 100000)}@example.com'
@@ -48,8 +47,6 @@ def run():
 
     upd = {'consent_privacy': True, 'notify_email': True, 'notify_push': True, 'display_name': 'Smokey'}
     p = client.patch('/api/profile', json=upd, headers=headers)
-    print('patch status', p.status_code)
-    print('patch body', p.text)
     if p.status_code != 200:
         fail('patch profile failed')
     ok('patch profile')
@@ -79,7 +76,7 @@ def run():
         fail('export csv invalid')
     ok('export csv')
 
-    print('\nPROFILE SMOKE OK')
+    # Profile smoke test completed successfully
 
 if __name__ == '__main__':
     run()

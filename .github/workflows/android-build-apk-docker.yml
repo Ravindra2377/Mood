@@ -1,0 +1,121 @@
+name: Android Build APK via Docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      variant:
+        description: "APK variant to build (stagingDebug, prodDebug, prodRelease). Leave empty to build all."
+        required: false
+        default: ""
+  push:
+    paths:
+      - "android-app/**"
+      - ".github/workflows/android-build-apk-docker.yml"
+  pull_request:
+    paths:
+      - "android-app/**"
+      - ".github/workflows/android-build-apk-docker.yml"
+
+concurrency:
+  group: android-build-apk-docker-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-apk:
+    name: Build ${{ matrix.variant }} APK via Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        include:
+          - variant: stagingDebug
+            build_task: ":app:assembleStagingDebug"
+            apk_path: "/app/app/build/outputs/apk/staging/debug/app-staging-debug.apk"
+            artifact_name: "app-staging-debug.apk"
+          - variant: prodDebug
+            build_task: ":app:assembleProdDebug"
+            apk_path: "/app/app/build/outputs/apk/prod/debug/app-prod-debug.apk"
+            artifact_name: "app-prod-debug.apk"
+          - variant: prodRelease
+            build_task: ":app:assembleProdRelease"
+            # Use the signed APK produced inside Dockerfile.android
+            apk_path: "/app/app/build/outputs/apk/prod/release/app-prod-release.apk"
+            artifact_name: "app-prod-release.apk"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Skip non-requested variants when workflow_dispatch specifies a single one
+      - name: Determine if this matrix item should run
+        id: should_run
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.variant }}" ] && [ "${{ matrix.variant }}" != "${{ github.event.inputs.variant }}" ]; then
+            echo "run=false" >> $GITHUB_OUTPUT
+          else
+            echo "run=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Docker Buildx
+        if: steps.should_run.outputs.run == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image for ${{ matrix.variant }}
+
+        if: steps.should_run.outputs.run == 'true'
+
+        working-directory: android-app
+        run: |
+
+          set -euo pipefail
+
+          echo "Building Docker image for task ${{ matrix.build_task }}"
+
+          echo "PWD:"; pwd
+          echo "Listing android-app contents:"
+          ls -la
+          docker build \
+            -f Dockerfile.android \
+            --build-arg BUILD_TASK="${{ matrix.build_task }}" \
+
+            -t soul-android-build:${{ matrix.variant }} \
+
+            .
+
+      - name: Extract APK from image
+        if: steps.should_run.outputs.run == 'true'
+        id: extract
+        run: |
+          set -euo pipefail
+          CID="$(docker create soul-android-build:${{ matrix.variant }})"
+          mkdir -p "android-apks/${{ matrix.variant }}"
+          docker cp "$CID":"${{ matrix.apk_path }}" "android-apks/${{ matrix.variant }}/${{ matrix.artifact_name }}"
+          docker rm "$CID" >/dev/null
+          echo "apk_out=android-apks/${{ matrix.variant }}/${{ matrix.artifact_name }}" >> $GITHUB_OUTPUT
+          ls -la "android-apks/${{ matrix.variant }}"
+
+      - name: Upload APK artifact
+        if: steps.should_run.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-${{ matrix.variant }}-apk
+          path: ${{ steps.extract.outputs.apk_out }}
+          if-no-files-found: error
+          retention-days: 7
+
+  summary:
+    name: Build summary
+    runs-on: ubuntu-latest
+    needs: build-apk
+    steps:
+      - name: Summary
+        run: |
+          echo "Android APK build via Docker completed." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Artifacts uploaded (if selected to run):" >> $GITHUB_STEP_SUMMARY
+          echo "- android-stagingDebug-apk" >> $GITHUB_STEP_SUMMARY
+          echo "- android-prodDebug-apk" >> $GITHUB_STEP_SUMMARY
+          echo "- android-prodRelease-apk (signed)" >> $GITHUB_STEP_SUMMARY

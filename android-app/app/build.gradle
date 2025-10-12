@@ -2,8 +2,12 @@ plugins {
     id 'com.android.application'
 }
 
+
 android {
+
+    namespace "com.mhaiapp"
     compileSdk 33
+
     defaultConfig {
         applicationId "com.mhaiapp"
         minSdk 24
@@ -13,35 +17,33 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-        compileOptions {
-
-            sourceCompatibility JavaVersion.VERSION_11
-
-            targetCompatibility JavaVersion.VERSION_11
-
-        }
-
-        flavorDimensions "env"
-        productFlavors {
-            staging {
-                dimension "env"
-                buildConfigField "String", "BASE_URL", "\"https://api-staging.soulapp.app/\""
-                applicationIdSuffix ".staging"
-                versionNameSuffix "-staging"
-            }
-            prod {
-                dimension "env"
-                buildConfigField "String", "BASE_URL", "\"https://api.soulapp.app/\""
-            }
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
+    flavorDimensions "env"
+    productFlavors {
+        staging {
+            dimension "env"
+            buildConfigField "String", "BASE_URL", "\"https://api-staging.soulapp.app/\""
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+        }
+        prod {
+            dimension "env"
+            buildConfigField "String", "BASE_URL", "\"https://api.soulapp.app/\""
+        }
+    }
+}
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata:2.7.0'
+
+    // Set Lifecycle to 2.6.2 to satisfy compileSdk 33
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.6.2'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'

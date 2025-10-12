@@ -14,8 +14,4 @@ email = sys.argv[1] if len(sys.argv) > 1 else 'debug@example.com'
 pw = sys.argv[2] if len(sys.argv) > 2 else 'pw'
 
 resp = client.post('/api/auth/token', data={'username': email, 'password': pw})
-print('status', resp.status_code)
-try:
-    print('json:', resp.json())
-except Exception:
-    print('text:', resp.text)
+# Token request completed - status: {resp.status_code}

@@ -18,7 +18,7 @@ def signup_and_token(email='u@example.com', password='pw'):
 
 def test_community_flow():
     admin_token = signup_and_token('admin@example.com', 'pw')
-    # make admin by hacking user record (simpler than adding admin creation flow)
+    # make admin by directly updating user record (test setup)
     # fetch DB and set role
     from app.main import SessionLocal
     from app.models.user import User

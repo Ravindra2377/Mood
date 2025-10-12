@@ -4,17 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       gradle_version:
-        description: 'Gradle version to install'
+        description: "Gradle version to install"
         required: false
-        default: '7.6'
+        default: "7.6"
   push:
     paths:
-      - 'android-app/**'
-      - '.github/workflows/android-build-apk.yml'
+      - "android-app/**"
+      - ".github/workflows/android-build-apk.yml"
   pull_request:
     paths:
-      - 'android-app/**'
-      - '.github/workflows/android-build-apk.yml'
+      - "android-app/**"
+      - ".github/workflows/android-build-apk.yml"
 
 concurrency:
   group: android-build-apk-${{ github.ref }}
@@ -27,8 +27,7 @@ jobs:
     timeout-minutes: 40
 
     env:
-      ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
-      GRADLE_VERSION: ${{ inputs.gradle_version || '7.6' }}
+      GRADLE_VERSION: ${{ inputs.gradle_version }}
 
     steps:
       - name: Checkout repository
@@ -38,7 +37,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: '11'
+          java-version: "11"
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3

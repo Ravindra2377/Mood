@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Launcher icon background now uses @drawable/ic_launcher_background_gradient.
+         This solid color remains as a fallback for any usages that require a simple color. -->
+    <color name="launcher_background">#2F3A5F</color>
+</resources>

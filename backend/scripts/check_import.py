@@ -11,7 +11,7 @@ def main():
     sys.path.insert(0, str(project_root))
     try:
         importlib.import_module('app.main')
-        print('App import OK')
+        # App import successful
     except Exception:
         traceback.print_exc()
         sys.exit(1)

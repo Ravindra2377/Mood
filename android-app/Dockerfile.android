@@ -1,0 +1,99 @@
+FROM ubuntu:22.04
+
+# Non-interactive for apt and sdkmanager
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 1) System dependencies + Java 11 (compatible with Android Gradle Plugin 7.4.x)
+RUN apt-get update && apt-get install -y \
+    openjdk-11-jdk wget curl unzip zip git ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
+# Expose JAVA_HOME (OpenJDK 11 on Ubuntu)
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="$JAVA_HOME/bin:${PATH}"
+
+# 2) Android SDK command-line tools
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+RUN mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools" \
+ && curl -sSL -o /tmp/cmdtools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip \
+ && unzip -q /tmp/cmdtools.zip -d "${ANDROID_SDK_ROOT}/cmdline-tools" \
+ && rm -f /tmp/cmdtools.zip \
+ && mv "${ANDROID_SDK_ROOT}/cmdline-tools/cmdline-tools" "${ANDROID_SDK_ROOT}/cmdline-tools/latest"
+
+ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools"
+
+# Avoid sdkmanager warning and accept licenses
+RUN mkdir -p /root/.android && touch /root/.android/repositories.cfg \
+ && yes | sdkmanager --licenses > /dev/null
+
+# Install SDK platform/tools matching the project (compile/target SDK 33)
+RUN sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+
+# 3) Gradle 7.6 (compatible with this project configuration)
+ENV GRADLE_HOME=/opt/gradle/gradle-7.6
+RUN curl -sSL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-7.6-bin.zip \
+ && mkdir -p /opt/gradle \
+ && unzip -q /tmp/gradle.zip -d /opt/gradle \
+ && rm -f /tmp/gradle.zip
+ENV PATH="${PATH}:${GRADLE_HOME}/bin"
+
+# 4) Project files
+# This Dockerfile resides in android-app/, so the build context should be that folder.
+WORKDIR /app
+COPY . /app
+
+# Point Gradle/AGP to the container SDK
+RUN printf "sdk.dir=%s\n" "${ANDROID_SDK_ROOT}" > /app/local.properties
+
+# Sanity checks
+RUN gradle -v && java -version
+
+# 5) Generate Gradle wrapper pinned to 7.6 (if missing) and make executable
+RUN ( [ -f ./gradlew ] && ./gradlew --version ) || gradle wrapper --gradle-version 7.6
+RUN chmod +x ./gradlew
+
+# 6) Choose what to build via build arg (default: staging debug)
+# Examples:
+#   --build-arg BUILD_TASK=":app:assembleProdDebug"
+#   --build-arg BUILD_TASK=":app:assembleProdRelease"
+ARG BUILD_TASK=":app:assembleStagingDebug"
+ENV BUILD_TASK=${BUILD_TASK}
+
+
+# Build the requested variant and auto-sign prodRelease with a generated debug-style keystore
+
+RUN set -e; \
+    ./gradlew ${BUILD_TASK} --stacktrace --no-daemon; \
+    unsigned="/app/app/build/outputs/apk/prod/release/app-prod-release-unsigned.apk"; \
+    if [ -f "$unsigned" ]; then \
+      echo "Generating debug-style keystore for signing..."; \
+      keytool -genkeypair -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 \
+        -dname "CN=Android Debug,O=Android,C=US" \
+        -keystore /tmp/debug.keystore -storepass android -keypass android; \
+      echo "Signing prod release APK..."; \
+      "$ANDROID_SDK_ROOT/build-tools/33.0.2/apksigner" sign \
+        --ks /tmp/debug.keystore \
+        --ks-pass pass:android \
+        --key-pass pass:android \
+        --ks-key-alias androiddebugkey \
+        --out /app/app/build/outputs/apk/prod/release/app-prod-release.apk \
+        "$unsigned"; \
+      "$ANDROID_SDK_ROOT/build-tools/33.0.2/apksigner" verify /app/app/build/outputs/apk/prod/release/app-prod-release.apk; \
+      echo "Signed APK at /app/app/build/outputs/apk/prod/release/app-prod-release.apk"; \
+    fi
+
+
+
+#   /app/app/build/outputs/apk/staging/debug/app-staging-debug.apk
+
+#   /app/app/build/outputs/apk/prod/debug/app-prod-debug.apk
+
+#   /app/app/build/outputs/apk/prod/release/app-prod-release-unsigned.apk
+#   /app/app/build/outputs/apk/prod/release/app-prod-release.apk  (signed inside image with debug key)
+
+#
+# Build and extract example (from host shell, with Docker Desktop running):
+#   docker build -f Dockerfile.android -t soul-android-build .
+#   cid=$(docker create soul-android-build)
+#   docker cp "$cid":/app/app/build/outputs/apk/staging/debug/app-staging-debug.apk .
+#   docker rm "$cid"

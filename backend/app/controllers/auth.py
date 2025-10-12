@@ -246,17 +246,17 @@ def verify_confirm(token: str):
 		if not user:
 			raise HTTPException(status_code=400, detail="User not found")
 
-				user.is_verified = True
+		user.is_verified = True
 
-				db.add(user)
+		db.add(user)
 
-				db.commit()
+		db.commit()
 
-				return {"status": "ok"}
+		return {"status": "ok"}
 
-			finally:
+	finally:
 
-				db.close()
+		db.close()
 
 		# --- OTP endpoints (per-phone, best-effort in-memory limits) ---
 
