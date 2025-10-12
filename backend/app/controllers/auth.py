@@ -302,6 +302,7 @@ def verify_confirm(token: str):
     user_id = int(payload["sub"])
     from app.main import SessionLocal
 
+<<<<<<< HEAD
     db: Session = SessionLocal()
     try:
         user = db.query(User).filter(User.id == user_id).first()
@@ -500,5 +501,5 @@ def verify_otp(payload: dict = Body(...)):
             "user": {"id": user.id, "email": user.email},
         }
 
-    finally:
-        db.close()
+
+>>>>>>> feat/android-flavors-otp-version-bump

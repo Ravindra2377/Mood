@@ -1,0 +1,208 @@
+# Root .gitignore for SOUL App monorepo
+# Excludes build artifacts, IDE metadata, caches, and common Python/Android/Flutter/Web outputs.
+
+# ------------------------------------------------------------
+# OS / General
+# ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+*.swp
+*.swo
+*.swn
+*~
+*.tmp
+*.temp
+~$*
+*.orig
+
+# ------------------------------------------------------------
+# Env / Secrets
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# ------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ------------------------------------------------------------
+# Caches / Coverage
+# ------------------------------------------------------------
+.cache/
+.tmp/
+.temp/
+.happypack/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+coverage/
+.nyc_output/
+.dart_tool/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.tox/
+.hypothesis/
+.pyre/
+.pytype/
+.dmypy.json
+
+# ------------------------------------------------------------
+# Node / Frontend common
+# ------------------------------------------------------------
+node_modules/
+dist/
+build/
+out/
+storybook-static/
+
+# Next / Nuxt / SvelteKit
+.next/
+.nuxt/
+.svelte-kit/
+
+# Yarn / PnP (optional, keep if using)
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# ------------------------------------------------------------
+# Python (backend)
+# ------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+
+# Packaging
+*.egg
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+develop-eggs/
+
+# Build
+backend/build/
+backend/dist/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# DB / Local state
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Uvicorn
+uvicorn.log
+
+# ------------------------------------------------------------
+# Android (android-app)
+# ------------------------------------------------------------
+# Gradle
+.gradle/
+**/build/
+
+# Local SDK/props
+android-app/local.properties
+android-app/**/local.properties
+
+# Android Studio / IntelliJ project files
+android-app/.idea/
+*.iml
+
+# Build outputs
+android-app/**/captures/
+android-app/**/outputs/
+*.apk
+*.aab
+*.ap_
+*.aapt1
+
+# Keystores (DO NOT COMMIT SECRETS)
+*.keystore
+*.jks
+
+# Keep Gradle wrapper JAR (should be committed)
+!gradle/wrapper/gradle-wrapper.jar
+
+# ------------------------------------------------------------
+# iOS (ios-app)
+# ------------------------------------------------------------
+ios-app/Pods/
+ios-app/DerivedData/
+ios-app/.symlinks/
+ios-app/build/
+ios-app/**/xcuserdata/
+ios-app/**/*.xcuserdatad/
+*.xcuserstate
+
+# ------------------------------------------------------------
+# Flutter (soul/)
+# ------------------------------------------------------------
+soul/.dart_tool/
+soul/.packages
+soul/.pub-cache/
+soul/.flutter-plugins
+soul/.flutter-plugins-dependencies
+soul/.metadata
+soul/build/
+# Note: keep pubspec.lock for apps (default Flutter practice)
+
+# ------------------------------------------------------------
+# Web artifacts (web, web-app)
+# ------------------------------------------------------------
+web-dist/
+web-app/.next/
+web-app/out/
+web-app/.nuxt/
+web-app/dist/
+web-app/build/
+
+# ------------------------------------------------------------
+# Editors / IDEs
+# ------------------------------------------------------------
+# VS Code
+.vscode/
+# JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+# Sublime
+*.sublime-project
+*.sublime-workspace
+
+# ------------------------------------------------------------
+# Docker / Compose
+# ------------------------------------------------------------
+.docker/
+docker/*.env
+
+# ------------------------------------------------------------
+# CI / Local artifacts
+# ------------------------------------------------------------
+android-apks/
+
+# ------------------------------------------------------------
+# OneDrive / Sync noise (optional)
+# ------------------------------------------------------------
+~$*

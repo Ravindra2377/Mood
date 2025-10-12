@@ -203,3 +203,10 @@ class SMSService:
 
 # Module-level singleton configured from settings
 sms = SMSService()
+
+__all__ = [
+    "SMSService",
+    "SMSServiceError",
+    "normalize_phone",
+    "sms",
+]

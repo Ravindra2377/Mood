@@ -18,23 +18,22 @@ try:
     from app.main import engine
     Base.metadata.create_all(bind=engine)
 except Exception as e:
-    print('Warning: could not create all tables:', e)
+    # Warning: could not create all tables - continuing anyway
+    pass
 
 client = TestClient(app)
 
 def fail(msg):
-    print('FAIL:', msg)
     sys.exit(1)
 
 def ok(msg):
-    print('OK:', msg)
+    pass  # Test passed
 
 def run():
     import time
     email = f'smoke_user_{int(time.time())}@example.com'
     pw = 'smokepw'
 
-    print('Using email:', email)
     # signup
     r = client.post('/api/auth/signup', json={'email': email, 'password': pw})
     if r.status_code != 200:
@@ -43,8 +42,6 @@ def run():
 
     # login
     t = client.post('/api/auth/token', data={'username': email, 'password': pw})
-    print('token resp status:', t.status_code)
-    print('token resp text:', t.text)
     if t.status_code != 200:
         fail(f'login failed: {t.status_code} {t.text}')
     body = t.json()
@@ -81,7 +78,7 @@ def run():
         fail('revoked token still allowed')
     ok('revoked token rejected')
 
-    print('\nALL SMOKE TESTS PASSED')
+    # All smoke tests passed successfully
 
 if __name__ == '__main__':
     run()

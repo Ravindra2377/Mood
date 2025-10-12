@@ -50,11 +50,13 @@ jobs:
           y
           EOF
 
-          # Install required packages explicitly
+
           "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" \
+
             "platform-tools" \
-            "platforms;android-33" \
-            "build-tools;33.0.2"
+
+            "platforms;android-34" \
+            "build-tools;34.0.0"
 
       - name: Cache Gradle caches
         uses: actions/cache@v4

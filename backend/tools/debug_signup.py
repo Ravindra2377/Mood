@@ -16,8 +16,4 @@ Base.metadata.create_all(bind=engine)
 
 client = TestClient(app)
 resp = client.post('/api/auth/signup', json={'email': 'debug_user@example.com', 'password': 'pw'})
-print('status', resp.status_code)
-try:
-    print('json', resp.json())
-except Exception:
-    print('text', resp.text)
+# Debug signup completed - status: {resp.status_code}

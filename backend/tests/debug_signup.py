@@ -27,8 +27,4 @@ client = TestClient(app)
 
 payload = {'email': 'debug_user@example.com', 'password': 'pwdebug'}
 resp = client.post('/api/auth/signup', json=payload)
-print('STATUS', resp.status_code)
-try:
-    print('JSON:', resp.json())
-except Exception:
-    print('TEXT:', resp.text)
+# Debug signup test completed - status: {resp.status_code}

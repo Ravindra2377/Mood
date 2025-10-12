@@ -41,7 +41,7 @@ jobs:
             artifact_name: "app-prod-debug.apk"
           - variant: prodRelease
             build_task: ":app:assembleProdRelease"
-            # Signed inside Dockerfile with a debug-style key
+            # Signed APK is produced inside Dockerfile.android using a debug-style key
             apk_path: "/app/app/build/outputs/apk/prod/release/app-prod-release.apk"
             artifact_name: "app-prod-release.apk"
 
@@ -49,6 +49,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Skip non-requested variants when workflow_dispatch specifies a single one
       - name: Determine if this matrix item should run
         id: should_run
         run: |
@@ -137,7 +138,10 @@ EOF
         working-directory: android-app
         run: |
           set -euo pipefail
-          echo "Building Docker image for task: ${{ matrix.build_task }}"
+          echo "Building Docker image for task ${{ matrix.build_task }}"
+          echo "PWD:"; pwd
+          echo "Listing android-app contents:"
+          ls -la
           docker build \
             -f Dockerfile.android \
             --build-arg BUILD_TASK="${{ matrix.build_task }}" \

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Use shared launcher background color defined in values/colors_launcher.xml (from main) -->
+    <background android:drawable="@color/launcher_background" />
+    <!-- Foreground image for staging placed in drawable(-nodpi)/launcher_foreground.* -->
+    <foreground android:drawable="@drawable/launcher_foreground" />
+    <!-- Optional: reuse same asset for monochrome until a vector is provided -->
+    <monochrome android:drawable="@drawable/launcher_foreground" />
+</adaptive-icon>
