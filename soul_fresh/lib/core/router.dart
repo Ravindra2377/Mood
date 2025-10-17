@@ -5,10 +5,9 @@ import '../services/auth_service.dart';
 import '../screens/login_screen.dart';
 import '../screens/signup_screen.dart';
 import '../screens/otp_verification_screen.dart';
-// Import other screens as they are created
-// import '../screens/home_screen.dart';
-// import '../screens/mood_entry_screen.dart';
-// etc.
+import '../screens/profile_screen.dart';
+import '../screens/settings_screen.dart';
+import '../screens/privacy_settings_screen.dart';
 
 /// App router configuration
 class AppRouter {
@@ -75,6 +74,25 @@ class AppRouter {
               }
             },
           ),
+          settings: settings,
+        );
+
+      // Profile routes
+      case Routes.profile:
+        return MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+          settings: settings,
+        );
+
+      case Routes.settings:
+        return MaterialPageRoute(
+          builder: (_) => const SettingsScreen(),
+          settings: settings,
+        );
+
+      case Routes.privacySettings:
+        return MaterialPageRoute(
+          builder: (_) => const PrivacySettingsScreen(),
           settings: settings,
         );
 

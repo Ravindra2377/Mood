@@ -21,6 +21,13 @@ import 'models/journal_entry_adapter.dart';
 import 'models/app_models.dart';
 import 'data/appMockData.dart';
 
+// New router and auth screens
+import 'core/router.dart';
+import 'core/routes.dart';
+import 'screens/login_screen.dart' as NewLogin;
+import 'screens/signup_screen.dart';
+import 'screens/otp_verification_screen.dart';
+
 /// SOUL Flutter application entry point
 ///
 /// - Initializes Hive (local storage foundation).
@@ -49,6 +56,8 @@ class SoulApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+    
     return MaterialApp(
       title: 'SOUL',
       debugShowCheckedModeBanner: false,
@@ -56,10 +65,14 @@ class SoulApp extends ConsumerWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
 
-  // Use the AuthGate to decide between Login and Home based on token state.
-  home: const _AuthGate(),
+      // Use the AuthGate to decide between Login and Home based on token state.
+      home: const _AuthGate(),
 
-      // Named routes used by the app. As features grow, prefer a Router API.
+      // Use new router with auth guards
+      onGenerateRoute: router.onGenerateRoute,
+      onUnknownRoute: router.onUnknownRoute,
+
+      // Keep legacy named routes for existing screens
       routes: {
         LoginScreen.route: (_) => const LoginScreen(),
         OnboardingScreen.route: (_) => const OnboardingScreen(),
