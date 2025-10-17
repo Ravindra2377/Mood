@@ -106,10 +106,17 @@ jobs:
           find soul_fresh -maxdepth 2 -type f -print
 
       - name: Install dependencies (pub get)
+
         shell: bash
+
         working-directory: ${{ github.workspace }}/soul_fresh
+
         run: |
+
           set -euo pipefail
+
+          rm -rf android
+          flutter create .
           flutter pub get
 
       - name: Add json_serializable (best-effort to avoid codegen conflicts)

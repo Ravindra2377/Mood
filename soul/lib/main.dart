@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 import 'state/app_state.dart';
 
@@ -32,8 +34,8 @@ class SoulApp extends ConsumerWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
 
-      // AuthGate decides which initial screen to show.
-      home: const _AuthGate(),
+      // WebShell presents the provided HTML UI as the app shell.
+      home: const WebShell(),
 
       // Named routes used by the app. As features grow, prefer a Router API.
       routes: {
@@ -565,6 +567,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
         ],
+      ),
+    );
+  }
+}
+
+/// WebShell loads the provided HTML UI (assets/web/soul_web.html) inside a WebView.
+/// This preserves Riverpod/services while rendering your exact frontend.
+class WebShell extends StatefulWidget {
+  const WebShell({super.key});
+
+  @override
+  State<WebShell> createState() => _WebShellState();
+}
+
+class _WebShellState extends State<WebShell> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.transparent);
+    _loadHtml();
+  }
+
+  Future<void> _loadHtml() async {
+    final html = await rootBundle.loadString('assets/web/soul_web.html');
+    // baseUrl allows relative asset paths; using a dummy https origin for CSP compatibility.
+    await _controller.loadHtmlString(html, baseUrl: 'https://app.local/');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: WebViewWidget(controller: _controller),
       ),
     );
   }

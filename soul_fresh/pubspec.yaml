@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  google_fonts: ^6.0.0
 
   # Networking
   dio: ^5.5.0+1
@@ -51,3 +52,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/web/soul_web.html
+    - assets/images/brain.png
+    - assets/images/meditation_brain.png
+    - assets/images/meditation_child.png
+    - assets/images/mood_angry.png
+    - assets/images/mood_sad.png
+    - assets/images/mood_neutral.png
+    - assets/images/mood_happy.png
+    - assets/images/mood_veryhappy.png
