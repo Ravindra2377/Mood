@@ -42,7 +42,8 @@ class TokenRepository {
 
   final FlutterSecureStorage _storage;
 
-  Future<String?> readAccessToken() => _storage.read(key: _StorageKeys.accessToken);
+  Future<String?> readAccessToken() =>
+      _storage.read(key: _StorageKeys.accessToken);
 
   Future<void> saveAccessToken(String token) =>
       _storage.write(key: _StorageKeys.accessToken, value: token);
@@ -96,50 +97,52 @@ class AuthController extends AsyncNotifier<AuthState> {
     return AuthState(initialized: true, accessToken: token);
   }
 
-
   /// Request an OTP to be sent to the provided email address.
   Future<void> sendOtp(String email) async {
+    // Legacy: OTP flow retained for compatibility. Prefer email/password login.
     await _api.requestOtp(OtpRequest(email: email));
   }
 
-
-
-  /// Verify OTP and store tokens.
-
-  Future<void> verifyOtp({
-
-    required String email,
-    required String code,
-
-  }) async {
-
-    // Show loading state
-
+  /// Backwards-compatible OTP verification method used by older UI flows.
+  /// Verifies the OTP via the API and stores the returned access token.
+  Future<void> verifyOtp({required String email, required String code}) async {
     state = const AsyncLoading();
-
-
-
     try {
-
       final res = await _api.verifyOtp(VerifyOtpRequest(email: email, code: code));
       await _tokens.saveAccessToken(res.accessToken);
-
-
-
-      // Rebuild state with the new token
-
       state = AsyncData(AuthState(initialized: true, accessToken: res.accessToken));
-
     } catch (e, st) {
-
       state = AsyncError(e, st);
-
       rethrow;
-
     }
-
   }
 
+  /// Login with email and password (replaces OTP verify flow).
+  Future<void> login({required String email, required String password}) async {
+    state = const AsyncLoading();
+    try {
+      final res = await _api.login(LoginRequest(email: email, password: password));
+      await _tokens.saveAccessToken(res.accessToken);
+      state = AsyncData(AuthState(initialized: true, accessToken: res.accessToken));
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+
+  /// Signup with email and password. On success, the API may return the created user;
+  /// we'll then call login to obtain tokens.
+  Future<void> signup({required String email, required String password}) async {
+    state = const AsyncLoading();
+    try {
+      await _api.signup(SignupRequest(email: email, password: password));
+      // After signup, perform login to obtain tokens
+      await login(email: email, password: password);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
 
   /// Log out: revoke server session (best-effort) and clear token locally.
   Future<void> logout() async {

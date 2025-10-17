@@ -1,0 +1,58 @@
+# Static analysis configuration for the SOUL Flutter app.
+# Extends the recommended Flutter lints and adds a few project-specific tweaks.
+# See: https://pub.dev/packages/flutter_lints
+
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  # Exclude generated files and build outputs from analysis.
+  exclude:
+    - build/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.gr.dart"
+    - "**/*.gen.dart"
+    - "**/*.mocks.dart"
+    - "**/*.config.dart"
+  errors:
+    # Promote or demote severities for select diagnostics
+    invalid_use_of_visible_for_testing_member: error
+    missing_required_param: error
+    missing_return: error
+    unused_import: error
+    dead_code: warning
+    todo: info
+
+linter:
+  rules:
+    # Style & readability
+    always_declare_return_types: true
+    directives_ordering: true
+    eol_at_end_of_file: true
+    prefer_single_quotes: true
+    prefer_final_locals: true
+    prefer_final_in_for_each: true
+    use_full_hex_values_for_flutter_colors: true
+    require_trailing_commas: true
+    sort_pub_dependencies: true
+    no_leading_underscores_for_local_identifiers: true
+
+    # Flutter specific
+    use_key_in_widget_constructors: true
+    prefer_const_constructors: true
+    prefer_const_literals_to_create_immutables: true
+    avoid_unnecessary_containers: true
+
+    # Safety & best practices
+    avoid_print: true               # Prefer Logger or debugPrint (conditionally)
+    avoid_dynamic_calls: true
+    cancel_subscriptions: true
+    close_sinks: true
+    depend_on_referenced_packages: true
+    avoid_redundant_argument_values: true
+    unnecessary_late: true
+
+# You can run static analysis locally with:
+#   flutter analyze
+# Code generation (once build_runner is configured in pubspec):
+#   dart run build_runner build --delete-conflicting-outputs

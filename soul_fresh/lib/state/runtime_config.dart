@@ -10,9 +10,9 @@ class RuntimeConfigController extends AsyncNotifier<String> {
 
   @override
   Future<String> build() async {
-    // Load persisted base URL if present, otherwise fall back to compile-time value.
+    // Load persisted base URL if present, otherwise fall back to the full API base (base + /api).
     final saved = await _storage.read(key: _storageKey);
-    return (saved != null && saved.isNotEmpty) ? saved : AppConfig.baseUrl;
+    return (saved != null && saved.isNotEmpty) ? saved : AppConfig.apiBaseUrl;
   }
 
   Future<void> setBaseUrl(String url) async {
@@ -22,10 +22,11 @@ class RuntimeConfigController extends AsyncNotifier<String> {
 
   Future<void> clear() async {
     await _storage.delete(key: _storageKey);
-    state = AsyncData(AppConfig.baseUrl);
+    state = AsyncData(AppConfig.apiBaseUrl);
   }
 }
 
-final runtimeConfigProvider = AsyncNotifierProvider<RuntimeConfigController, String>(
+final runtimeConfigProvider =
+    AsyncNotifierProvider<RuntimeConfigController, String>(
   () => RuntimeConfigController(),
 );

@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'state/app_state.dart';
-import 'web_shell.dart';
+import 'state/runtime_config.dart';
+import 'state/ui_state.dart';
+import 'screens/journal_list.dart';
+import 'screens/meditation.dart';
+import 'screens/onboarding_screen.dart';
+import 'screens/expression_screen.dart';
+import 'screens/enhanced_meditation_screen.dart';
+import 'screens/activities_screen.dart';
+import 'screens/resources_screen.dart';
+import 'widgets/mood_widgets.dart';
+import 'widgets/mood_selector.dart';
+import 'widgets/time_filter_pills.dart';
+import 'widgets/activity_card.dart';
+import 'models/journal_entry_adapter.dart';
+import 'models/app_models.dart';
+import 'data/appMockData.dart';
 
 /// SOUL Flutter application entry point
 ///
@@ -17,9 +33,16 @@ Future<void> main() async {
 
   // Initialize Hive for future offline caches (moods, journals, etc.).
   await Hive.initFlutter();
+  // Register adapters used by local storage
+  if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(JournalEntryAdapter());
 
   runApp(const ProviderScope(child: SoulApp()));
 }
+
+// Toggle this during local testing to bypass the OTP network flow.
+// When true the app will directly set a dummy access token and navigate
+// to the Home screen so you can test signup/login UI without a backend.
+const bool skipOtp = false;
 
 class SoulApp extends ConsumerWidget {
   const SoulApp({super.key});
@@ -33,15 +56,19 @@ class SoulApp extends ConsumerWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
 
-      // Use the WebView shell to render the provided HTML UI.
-      home: SoulWebShell(),
+  // Use the AuthGate to decide between Login and Home based on token state.
+  home: const _AuthGate(),
 
       // Named routes used by the app. As features grow, prefer a Router API.
       routes: {
         LoginScreen.route: (_) => const LoginScreen(),
-        OtpScreen.route: (_) => const OtpScreen(),
+        OnboardingScreen.route: (_) => const OnboardingScreen(),
         HomeScreen.route: (_) => const HomeScreen(),
         MoodScreen.route: (_) => const MoodScreen(),
+        ExpressionScreen.route: (_) => const ExpressionScreen(),
+        EnhancedMeditationScreen.route: (_) => const EnhancedMeditationScreen(),
+        ActivitiesScreen.route: (_) => const ActivitiesScreen(),
+        ResourcesScreen.route: (_) => const ResourcesScreen(),
         JournalListScreen.route: (_) => const JournalListScreen(),
         AnalyticsScreen.route: (_) => const AnalyticsScreen(),
         SettingsScreen.route: (_) => const SettingsScreen(),
@@ -62,6 +89,7 @@ class AppTheme {
       colorSchemeSeed: _brandSeed,
       useMaterial3: true,
       brightness: Brightness.light,
+      textTheme: GoogleFonts.poppinsTextTheme(),
     );
 
     return base.copyWith(
@@ -100,6 +128,8 @@ class AppTheme {
       colorSchemeSeed: _brandSeed,
       useMaterial3: true,
       brightness: Brightness.dark,
+      textTheme: GoogleFonts.poppinsTextTheme(
+          ThemeData(brightness: Brightness.dark).textTheme),
     );
 
     return base.copyWith(
@@ -237,6 +267,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailCtrl = TextEditingController();
+  final _passwordCtrl = TextEditingController();
 
   bool _sending = false;
 
@@ -261,7 +292,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Enter your email to receive a one-time code.',
+                  'Sign in or create an account with email and password.',
                   style: theme.textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -275,44 +306,90 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
+                TextField(
+                  controller: _passwordCtrl,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    hintText: '••••••••',
+                  ),
+                ),
+                const SizedBox(height: 12),
                 if (_error != null)
                   Text(_error!, style: const TextStyle(color: Colors.red)),
                 const Spacer(),
-                FilledButton(
-                  onPressed: _sending
-                      ? null
-                      : () async {
-                          setState(() {
-                            _sending = true;
-                            _error = null;
-                          });
-                          try {
-                            await ref
-                                .read(authControllerProvider.notifier)
-                                .sendOtp(
-                                  _emailCtrl.text.trim(),
-                                );
-
-                            if (!mounted) return;
-
-                            Navigator.pushNamed(
-                              context,
-                              OtpScreen.route,
-                              arguments: _emailCtrl.text.trim(),
-                            );
-                          } catch (e) {
-                            setState(() => _error = e.toString());
-                          } finally {
-                            if (mounted) setState(() => _sending = false);
-                          }
-                        },
-                  child: _sending
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Send OTP'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: _sending
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _sending = true;
+                                  _error = null;
+                                });
+                                try {
+                                  // Signup flow
+                                  final email = _emailCtrl.text.trim();
+                                  final password = _passwordCtrl.text;
+                                  if (skipOtp) {
+                                    // For local dev, just set token and navigate
+                                    await ref
+                                        .read(authControllerProvider.notifier)
+                                        .setToken('local-debug-token');
+                                    if (!mounted) return;
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context, HomeScreen.route, (_) => false);
+                                  } else {
+                                    await ref
+                                        .read(authControllerProvider.notifier)
+                                        .signup(email: email, password: password);
+                                  }
+                                } catch (e) {
+                                  setState(() => _error = e.toString());
+                                } finally {
+                                  if (mounted) setState(() => _sending = false);
+                                }
+                              },
+                        child: const Text('Sign up'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: _sending
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _sending = true;
+                                  _error = null;
+                                });
+                                try {
+                                  final email = _emailCtrl.text.trim();
+                                  final password = _passwordCtrl.text;
+                                  if (skipOtp) {
+                                    await ref
+                                        .read(authControllerProvider.notifier)
+                                        .setToken('local-debug-token');
+                                    if (!mounted) return;
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context, HomeScreen.route, (_) => false);
+                                  } else {
+                                    await ref
+                                        .read(authControllerProvider.notifier)
+                                        .login(email: email, password: password);
+                                  }
+                                } catch (e) {
+                                  setState(() => _error = e.toString());
+                                } finally {
+                                  if (mounted) setState(() => _sending = false);
+                                }
+                              },
+                        child: const Text('Log in'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -373,18 +450,33 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                           });
 
                           try {
-                            await ref
-                                .read(authControllerProvider.notifier)
-                                .verifyOtp(
-                                    email: email, code: _otpCtrl.text.trim());
+                            if (skipOtp) {
+                              // Accept any code in local debug mode.
+                              await ref
+                                  .read(authControllerProvider.notifier)
+                                  .setToken('local-debug-token');
 
-                            if (!mounted) return;
+                              if (!mounted) return;
 
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              HomeScreen.route,
-                              (_) => false,
-                            );
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                HomeScreen.route,
+                                (_) => false,
+                              );
+                            } else {
+                              await ref
+                                  .read(authControllerProvider.notifier)
+                                  .verifyOtp(
+                                      email: email, code: _otpCtrl.text.trim());
+
+                              if (!mounted) return;
+
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                HomeScreen.route,
+                                (_) => false,
+                              );
+                            }
                           } catch (e) {
                             setState(() => _error = e.toString());
                           } finally {
@@ -408,78 +500,256 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   }
 }
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   static const route = '/home';
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _selectedIndex = 0;
+
+  void _onNavTap(int index) {
+    setState(() => _selectedIndex = index);
+    switch (index) {
+      case 1:
+        Navigator.pushNamed(context, JournalListScreen.route);
+        break;
+      case 2:
+        Navigator.pushNamed(context, AnalyticsScreen.route);
+        break;
+      case 3:
+        Navigator.pushNamed(context, SettingsScreen.route);
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final gradient = Theme.of(context).extension<SoulGradients>()?.pastel ??
+        const LinearGradient(colors: [Colors.blue, Colors.teal]);
+    final selectedMood = ref.watch(selectedMoodProvider);
+    final selectedFilter = ref.watch(timeFilterProvider);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SOUL'),
-        actions: [
-          IconButton(
-            tooltip: 'Settings',
-            onPressed: () => Navigator.pushNamed(context, SettingsScreen.route),
-            icon: const Icon(Icons.settings_outlined),
+      body: Container(
+        decoration: BoxDecoration(gradient: gradient),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundImage: NetworkImage(AppMockData.userAvatarUrl),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Hi, ${AppMockData.userName}',
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const Text(
+                            'How are you doing today?',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.notifications_outlined),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // Time filter pills
+                TimeFilterPills(
+                  selectedFilter: selectedFilter,
+                  onFilterSelected: (filter) {
+                    ref.read(timeFilterProvider.notifier).state = filter;
+                  },
+                ),
+                const SizedBox(height: 16),
+                // Search bar
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: const TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search, size: 20),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Daily mood section
+                const Text(
+                  'Daily mood',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                MoodSelector(
+                  selectedMood: selectedMood,
+                  onMoodSelected: (mood) {
+                    ref.read(selectedMoodProvider.notifier).state = mood;
+                  },
+                ),
+                const SizedBox(height: 24),
+                // Activities section
+                const Text(
+                  'Activities',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 110,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: AppMockData.activities.length,
+                    itemBuilder: (context, index) {
+                      final activity = AppMockData.activities[index];
+                      return ActivityCard(
+                        activity: activity,
+                        onTap: () {
+                          if (activity.type == ActivityType.yoga) {
+                            Navigator.pushNamed(context, EnhancedMeditationScreen.route);
+                          } else if (activity.type == ActivityType.journal) {
+                            Navigator.pushNamed(context, ExpressionScreen.route);
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Quick actions
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, ActivitiesScreen.route);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.all(16),
+                        ),
+                        child: const Text('View Activities'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, ResourcesScreen.route);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.all(16),
+                        ),
+                        child: const Text('Self Help'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          IconButton(
-            tooltip: 'Logout',
-            onPressed: () => ref.read(authControllerProvider.notifier).logout(),
-            icon: const Icon(Icons.logout),
-          ),
-        ],
+        ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.mood_outlined),
-              title: const Text('Log a Mood'),
-              subtitle:
-                  const Text('Record your current feeling with a quick note'),
-              onTap: () => Navigator.pushNamed(context, MoodScreen.route),
-            ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Container(
+          height: 64,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(32),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8)
+            ],
           ),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.menu_book_outlined),
-              title: const Text('Journals'),
-              subtitle: const Text('Reflect and keep notes'),
-              onTap: () =>
-                  Navigator.pushNamed(context, JournalListScreen.route),
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.insights_outlined),
-              title: const Text('Analytics'),
-              subtitle: const Text('Trends and insights'),
-              onTap: () => Navigator.pushNamed(context, AnalyticsScreen.route),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: Theme.of(context).extension<SoulGradients>()!.pastel,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              'Have a mindful day ✨',
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: Colors.black.withOpacity(0.7),
-                fontWeight: FontWeight.w600,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                onPressed: () => _onNavTap(0),
+                icon: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: _selectedIndex == 0 ? Colors.black : Colors.white,
+                  child: Icon(
+                    Icons.home,
+                    color: _selectedIndex == 0 ? Colors.white : Colors.black,
+                  ),
+                ),
               ),
-            ),
+              IconButton(
+                onPressed: () => _onNavTap(1),
+                icon: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: _selectedIndex == 1 ? Colors.black : Colors.white,
+                  child: Icon(
+                    Icons.menu_book_outlined,
+                    color: _selectedIndex == 1 ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => _onNavTap(2),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _selectedIndex == 2 ? Colors.black : Colors.white,
+                  ),
+                  child: Icon(
+                    Icons.bar_chart,
+                    color: _selectedIndex == 2 ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () => _onNavTap(3),
+                icon: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: _selectedIndex == 3 ? Colors.black : Colors.white,
+                  child: Icon(
+                    Icons.settings,
+                    color: _selectedIndex == 3 ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
+
 
 class MoodScreen extends StatelessWidget {
   static const route = '/mood';
@@ -496,20 +766,7 @@ class MoodScreen extends StatelessWidget {
   }
 }
 
-class JournalListScreen extends StatelessWidget {
-  static const route = '/journals';
-  const JournalListScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Journals')),
-      body: const Center(
-        child: Text('Journal list and CRUD coming soon.'),
-      ),
-    );
-  }
-}
+// Journal list screen implemented in `lib/screens/journal_list.dart`.
 
 class AnalyticsScreen extends StatelessWidget {
   static const route = '/analytics';
@@ -594,11 +851,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('API Base URL', style: TextStyle(fontWeight: FontWeight.w600)),
+                        const Text('API Base URL',
+                            style: TextStyle(fontWeight: FontWeight.w600)),
                         const SizedBox(height: 8),
                         TextField(
                           controller: _controller,
-                          decoration: const InputDecoration(border: OutlineInputBorder()),
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder()),
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -608,10 +867,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ? null
                                   : () async {
                                       setState(() => _saving = true);
-                                      await ref.read(runtimeConfigProvider.notifier).setBaseUrl(_controller.text.trim());
+                                      await ref
+                                          .read(runtimeConfigProvider.notifier)
+                                          .setBaseUrl(_controller.text.trim());
                                       setState(() => _saving = false);
                                     },
-                              child: _saving ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Save'),
+                              child: _saving
+                                  ? const SizedBox(
+                                      height: 16,
+                                      width: 16,
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2))
+                                  : const Text('Save'),
                             ),
                             const SizedBox(width: 8),
                             OutlinedButton(
@@ -619,7 +886,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ? null
                                   : () async {
                                       setState(() => _saving = true);
-                                      await ref.read(runtimeConfigProvider.notifier).clear();
+                                      await ref
+                                          .read(runtimeConfigProvider.notifier)
+                                          .clear();
                                       setState(() => _saving = false);
                                     },
                               child: const Text('Reset to default'),
@@ -629,7 +898,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     );
                   },
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (e, st) => Text('Error loading config: $e'),
                 );
               },
