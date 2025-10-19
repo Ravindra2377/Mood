@@ -13,7 +13,7 @@ class AppMockData {
     Activity(
       id: "act-1",
       type: ActivityType.yoga,
-      title: "Yoga",
+      title: "Meditation",
       color: const Color(0xFFE8B4F0),
       icon: Icons.self_improvement,
     ),

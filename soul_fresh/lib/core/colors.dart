@@ -61,8 +61,7 @@ class AppColors {
   static const Color moodVeryHappy = Color(0xFF26A69A);
 
   // Activity colors
-  static const Color activityYoga = pastelPurple;
+  static const Color activityMeditation = pastelPurple;
   static const Color activityJournal = pastelBlue;
   static const Color activityExercise = pastelGreen;
-  static const Color activityMeditation = pastelOrange;
 }

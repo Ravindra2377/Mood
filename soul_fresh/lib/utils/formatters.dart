@@ -124,7 +124,7 @@ class Formatters {
   static String activityType(String type) {
     switch (type.toLowerCase()) {
       case 'yoga':
-        return 'Yoga 🧘';
+        return 'Meditation 🧘';
       case 'journal':
       case 'journaling':
         return 'Journaling 📝';
