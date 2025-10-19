@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.mhaiapp.models.AuthRequest;
 import com.mhaiapp.models.AuthResponse;
+import com.mhaiapp.models.UserRead;
 import com.mhaiapp.network.ApiClient;
 import com.mhaiapp.network.ApiService;
 import com.mhaiapp.utils.SharedPrefsManager;
@@ -13,8 +14,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AuthRepository {
-    private ApiService apiService;
-    private SharedPrefsManager prefs;
+    private final ApiService apiService;
+    private final SharedPrefsManager prefs;
 
     public AuthRepository(Context ctx, String baseUrl) {
         apiService = ApiClient.getClient(baseUrl).create(ApiService.class);
@@ -27,13 +28,10 @@ public class AuthRepository {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
-                                        String token = response.body().access_token;
-
-                                        String refresh = response.body().refresh_token;
-                                        prefs.saveAccessToken(token);
-                                        if (refresh != null) prefs.saveRefreshToken(refresh);
-
+                    String token = response.body().access_token;
+                    String refresh = response.body().refresh_token;
+                    if (token != null) prefs.saveAccessToken(token);
+                    if (refresh != null) prefs.saveRefreshToken(refresh);
                     cb.onSuccess(response.body());
                 } else {
                     cb.onError("Login failed: " + response.code());
@@ -49,26 +47,19 @@ public class AuthRepository {
 
     public void signup(String email, String password, final AuthCallback cb) {
         AuthRequest req = new AuthRequest(email, password);
-        apiService.signup(req).enqueue(new Callback<AuthResponse>() {
+        apiService.signup(req).enqueue(new Callback<UserRead>() {
             @Override
-            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+            public void onResponse(Call<UserRead> call, Response<UserRead> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
-                                        String token = response.body().access_token;
-
-                                        String refresh = response.body().refresh_token;
-                                        prefs.saveAccessToken(token);
-
-                                        if (refresh != null) prefs.saveRefreshToken(refresh);
-
-                    cb.onSuccess(response.body());
+                    // Auto-login after successful signup to fetch tokens
+                    login(email, password, cb);
                 } else {
                     cb.onError("Signup failed: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(Call<AuthResponse> call, Throwable t) {
+            public void onFailure(Call<UserRead> call, Throwable t) {
                 cb.onError(t.getMessage());
             }
         });

@@ -1,16 +1,18 @@
 /* Minimal design tokens used by new components */
 :root {
-  --soul-pink: #FAD1E6;
-  --soul-blue: #E8F4FD;
-  --soul-lilac: #F0E6FF;
-  --soul-mint: #E6F8F0;
+  --soul-pink: #ffe5f2;
+  --soul-blue: #e5f2ff;
+  --soul-lilac: #f2e5ff;
+  --soul-mint: #e5fff2;
+  --soul-peach: #fff8e5;
+  --soul-lavender: #fadafa;
 
-  --gradient-main: radial-gradient(circle at 10% 10%, #F8FBFF 0%, #EEF4FF 40%, #F7F2FF 100%);
-  --card-gradient: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,250,255,0.9));
+  --gradient-main: radial-gradient(circle at 10% 10%, #e5f2ff 0%, #f2e5ff 40%, #ffe5f2 100%);
+  --card-gradient: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,218,250,0.75));
   --cta-gradient: linear-gradient(90deg,#111111 0%, #0a0a0a 100%);
 
-  --bg-primary: #F6FAFF;
-  --soul-accent: #D9A6F0;
+  --bg-primary: #e5f2ff;
+  --soul-accent: #fadafa;
 
   --text-primary: #071029;
   --text-secondary: #6B7280;

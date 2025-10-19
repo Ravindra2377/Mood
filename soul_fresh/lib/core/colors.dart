@@ -19,9 +19,13 @@ class AppColors {
 
   // Semantic colors
   static const Color success = Color(0xFF4CAF50);
+  static const Color successLight = Color(0xFFE8F5E9);
   static const Color warning = Color(0xFFFF9800);
+  static const Color warningLight = Color(0xFFFFF3E0);
   static const Color error = Color(0xFFF44336);
+  static const Color errorLight = Color(0xFFFFEBEE);
   static const Color info = Color(0xFF2196F3);
+  static const Color infoLight = Color(0xFFE3F2FD);
 
   // Neutral colors
   static const Color white = Color(0xFFFFFFFF);

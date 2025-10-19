@@ -1,11 +1,13 @@
 package com.mhaiapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.mhaiapp.BuildConfig;
 import com.mhaiapp.models.AuthResponse;
 import com.mhaiapp.repositories.AuthRepository;
 import com.mhaiapp.R;
@@ -18,7 +20,8 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        String baseUrl = "http://10.0.2.2:8000/";
+        // Use the same base URL strategy as LoginActivity
+        String baseUrl = BuildConfig.BASE_URL;
         authRepo = new AuthRepository(this, baseUrl);
 
         EditText email = findViewById(R.id.email);
@@ -26,10 +29,20 @@ public class SignupActivity extends AppCompatActivity {
         Button signup = findViewById(R.id.btn_signup);
 
         signup.setOnClickListener(v -> {
-            authRepo.signup(email.getText().toString(), password.getText().toString(), new AuthRepository.AuthCallback() {
+            String e = email.getText() != null ? email.getText().toString().trim() : "";
+            String p = password.getText() != null ? password.getText().toString().trim() : "";
+            if (e.isEmpty() || p.isEmpty()) {
+                Toast.makeText(SignupActivity.this, "Enter email and password", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            authRepo.signup(e, p, new AuthRepository.AuthCallback() {
                 @Override
                 public void onSuccess(AuthResponse resp) {
-                    runOnUiThread(() -> Toast.makeText(SignupActivity.this, "Signup successful", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> {
+                        Toast.makeText(SignupActivity.this, "Signup successful", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                        finish();
+                    });
                 }
 
                 @Override

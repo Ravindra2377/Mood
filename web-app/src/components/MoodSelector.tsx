@@ -7,11 +7,11 @@ interface MoodSelectorProps {
 
 export const MoodSelector: React.FC<MoodSelectorProps> = ({ selectedMood, onMoodSelect }) => {
   const moods = [
-    { value: 1, emoji: '😢', color: '#FF8FA3' },
-    { value: 2, emoji: '😕', color: '#8FB4FF' },
-    { value: 3, emoji: '😐', color: '#A8A8A8' },
-    { value: 4, emoji: '🙂', color: '#FFE66D' },
-    { value: 5, emoji: '😊', color: '#A8E6CF' }
+    { value: 1, image: '/mood-1.png', color: '#FF8FA3' },
+    { value: 2, image: '/mood-2.png', color: '#8FB4FF' },
+    { value: 3, image: '/mood-3.png', color: '#A8A8A8' },
+    { value: 4, image: '/mood-4.png', color: '#FFE66D' },
+    { value: 5, image: '/mood-5.png', color: '#A8E6CF' }
   ];
 
   return (
@@ -23,7 +23,7 @@ export const MoodSelector: React.FC<MoodSelectorProps> = ({ selectedMood, onMood
           onClick={() => onMoodSelect(mood.value)}
           style={{ backgroundColor: selectedMood === mood.value ? mood.color : 'transparent' }}
         >
-          <span className="mood-emoji">{mood.emoji}</span>
+          <img src={mood.image} alt={`Mood ${mood.value}`} className="mood-emoji" />
         </button>
       ))}
     </div>

@@ -1,90 +1,133 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/api_client.dart';
+import '../core/config.dart';
 import '../services/secure_storage_service.dart';
+import '../main.dart' show skipOtp;
 
 // Provider for AuthService
 final authServiceProvider = Provider<AuthService>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
   final storage = ref.watch(secureStorageServiceProvider);
-  return AuthService(apiClient, storage);
+  return AuthService(storage);
 });
 
 /// Authentication service for handling login, signup, and session management
 class AuthService {
-  final ApiClient _apiClient;
   final SecureStorageService _storage;
+  late final Dio _dio;
 
-  AuthService(this._apiClient, this._storage);
+  AuthService(this._storage) {
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: AppConfig.apiBaseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: const {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+  }
 
   /// Sign up with email and password
-  Future<AuthResponse> signup({
-    required String email,
-    required String password,
-  }) async {
+  Future<Map<String, dynamic>> signup(String email, String password) async {
+    if (skipOtp) {
+      // Mock signup for testing without backend
+      await _storage.saveAccessToken('dummy-token-$email');
+      await _storage.saveUserEmail(email);
+      return {'success': true, 'message': 'Mock signup successful'};
+    }
+
     try {
-      final user = await _apiClient.signup(
-        SignupRequest(email: email, password: password),
-      );
+      final response = await _dio.post('/auth/signup', data: {
+        'email': email,
+        'password': password,
+      });
       
-      // After signup, login to get tokens
-      return await login(email: email, password: password);
-    } catch (e) {
+      // After signup, request OTP
+      await requestOtp(email);
+      
+      return response.data;
+    } on DioException catch (e) {
       throw _handleError(e);
     }
   }
 
   /// Login with email and password
-  Future<AuthResponse> login({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final response = await _apiClient.login(
-        LoginRequest(email: email, password: password),
-      );
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    if (skipOtp) {
+      // Mock login for testing without backend
+      await _storage.saveAccessToken('dummy-token-$email');
+      await _storage.saveUserEmail(email);
+      return {'access_token': 'dummy-token-$email', 'success': true};
+    }
 
+    try {
+      final response = await _dio.post('/auth/token', data: {
+        'username': email,  // FastAPI OAuth2 uses 'username' field
+        'password': password,
+        'grant_type': 'password',
+      }, options: Options(
+        contentType: Headers.formUrlEncodedContentType,
+      ));
+
+      final data = response.data;
+      
       // Save tokens and user info
-      await _storage.saveAccessToken(response.accessToken);
-      if (response.refreshToken != null) {
-        await _storage.saveRefreshToken(response.refreshToken!);
+      await _storage.saveAccessToken(data['access_token']);
+      if (data.containsKey('refresh_token')) {
+        await _storage.saveRefreshToken(data['refresh_token']);
       }
       await _storage.saveUserEmail(email);
 
-      return response;
-    } catch (e) {
+      return data;
+    } on DioException catch (e) {
       throw _handleError(e);
     }
   }
 
-  /// Request OTP (legacy support)
+  /// Request OTP
   Future<void> requestOtp(String email) async {
+    if (skipOtp) {
+      // Mock OTP request for testing
+      return;
+    }
+
     try {
-      await _apiClient.requestOtp(OtpRequest(email: email));
-    } catch (e) {
+      await _dio.post('/auth/otp/request', data: {'email': email});
+    } on DioException catch (e) {
       throw _handleError(e);
     }
   }
 
-  /// Verify OTP (legacy support)
-  Future<AuthResponse> verifyOtp({
-    required String email,
-    required String code,
-  }) async {
-    try {
-      final response = await _apiClient.verifyOtp(
-        VerifyOtpRequest(email: email, code: code),
-      );
+  /// Verify OTP
+  Future<Map<String, dynamic>> verifyOtp(String email, String code) async {
+    if (skipOtp) {
+      // Mock OTP verification for testing
+      await _storage.saveAccessToken('dummy-token-$email');
+      await _storage.saveUserEmail(email);
+      return {'success': true, 'message': 'Mock OTP verified'};
+    }
 
+    try {
+      final response = await _dio.post('/auth/verify-otp', data: {
+        'email': email,
+        'code': code,
+      });
+
+      final data = response.data;
+      
       // Save tokens and user info
-      await _storage.saveAccessToken(response.accessToken);
-      if (response.refreshToken != null) {
-        await _storage.saveRefreshToken(response.refreshToken!);
+      if (data.containsKey('access_token')) {
+        await _storage.saveAccessToken(data['access_token']);
+      }
+      if (data.containsKey('refresh_token')) {
+        await _storage.saveRefreshToken(data['refresh_token']);
       }
       await _storage.saveUserEmail(email);
 
-      return response;
-    } catch (e) {
+      return data;
+    } on DioException catch (e) {
       throw _handleError(e);
     }
   }
@@ -92,7 +135,12 @@ class AuthService {
   /// Logout
   Future<void> logout() async {
     try {
-      await _apiClient.logout();
+      final token = await _storage.getAccessToken();
+      if (token != null) {
+        await _dio.post('/auth/logout', options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+        ));
+      }
     } catch (e) {
       // Best effort - continue even if API call fails
     } finally {
@@ -118,31 +166,33 @@ class AuthService {
         throw Exception('No refresh token available');
       }
 
-      // TODO: Implement refresh token endpoint call when backend supports it
-      // For now, just throw to force re-login
-      throw Exception('Token refresh not implemented');
-    } catch (e) {
+      final response = await _dio.post('/auth/refresh', data: {
+        'refresh_token': refreshToken,
+      });
+
+      final data = response.data;
+      if (data.containsKey('access_token')) {
+        await _storage.saveAccessToken(data['access_token']);
+      }
+    } on DioException catch (e) {
       await _storage.clearAll();
       throw Exception('Session expired. Please login again.');
     }
   }
 
   /// Handle errors from API calls
-  String _handleError(Object error) {
-    if (error is DioException) {
-      final response = error.response;
-      if (response != null) {
-        final data = response.data;
-        if (data is Map && data.containsKey('detail')) {
-          return data['detail'].toString();
-        }
-        if (data is String) {
-          return data;
-        }
-        return 'Request failed with status ${response.statusCode}';
+  String _handleError(DioException error) {
+    final response = error.response;
+    if (response != null) {
+      final data = response.data;
+      if (data is Map && data.containsKey('detail')) {
+        return data['detail'].toString();
       }
-      return 'Network error. Please check your connection.';
+      if (data is String) {
+        return data;
+      }
+      return 'Request failed with status ${response.statusCode}';
     }
-    return error.toString();
+    return 'Network error. Please check your connection.';
   }
 }

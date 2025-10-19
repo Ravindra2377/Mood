@@ -49,7 +49,7 @@ Future<void> main() async {
 // Toggle this during local testing to bypass the OTP network flow.
 // When true the app will directly set a dummy access token and navigate
 // to the Home screen so you can test signup/login UI without a backend.
-const bool skipOtp = false;
+const bool skipOtp = true;
 
 class SoulApp extends ConsumerWidget {
   const SoulApp({super.key});
@@ -74,7 +74,7 @@ class SoulApp extends ConsumerWidget {
 
       // Keep legacy named routes for existing screens
       routes: {
-        LoginScreen.route: (_) => const LoginScreen(),
+  Routes.login: (_) => const NewLogin.LoginScreen(),
         OnboardingScreen.route: (_) => const OnboardingScreen(),
         HomeScreen.route: (_) => const HomeScreen(),
         MoodScreen.route: (_) => const MoodScreen(),
@@ -207,8 +207,9 @@ class _AuthGate extends ConsumerWidget {
         message: 'Startup error: $e',
         onRetry: () => ref.invalidate(authControllerProvider),
       ),
-      data: (state) =>
-          state.isAuthenticated ? const HomeScreen() : const LoginScreen(),
+    data: (state) => state.isAuthenticated
+      ? const HomeScreen()
+      : const NewLogin.LoginScreen(),
     );
   }
 }

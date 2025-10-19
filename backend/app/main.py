@@ -51,6 +51,7 @@ from app.controllers import timers as timers_controller
 from app.controllers import admin as admin_controller
 from app.controllers import analytics as analytics_controller
 from app.controllers import privacy as privacy_controller
+from app.controllers import mental_health_tracking
 
 # SQLAlchemy setup
 DATABASE_URL = settings.DATABASE_URL
@@ -92,10 +93,17 @@ async def accept_language_middleware(request: Request, call_next):
 
     # Prefer explicit header parsing with q-values
 
+    candidate = None
     try:
         from app.services.i18n import available_locales
 
-
+        candidate = parse_accept_language(al or '', available_locales())
+    except Exception:
+        try:
+            # Fallback: try parsing without a list of available locales
+            candidate = parse_accept_language(al or '')
+        except Exception:
+            candidate = None
 
     # If there's an Authorization bearer token, try to get profile language and cache it on request
 
@@ -226,6 +234,7 @@ app.include_router(community.router, prefix="/api", tags=["community"])
 
 app.include_router(crisis.router, prefix="/api/crisis", tags=["crisis"])
 
+app.include_router(mental_health_tracking.router)
 
 app.include_router(i18n.router, prefix="/api", tags=["i18n"])
 

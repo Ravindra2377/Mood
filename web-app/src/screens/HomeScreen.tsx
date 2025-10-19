@@ -30,11 +30,11 @@ const QUOTES = [
 ];
 
 const MOODS = [
-  { emoji: "😡", label: "Angry" },
-  { emoji: "😔", label: "Sad" },
-  { emoji: "😐", label: "Neutral" },
-  { emoji: "🙂", label: "Content" },
-  { emoji: "😄", label: "Happy" },
+  { image: "/mood-1.png", label: "Angry" },
+  { image: "/mood-2.png", label: "Sad" },
+  { image: "/mood-3.png", label: "Neutral" },
+  { image: "/mood-4.png", label: "Content" },
+  { image: "/mood-5.png", label: "Happy" },
 ];
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ user, navigateTo }) => {
@@ -73,7 +73,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ user, navigateTo }) => {
         <div className="mood-emojis">
           {MOODS.map((mood, idx) => (
             <span
-              key={mood.emoji}
+              key={mood.image}
               className={`mood-emoji${selectedMood === idx ? " selected" : ""}`}
               title={mood.label}
               onClick={() => handleMoodSelect(idx)}
@@ -81,7 +81,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ user, navigateTo }) => {
               role="button"
               aria-label={mood.label}
             >
-              {mood.emoji}
+              <img src={mood.image} alt={mood.label} />
             </span>
           ))}
         </div>

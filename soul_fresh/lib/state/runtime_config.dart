@@ -12,7 +12,17 @@ class RuntimeConfigController extends AsyncNotifier<String> {
   Future<String> build() async {
     // Load persisted base URL if present, otherwise fall back to the full API base (base + /api).
     final saved = await _storage.read(key: _storageKey);
-    return (saved != null && saved.isNotEmpty) ? saved : AppConfig.apiBaseUrl;
+
+    if (saved != null && saved.isNotEmpty) {
+      // If the persisted value still points to the old production host while running locally,
+      // override it so developers don't need to clear storage manually.
+      if (saved.contains('soulapp.app') && AppConfig.baseUrl.contains('10.0.2.2')) {
+        return AppConfig.apiBaseUrl;
+      }
+      return saved;
+    }
+
+    return AppConfig.apiBaseUrl;
   }
 
   Future<void> setBaseUrl(String url) async {

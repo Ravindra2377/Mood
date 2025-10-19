@@ -11,16 +11,6 @@ import '../screens/privacy_settings_screen.dart';
 
 /// App router configuration
 class AppRouter {
-  final WidgetRef ref;
-
-  AppRouter(this.ref);
-
-  /// Check if user is authenticated
-  Future<bool> _isAuthenticated() async {
-    final authService = ref.read(authServiceProvider);
-    return await authService.isAuthenticated();
-  }
-
   /// Generate routes
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -48,31 +38,23 @@ class AppRouter {
       // Home route (protected)
       case Routes.home:
         return MaterialPageRoute(
-          builder: (_) => FutureBuilder<bool>(
-            future: _isAuthenticated(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                );
-              }
-              
-              if (snapshot.data == true) {
-                // TODO: Replace with actual HomeScreen
-                return Scaffold(
-                  appBar: AppBar(title: const Text('Home')),
-                  body: const Center(
-                    child: Text('Home Screen - To be implemented'),
+          builder: (_) => Scaffold(
+            appBar: AppBar(title: const Text('Home')),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Home Screen - Logged In!'),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(_).pushNamed(Routes.profile);
+                    },
+                    child: const Text('Go to Profile'),
                   ),
-                );
-              } else {
-                // Redirect to login
-                Future.microtask(() {
-                  Navigator.of(context).pushReplacementNamed(Routes.login);
-                });
-                return const SizedBox.shrink();
-              }
-            },
+                ],
+              ),
+            ),
           ),
           settings: settings,
         );
@@ -133,5 +115,5 @@ class AppRouter {
   }
 }
 
-/// Provider for AppRouter
-final appRouterProvider = Provider<AppRouter>((ref) => AppRouter(ref));
+/// Provider for AppRouter  
+final appRouterProvider = Provider<AppRouter>((ref) => AppRouter());
