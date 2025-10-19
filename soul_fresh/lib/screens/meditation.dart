@@ -56,13 +56,8 @@ class _MeditationScreenState extends State<MeditationScreen>
                       shape: BoxShape.circle,
                     ),
                   ),
-                  Image.asset('assets/images/meditation_brain.png',
-                      width: 120, height: 120, fit: BoxFit.contain),
-                  Positioned(
-                    bottom: 0,
-                    child: Image.asset('assets/images/meditation_child.png',
-                        width: 100, height: 100, fit: BoxFit.contain),
-                  ),
+                  Image.asset('assets/images/meditation_child.png',
+                      width: 150, height: 150, fit: BoxFit.contain),
                   const Positioned(
                     bottom: 16,
                     child: Text('Inhale...',
