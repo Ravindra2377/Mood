@@ -7,16 +7,13 @@ import 'state/app_state.dart';
 import 'state/runtime_config.dart';
 import 'state/ui_state.dart';
 import 'screens/journal_list.dart';
-import 'screens/meditation.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/expression_screen.dart';
 import 'screens/enhanced_meditation_screen.dart';
 import 'screens/activities_screen.dart';
 import 'screens/resources_screen.dart';
 import 'screens/profile_screen.dart';
-import 'widgets/mood_widgets.dart';
 import 'widgets/mood_selector.dart';
-import 'widgets/time_filter_pills.dart';
 import 'widgets/activity_card.dart';
 import 'models/journal_entry_adapter.dart';
 import 'models/app_models.dart';
@@ -26,8 +23,6 @@ import 'data/appMockData.dart';
 import 'core/router.dart';
 import 'core/routes.dart';
 import 'screens/login_screen.dart' as NewLogin;
-import 'screens/signup_screen.dart';
-import 'screens/otp_verification_screen.dart';
 import 'screens/mental_health_dashboard.dart';
 import 'screens/mental_health/stress_management_screen.dart';
 import 'screens/mental_health/mood_tracking_screen.dart';
@@ -559,7 +554,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final gradient = Theme.of(context).extension<SoulGradients>()?.pastel ??
         const LinearGradient(colors: [Colors.blue, Colors.teal]);
     final selectedMood = ref.watch(selectedMoodProvider);
-    final selectedFilter = ref.watch(timeFilterProvider);
 
     return Scaffold(
       body: Container(
@@ -607,14 +601,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                // Time filter pills
-                TimeFilterPills(
-                  selectedFilter: selectedFilter,
-                  onFilterSelected: (filter) {
-                    ref.read(timeFilterProvider.notifier).state = filter;
-                  },
-                ),
-                const SizedBox(height: 16),
                 // Search bar
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
