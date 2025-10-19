@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:soul_fresh/config/app_colors.dart';
+import 'package:soul/config/app_colors.dart';
 
 // Providers
 final sleepLogsProvider =
@@ -88,7 +88,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
           unselectedLabelColor: AppColors.secondaryText,
           indicatorColor: const Color(0xFF6C5CE7),
           tabs: const [
-            Tab(icon: Icon(Icons.bed_time), text: 'Log'),
+            Tab(icon: Icon(Icons.bedtime), text: 'Log'),
             Tab(icon: Icon(Icons.show_chart), text: 'Analytics'),
             Tab(icon: Icon(Icons.tips_and_updates), text: 'Tips'),
           ],

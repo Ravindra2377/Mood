@@ -28,6 +28,13 @@ import 'screens/login_screen.dart' as NewLogin;
 import 'screens/signup_screen.dart';
 import 'screens/otp_verification_screen.dart';
 import 'screens/mental_health_dashboard.dart';
+import 'screens/mental_health/stress_management_screen.dart';
+import 'screens/mental_health/mood_tracking_screen.dart';
+import 'screens/mental_health/sleep_tracking_screen.dart';
+import 'screens/mental_health/mindfulness_screen.dart';
+import 'screens/mental_health/anxiety_management_screen.dart';
+import 'screens/mental_health/wellness_screen.dart';
+import 'config/app_colors.dart';
 
 /// SOUL Flutter application entry point
 ///
@@ -51,6 +58,9 @@ Future<void> main() async {
 // When true the app will directly set a dummy access token and navigate
 // to the Home screen so you can test signup/login UI without a backend.
 const bool skipOtp = true;
+
+// Provider to track current tab in mental health dashboard
+final mentalHealthTabProvider = StateProvider<int>((ref) => 0);
 
 class SoulApp extends ConsumerWidget {
   const SoulApp({super.key});
@@ -798,16 +808,62 @@ class MoodScreen extends StatelessWidget {
 
 // Journal list screen implemented in `lib/screens/journal_list.dart`.
 
-class AnalyticsScreen extends StatelessWidget {
+class AnalyticsScreen extends ConsumerWidget {
   static const route = '/analytics';
   const AnalyticsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentTab = ref.watch(mentalHealthTabProvider);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Analytics')),
-      body: const Center(
-        child: Text('Charts and insights will be rendered here.'),
+      backgroundColor: AppColors.backgroundColor,
+      body: IndexedStack(
+        index: currentTab,
+        children: const [
+          StressManagementScreen(),
+          MoodTrackingScreen(),
+          SleepTrackingScreen(),
+          MindfulnessScreen(),
+          AnxietyManagementScreen(),
+          WellnessScreen(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentTab,
+        onTap: (index) {
+          ref.read(mentalHealthTabProvider.notifier).state = index;
+        },
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: AppColors.cardColor,
+        selectedItemColor: const Color(0xFF6C5CE7),
+        unselectedItemColor: AppColors.secondaryText,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.psychology),
+            label: 'Stress',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.mood),
+            label: 'Mood',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bedtime),
+            label: 'Sleep',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Mindfulness',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.track_changes),
+            label: 'Anxiety',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            label: 'Wellness',
+          ),
+        ],
       ),
     );
   }

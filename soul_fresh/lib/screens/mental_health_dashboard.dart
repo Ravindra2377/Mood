@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:soul_fresh/config/app_colors.dart';
-import 'package:soul_fresh/screens/mental_health/stress_management_screen.dart';
-import 'package:soul_fresh/screens/mental_health/mood_tracking_screen.dart';
-import 'package:soul_fresh/screens/mental_health/sleep_tracking_screen.dart';
-import 'package:soul_fresh/screens/mental_health/mindfulness_screen.dart';
-import 'package:soul_fresh/screens/mental_health/anxiety_management_screen.dart';
-import 'package:soul_fresh/screens/mental_health/wellness_screen.dart';
+import 'package:soul/config/app_colors.dart';
+import 'mental_health/stress_management_screen.dart';
+import 'mental_health/mood_tracking_screen.dart';
+import 'mental_health/sleep_tracking_screen.dart';
+import 'mental_health/mindfulness_screen.dart';
+import 'mental_health/anxiety_management_screen.dart';
+import 'mental_health/wellness_screen.dart';
 
 // Provider to track current tab
 final mentalHealthTabProvider = StateProvider<int>((ref) => 0);
@@ -23,7 +23,7 @@ class MentalHealthDashboard extends ConsumerWidget {
       body: IndexedStack(
         index: currentTab,
         children: const [
-          StressTrackingScreen(),
+          StressManagementScreen(),
           MoodTrackingScreen(),
           SleepTrackingScreen(),
           MindfulnessScreen(),
@@ -50,7 +50,7 @@ class MentalHealthDashboard extends ConsumerWidget {
             label: 'Mood',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bed_time),
+            icon: Icon(Icons.bedtime),
             label: 'Sleep',
           ),
           BottomNavigationBarItem(

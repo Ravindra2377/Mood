@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:soul_fresh/config/app_colors.dart';
+import 'package:soul/config/app_colors.dart';
 
 // Providers
 final dailyCheckinProvider =
@@ -612,9 +612,9 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
           // Add Goal Button
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton.outlined(
+            child: OutlinedButton(
               onPressed: () {},
-              style: ElevatedButton.styleFrom(
+              style: OutlinedButton.styleFrom(
                 side: const BorderSide(
                   color: Color(0xFFFFB347),
                   width: 2,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:soul_fresh/config/app_colors.dart';
-import 'package:soul_fresh/models/mental_health_models.dart';
+import 'package:soul/config/app_colors.dart';
+import 'package:soul/models/mental_health_models.dart';
 
 // Provider for stress logs
 final stressLogsProvider =

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:soul_fresh/config/app_colors.dart';
+import 'package:soul/config/app_colors.dart';
 
 // Providers
 final meditationSessionsProvider =
@@ -448,16 +448,17 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
                     color: unlocked ? const Color(0xFF00B894) : Colors.grey,
                     width: 1,
                   ),
-                  opacity: unlocked ? 1 : 0.6,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      icon,
-                      style: TextStyle(
-                        fontSize: 28,
-                        opacity: unlocked ? 1 : 0.5,
+                    Opacity(
+                      opacity: unlocked ? 1 : 0.6,
+                      child: Text(
+                        icon,
+                        style: const TextStyle(
+                          fontSize: 28,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 4),

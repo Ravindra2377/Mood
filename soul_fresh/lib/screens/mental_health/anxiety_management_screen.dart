@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:soul_fresh/config/app_colors.dart';
+import 'package:soul/config/app_colors.dart';
 
 // Providers
 final anxietyLogsProvider =
@@ -483,9 +483,9 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
           // Edit Safety Plan Button
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton.outlined(
+            child: OutlinedButton(
               onPressed: () {},
-              style: ElevatedButton.styleFrom(
+              style: OutlinedButton.styleFrom(
                 side: const BorderSide(
                   color: Color(0xFF00D2D3),
                   width: 2,

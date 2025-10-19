@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:soul_fresh/config/app_colors.dart';
+import 'package:soul/config/app_colors.dart';
 
 // Providers
 final moodEntriesProvider =
