@@ -88,7 +88,6 @@ class SoulApp extends ConsumerWidget {
   Routes.login: (_) => const NewLogin.LoginScreen(),
         OnboardingScreen.route: (_) => const OnboardingScreen(),
         HomeScreen.route: (_) => const HomeScreen(),
-        '/mental-health': (_) => const MentalHealthDashboard(),
         MoodScreen.route: (_) => const MoodScreen(),
         ExpressionScreen.route: (_) => const ExpressionScreen(),
         EnhancedMeditationScreen.route: (_) => const EnhancedMeditationScreen(),
@@ -673,20 +672,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 // Quick actions
                 Row(
                   children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/mental-health');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF6C5CE7),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.all(16),
-                        ),
-                        child: const Text('Mental Health'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
