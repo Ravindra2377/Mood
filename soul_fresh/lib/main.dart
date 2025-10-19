@@ -13,6 +13,7 @@ import 'screens/expression_screen.dart';
 import 'screens/enhanced_meditation_screen.dart';
 import 'screens/activities_screen.dart';
 import 'screens/resources_screen.dart';
+import 'screens/profile_screen.dart';
 import 'widgets/mood_widgets.dart';
 import 'widgets/mood_selector.dart';
 import 'widgets/time_filter_pills.dart';
@@ -88,11 +89,13 @@ class SoulApp extends ConsumerWidget {
   Routes.login: (_) => const NewLogin.LoginScreen(),
         OnboardingScreen.route: (_) => const OnboardingScreen(),
         HomeScreen.route: (_) => const HomeScreen(),
+        '/mental-health': (_) => const MentalHealthDashboard(),
         MoodScreen.route: (_) => const MoodScreen(),
         ExpressionScreen.route: (_) => const ExpressionScreen(),
         EnhancedMeditationScreen.route: (_) => const EnhancedMeditationScreen(),
         ActivitiesScreen.route: (_) => const ActivitiesScreen(),
         ResourcesScreen.route: (_) => const ResourcesScreen(),
+        ProfileScreen.route: (_) => const ProfileScreen(),
         JournalListScreen.route: (_) => const JournalListScreen(),
         AnalyticsScreen.route: (_) => const AnalyticsScreen(),
         SettingsScreen.route: (_) => const SettingsScreen(),
@@ -570,9 +573,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 // Header
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 24,
-                      backgroundImage: NetworkImage(AppMockData.userAvatarUrl),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, ProfileScreen.route);
+                      },
+                      child: CircleAvatar(
+                        radius: 24,
+                        backgroundImage: NetworkImage(AppMockData.userAvatarUrl),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
