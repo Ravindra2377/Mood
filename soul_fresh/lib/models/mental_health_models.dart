@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
-
-/// Mental Health Data Models
-/// All classes for tracking stress, mood, sleep, mindfulness, anxiety, and wellness
+// Mental Health Data Models
+// All classes for tracking stress, mood, sleep, mindfulness, anxiety, and wellness
 
 // ============ STRESS MODELS ============
 class StressLog {

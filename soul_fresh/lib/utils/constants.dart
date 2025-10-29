@@ -25,7 +25,7 @@ class Constants {
   static const Duration animationDuration = Duration(milliseconds: 300);
   static const Duration snackBarDuration = Duration(seconds: 3);
   static const Duration errorSnackBarDuration = Duration(seconds: 5);
-  static const Duration debounceD uration = Duration(milliseconds: 500);
+  static const Duration debounceDuration = Duration(milliseconds: 500);
 
   // Limits
   static const int maxJournalTitleLength = 100;

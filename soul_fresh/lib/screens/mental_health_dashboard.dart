@@ -7,6 +7,7 @@ import 'mental_health/sleep_tracking_screen.dart';
 import 'mental_health/mindfulness_screen.dart';
 import 'mental_health/anxiety_management_screen.dart';
 import 'mental_health/wellness_screen.dart';
+import '../features/exercises/screens/exercises_main_screen.dart';
 
 // Provider to track current tab
 final mentalHealthTabProvider = StateProvider<int>((ref) => 0);
@@ -29,6 +30,7 @@ class MentalHealthDashboard extends ConsumerWidget {
           MindfulnessScreen(),
           AnxietyManagementScreen(),
           WellnessScreen(),
+          ExercisesMainScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -64,6 +66,10 @@ class MentalHealthDashboard extends ConsumerWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_border),
             label: 'Wellness',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fitness_center),
+            label: 'Exercises',
           ),
         ],
       ),

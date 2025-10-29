@@ -11,7 +11,7 @@ import 'screens/onboarding_screen.dart';
 import 'screens/expression_screen.dart';
 import 'screens/enhanced_meditation_screen.dart';
 import 'screens/activities_screen.dart';
-import 'screens/resources_screen.dart';
+import 'screens/self_help_screen.dart';
 import 'screens/profile_screen.dart';
 import 'widgets/mood_selector.dart';
 import 'widgets/activity_card.dart';
@@ -30,6 +30,9 @@ import 'screens/mental_health/sleep_tracking_screen.dart';
 import 'screens/mental_health/mindfulness_screen.dart';
 import 'screens/mental_health/anxiety_management_screen.dart';
 import 'screens/mental_health/wellness_screen.dart';
+import 'features/exercises/screens/exercises_main_screen.dart';
+import 'features/analytics/services/analytics_service.dart';
+import 'features/analytics/screens/unified_analytics_screen.dart';
 import 'config/app_colors.dart';
 
 /// SOUL Flutter application entry point
@@ -46,6 +49,9 @@ Future<void> main() async {
   await Hive.initFlutter();
   // Register adapters used by local storage
   if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(JournalEntryAdapter());
+  
+  // Initialize analytics service
+  await AnalyticsService.initialize();
 
   runApp(const ProviderScope(child: SoulApp()));
 }
@@ -89,11 +95,11 @@ class SoulApp extends ConsumerWidget {
         ExpressionScreen.route: (_) => const ExpressionScreen(),
         EnhancedMeditationScreen.route: (_) => const EnhancedMeditationScreen(),
         ActivitiesScreen.route: (_) => const ActivitiesScreen(),
-        ResourcesScreen.route: (_) => const ResourcesScreen(),
+  SelfHelpScreen.route: (_) => const SelfHelpScreen(),
         ProfileScreen.route: (_) => const ProfileScreen(),
         JournalListScreen.route: (_) => const JournalListScreen(),
-        AnalyticsScreen.route: (_) => const AnalyticsScreen(),
-        SettingsScreen.route: (_) => const SettingsScreen(),
+        AnalyticsScreen.route: (_) => const UnifiedAnalyticsScreen(),
+        ExercisesMainScreen.route: (_) => const ExercisesMainScreen(),
       },
     );
   }
@@ -544,7 +550,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         Navigator.pushNamed(context, AnalyticsScreen.route);
         break;
       case 3:
-        Navigator.pushNamed(context, SettingsScreen.route);
+        Navigator.pushNamed(context, ProfileScreen.route);
         break;
     }
   }
@@ -653,9 +659,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         activity: activity,
                         onTap: () {
                           if (activity.type == ActivityType.yoga) {
-                            Navigator.pushNamed(context, EnhancedMeditationScreen.route);
+                            Navigator.pushNamed(
+                              context,
+                              EnhancedMeditationScreen.route,
+                            );
                           } else if (activity.type == ActivityType.journal) {
-                            Navigator.pushNamed(context, ExpressionScreen.route);
+                            Navigator.pushNamed(
+                              context,
+                              ExpressionScreen.route,
+                            );
+                          } else if (activity.type == ActivityType.exercises) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const ExercisesMainScreen(),
+                              ),
+                            );
                           }
                         },
                       );
@@ -683,7 +701,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, ResourcesScreen.route);
+                          Navigator.pushNamed(context, SelfHelpScreen.route);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -756,7 +774,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   radius: 18,
                   backgroundColor: _selectedIndex == 3 ? Colors.black : Colors.white,
                   child: Icon(
-                    Icons.settings,
+                    Icons.person,
                     color: _selectedIndex == 3 ? Colors.white : Colors.black,
                   ),
                 ),
@@ -872,23 +890,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: Text('Appearance'),
             subtitle: Text('Light / Dark will follow system for now'),
           ),
-          RadioListTile<ThemeMode>(
-            title: const Text('System'),
-            value: ThemeMode.system,
-            groupValue: _mode,
-            onChanged: (v) => setState(() => _mode = v ?? ThemeMode.system),
-          ),
-          RadioListTile<ThemeMode>(
-            title: const Text('Light'),
-            value: ThemeMode.light,
-            groupValue: _mode,
-            onChanged: (v) => setState(() => _mode = v ?? ThemeMode.system),
-          ),
-          RadioListTile<ThemeMode>(
-            title: const Text('Dark'),
-            value: ThemeMode.dark,
-            groupValue: _mode,
-            onChanged: (v) => setState(() => _mode = v ?? ThemeMode.system),
+          Column(
+            children: [
+              RadioListTile<ThemeMode>(
+                value: ThemeMode.system,
+                groupValue: _mode,
+                onChanged: (v) => setState(() => _mode = v ?? ThemeMode.system),
+                title: const Text('System'),
+              ),
+              RadioListTile<ThemeMode>(
+                value: ThemeMode.light,
+                groupValue: _mode,
+                onChanged: (v) => setState(() => _mode = v ?? ThemeMode.system),
+                title: const Text('Light'),
+              ),
+              RadioListTile<ThemeMode>(
+                value: ThemeMode.dark,
+                groupValue: _mode,
+                onChanged: (v) => setState(() => _mode = v ?? ThemeMode.system),
+                title: const Text('Dark'),
+              ),
+            ],
           ),
           const Divider(),
           const ListTile(

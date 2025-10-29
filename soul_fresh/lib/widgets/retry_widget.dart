@@ -262,7 +262,7 @@ class ErrorCard extends StatelessWidget {
               const SizedBox(height: 12),
               Align(
                 alignment: Alignment.centerRight,
-                child: CompactRetryButton(onRetry: onRetry),
+                child: CompactRetryButton(onRetry: onRetry!),
               ),
             ],
           ],

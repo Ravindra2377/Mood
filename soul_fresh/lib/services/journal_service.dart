@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../state/app_state.dart';
 import 'api_client.dart';
 
 /// Service for journal-related API calls
@@ -13,7 +15,7 @@ class JournalService {
     DateTime? timestamp,
   }) async {
     try {
-      await _apiClient.saveJournalEntry({
+  await (_apiClient as dynamic).saveJournalEntry({
         'text': text,
         'timestamp': (timestamp ?? DateTime.now()).toIso8601String(),
       });
@@ -29,7 +31,7 @@ class JournalService {
     int? limit,
   }) async {
     try {
-      return await _apiClient.getJournalEntries(
+  return await (_apiClient as dynamic).getJournalEntries(
         startDate: startDate?.toIso8601String(),
         endDate: endDate?.toIso8601String(),
         limit: limit,
@@ -42,7 +44,7 @@ class JournalService {
   /// Delete journal entry
   Future<void> deleteJournalEntry(String entryId) async {
     try {
-      await _apiClient.deleteJournalEntry(entryId);
+  await (_apiClient as dynamic).deleteJournalEntry(entryId);
     } catch (e) {
       throw Exception('Failed to delete journal entry: $e');
     }

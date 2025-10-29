@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../state/app_state.dart';
 import 'api_client.dart';
 
 /// Service for user profile API calls
@@ -10,7 +12,7 @@ class UserService {
   /// Fetch user profile
   Future<Map<String, dynamic>> getUserProfile() async {
     try {
-      return await _apiClient.getUserProfile();
+  return await (_apiClient as dynamic).getUserProfile();
     } catch (e) {
       throw Exception('Failed to fetch user profile: $e');
     }
@@ -19,7 +21,7 @@ class UserService {
   /// Update user profile
   Future<void> updateUserProfile(Map<String, dynamic> data) async {
     try {
-      await _apiClient.updateUserProfile(data);
+  await (_apiClient as dynamic).updateUserProfile(data);
     } catch (e) {
       throw Exception('Failed to update user profile: $e');
     }

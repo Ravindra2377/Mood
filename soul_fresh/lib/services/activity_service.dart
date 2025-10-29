@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/app_models.dart';
+import '../state/app_state.dart';
 import 'api_client.dart';
 
 /// Service for activity-related API calls
@@ -12,7 +14,7 @@ class ActivityService {
   /// Fetch user's activities
   Future<List<Activity>> getActivities() async {
     try {
-      final response = await _apiClient.getActivities();
+  final response = await (_apiClient as dynamic).getActivities();
       
       return response.map((item) => Activity(
         id: item['id'] as String,
@@ -29,7 +31,7 @@ class ActivityService {
   /// Fetch activity statistics
   Future<List<ActivityStat>> getActivityStats({DateTime? date}) async {
     try {
-      final response = await _apiClient.getActivityStats(
+  final response = await (_apiClient as dynamic).getActivityStats(
         date: date?.toIso8601String(),
       );
       
@@ -48,7 +50,7 @@ class ActivityService {
   /// Fetch physical state data
   Future<PhysicalState> getPhysicalState({DateTime? date}) async {
     try {
-      final response = await _apiClient.getPhysicalState(
+  final response = await (_apiClient as dynamic).getPhysicalState(
         date: date?.toIso8601String(),
       );
       

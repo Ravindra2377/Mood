@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/routes.dart';
-import '../services/auth_service.dart';
 import '../screens/login_screen.dart';
 import '../screens/signup_screen.dart';
 import '../screens/otp_verification_screen.dart';
 import '../screens/profile_screen.dart';
-import '../screens/settings_screen.dart';
 import '../screens/privacy_settings_screen.dart';
+import '../features/exercises/exercise_routes.dart';
 
 /// App router configuration
 class AppRouter {
   /// Generate routes
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    final exerciseRoute = createExerciseRoute(settings);
+    if (exerciseRoute != null) {
+      return exerciseRoute;
+    }
+
     switch (settings.name) {
       // Auth routes
       case Routes.login:
@@ -63,12 +67,6 @@ class AppRouter {
       case Routes.profile:
         return MaterialPageRoute(
           builder: (_) => const ProfileScreen(),
-          settings: settings,
-        );
-
-      case Routes.settings:
-        return MaterialPageRoute(
-          builder: (_) => const SettingsScreen(),
           settings: settings,
         );
 

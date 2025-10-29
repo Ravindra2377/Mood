@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/app_models.dart';
+import '../state/app_state.dart';
 import 'api_client.dart';
 
 /// Service for content and resources API calls
@@ -11,7 +13,7 @@ class ContentService {
   /// Fetch daily quote
   Future<Quote> getDailyQuote() async {
     try {
-      final response = await _apiClient.getDailyQuote();
+  final response = await (_apiClient as dynamic).getDailyQuote();
       
       return Quote(
         text: response['text'] as String,
@@ -28,7 +30,7 @@ class ContentService {
     int? limit,
   }) async {
     try {
-      final response = await _apiClient.getContentItems(
+  final response = await (_apiClient as dynamic).getContentItems(
         type: type?.toString().split('.').last,
         limit: limit,
       );

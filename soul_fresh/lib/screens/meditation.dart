@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class MeditationSession {
   final String id;
@@ -25,8 +26,10 @@ class MeditationScreen extends StatefulWidget {
 class _MeditationScreenState extends State<MeditationScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
+  late final AudioPlayer _audioPlayer;
   bool _playing = false;
   int _selectedMusicIndex = 0;
+  late final Stopwatch _stopwatch;
 
   final List<MeditationSession> _musicOptions = [
     MeditationSession(
@@ -86,12 +89,34 @@ class _MeditationScreenState extends State<MeditationScreen>
       vsync: this,
       duration: const Duration(seconds: 4),
     );
+    _stopwatch = Stopwatch();
+    _audioPlayer = AudioPlayer();
   }
 
   @override
   void dispose() {
     _ctrl.dispose();
+    _stopwatch.stop();
+    _audioPlayer.dispose();
     super.dispose();
+  }
+
+  String _formatTime(int milliseconds) {
+    int seconds = milliseconds ~/ 1000;
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  void _scheduleUpdate() {
+    if (_playing && mounted) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          setState(() {});
+          _scheduleUpdate();
+        }
+      });
+    }
   }
 
   @override
@@ -232,18 +257,24 @@ class _MeditationScreenState extends State<MeditationScreen>
             Column(
               children: [
                 FilledButton.icon(
-                  onPressed: () {
+                  onPressed: () async {
                     setState(() {
                       _playing = !_playing;
-                      if (_playing) {
-                        _ctrl.repeat(reverse: true);
-                        // Audio playback would be triggered here
-                        // _audioPlayer.play(_musicOptions[_selectedMusicIndex].audioPath);
-                      } else {
-                        _ctrl.stop();
-                        // _audioPlayer.pause();
-                      }
                     });
+                    if (_playing) {
+                      _ctrl.repeat(reverse: true);
+                      _stopwatch.start();
+                      // Mock audio playback - shows sound is "playing"
+                      // In production, add actual MP3 files to assets/audio/
+                      debugPrint('🔊 Playing: ${_musicOptions[_selectedMusicIndex].name}');
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        _scheduleUpdate();
+                      });
+                    } else {
+                      _ctrl.stop();
+                      _stopwatch.stop();
+                      debugPrint('⏸️ Paused');
+                    }
                   },
                   icon: Icon(_playing ? Icons.pause : Icons.play_arrow),
                   label: Text(_playing ? 'Pause' : 'Start'),
@@ -254,11 +285,16 @@ class _MeditationScreenState extends State<MeditationScreen>
                   ),
                 ),
                 const SizedBox(height: 24),
-                Text(
-                  '00:00',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                AnimatedBuilder(
+                  animation: _ctrl,
+                  builder: (context, child) {
+                    return Text(
+                      _formatTime(_stopwatch.elapsedMilliseconds),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -303,7 +339,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                     '4. Uncomment audio playback code in this file.',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade700,
+                      color: Color(0xFF616161),
                       height: 1.6,
                     ),
                   ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:soul_fresh/config/app_colors.dart';
+import 'package:soul/config/app_colors.dart';
 
 // Model for goal category
 class GoalCategory {
@@ -28,9 +28,9 @@ class WellnessGoalSelectionScreen extends ConsumerStatefulWidget {
   final VoidCallback onComplete;
 
   const WellnessGoalSelectionScreen({
-    Key? key,
+    super.key,
     required this.onComplete,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<WellnessGoalSelectionScreen> createState() =>
@@ -186,7 +186,7 @@ class _WellnessGoalSelectionScreenState
                   child: Text(
                     '💡 Tip: You can change these anytime in settings',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.primaryColor,
+                          color: AppColors.primary,
                         ),
                   ),
                 ),
@@ -241,8 +241,8 @@ class _WellnessGoalSelectionScreenState
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    disabledBackgroundColor: AppColors.primaryColor.withOpacity(0.5),
+                      backgroundColor: AppColors.primary,
+                    disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
                     padding: const EdgeInsets.symmetric(
                       vertical: 16,
                       horizontal: 32,
@@ -425,7 +425,7 @@ class _GoalCard extends StatelessWidget {
               ),
             ],
           ),
-        );
+        ),
       ),
     );
   }

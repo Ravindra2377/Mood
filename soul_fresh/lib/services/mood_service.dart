@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/app_models.dart';
+import '../state/app_state.dart';
 import 'api_client.dart';
 
 /// Service for mood-related API calls
@@ -15,7 +17,7 @@ class MoodService {
   }) async {
     try {
       // Replace with your actual API endpoint
-      final response = await _apiClient.getMoodHistory(
+  final response = await (_apiClient as dynamic).getMoodHistory(
         startDate: startDate?.toIso8601String(),
         endDate: endDate?.toIso8601String(),
       );
@@ -38,7 +40,7 @@ class MoodService {
     DateTime? timestamp,
   }) async {
     try {
-      await _apiClient.saveMood({
+  await (_apiClient as dynamic).saveMood({
         'mood': mood.toString().split('.').last,
         'value': value,
         'timestamp': (timestamp ?? DateTime.now()).toIso8601String(),

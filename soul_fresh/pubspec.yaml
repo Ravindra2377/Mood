@@ -33,8 +33,11 @@ dependencies:
   # Audio playback for meditation sounds
   audioplayers: ^5.0.0
 
-  # Utilities
+  # Device vibration feedback
+  vibration: ^3.1.4
 
+  # Utilities
+  url_launcher: ^6.2.0
   intl: ^0.19.0
 
   collection: ^1.18.0
@@ -57,7 +60,6 @@ flutter:
     - assets/web/soul_web.html
     - assets/audio/
     - assets/images/brain.png
-    - assets/images/meditation_brain.png
     - assets/images/meditation_child.png
     - assets/images/mood_angry.png
     - assets/images/mood_sad.png

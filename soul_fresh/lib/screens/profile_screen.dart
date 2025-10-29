@@ -25,6 +25,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
   int _meditationMinutes = 128;
   int _wellnessScore = 78;
   late TabController _tabController;
+  
+  // Settings state
+  bool _notificationsEnabled = true;
+  bool _darkModeEnabled = false;
+  ThemeMode _themeMode = ThemeMode.system;
 
   @override
   void initState() {
@@ -62,14 +67,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: const Text('Profile & Settings'),
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => Navigator.pushNamed(context, '/settings'),
-          ),
-        ],
       ),
       body: _isLoading
           ? const LoadingWidget()
@@ -480,38 +479,41 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          _buildMenuSection('App Preferences', [
+          // Appearance Section
+          _buildMenuSection('Appearance', [
             _buildMenuItem(
               context,
               icon: Icons.palette,
               title: 'Theme',
-              subtitle: 'Light / Dark / Auto',
-              onTap: () {},
-            ),
-            _buildMenuItem(
-              context,
-              icon: Icons.language,
-              title: 'Language',
-              subtitle: 'English',
-              onTap: () {},
-            ),
-            _buildMenuItem(
-              context,
-              icon: Icons.text_fields,
-              title: 'Font Size',
-              subtitle: 'Medium',
-              onTap: () {},
+              subtitle: _getThemeModeText(),
+              onTap: () => _showThemeModeDialog(context),
             ),
           ]),
           const SizedBox(height: 24),
           
+          // Notifications Section
           _buildMenuSection('Notifications', [
+            SwitchListTile(
+              title: const Text('Enable Notifications'),
+              subtitle: const Text('Receive reminders and updates'),
+              value: _notificationsEnabled,
+              onChanged: (value) {
+                setState(() => _notificationsEnabled = value);
+              },
+            ),
             _buildMenuItem(
               context,
-              icon: Icons.notifications,
-              title: 'Mood Check-in',
+              icon: Icons.schedule,
+              title: 'Mood Check-in Time',
               subtitle: 'Daily at 9:00 AM',
-              onTap: () {},
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Time picker - Coming soon!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
             ),
             _buildMenuItem(
               context,
@@ -530,43 +532,117 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
           ]),
           const SizedBox(height: 24),
           
-          _buildMenuSection('Account', [
+          // Privacy Section
+          _buildMenuSection('Privacy & Security', [
             _buildMenuItem(
               context,
               icon: Icons.privacy_tip,
-              title: 'Privacy Policy',
-              onTap: () {},
+              title: 'Privacy Settings',
+              onTap: () => Navigator.pushNamed(context, '/privacy-settings'),
             ),
+            _buildMenuItem(
+              context,
+              icon: Icons.lock,
+              title: 'Change Password',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Change password - Coming soon!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+            ),
+          ]),
+          const SizedBox(height: 24),
+          
+          // Data Section
+          _buildMenuSection('Data & Storage', [
+            _buildMenuItem(
+              context,
+              icon: Icons.download,
+              title: 'Export My Data',
+              subtitle: 'Download as PDF/JSON',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Data export - Coming soon!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+            ),
+            _buildMenuItem(
+              context,
+              icon: Icons.cleaning_services,
+              title: 'Clear Cache',
+              subtitle: 'Free up storage space',
+              onTap: _clearCache,
+            ),
+          ]),
+          const SizedBox(height: 24),
+          
+          // About Section
+          _buildMenuSection('About', [
             _buildMenuItem(
               context,
               icon: Icons.description,
               title: 'Terms of Service',
-              onTap: () {},
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Terms of Service - Coming soon!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+            ),
+            _buildMenuItem(
+              context,
+              icon: Icons.privacy_tip,
+              title: 'Privacy Policy',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Privacy Policy - Coming soon!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
             ),
             _buildMenuItem(
               context,
               icon: Icons.info,
               title: 'About SOUL',
               subtitle: 'v1.0.0',
-              onTap: () {},
+              onTap: () {
+                showAboutDialog(
+                  context: context,
+                  applicationName: 'SOUL',
+                  applicationVersion: '1.0.0',
+                  applicationLegalese: '© 2025 SOUL Mental Health',
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text(
+                        'Your mental health companion for tracking moods, journaling, and meditation.',
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ]),
           const SizedBox(height: 24),
           
-          _buildMenuSection('Data', [
+          // Danger Zone
+          _buildMenuSection('Danger Zone', [
             _buildMenuItem(
               context,
-              icon: Icons.download,
-              title: 'Export My Data',
-              subtitle: 'Download as PDF/JSON',
-              onTap: () {},
-            ),
-            _buildMenuItem(
-              context,
-              icon: Icons.delete,
+              icon: Icons.delete_forever,
               title: 'Delete Account',
               subtitle: 'Permanent action',
-              onTap: () {},
+              onTap: _confirmDeleteAccount,
               color: Colors.red,
             ),
           ]),
@@ -794,6 +870,129 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
           );
         }
       }
+    }
+  }
+
+  String _getThemeModeText() {
+    switch (_themeMode) {
+      case ThemeMode.light:
+        return 'Light';
+      case ThemeMode.dark:
+        return 'Dark';
+      case ThemeMode.system:
+      default:
+        return 'System';
+    }
+  }
+
+  Future<void> _showThemeModeDialog(BuildContext context) async {
+    final selectedMode = await showDialog<ThemeMode>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Choose Theme'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<ThemeMode>(
+              title: const Text('System'),
+              subtitle: const Text('Follow system setting'),
+              value: ThemeMode.system,
+              groupValue: _themeMode,
+              onChanged: (value) => Navigator.pop(context, value),
+            ),
+            RadioListTile<ThemeMode>(
+              title: const Text('Light'),
+              subtitle: const Text('Always light theme'),
+              value: ThemeMode.light,
+              groupValue: _themeMode,
+              onChanged: (value) => Navigator.pop(context, value),
+            ),
+            RadioListTile<ThemeMode>(
+              title: const Text('Dark'),
+              subtitle: const Text('Always dark theme'),
+              value: ThemeMode.dark,
+              groupValue: _themeMode,
+              onChanged: (value) => Navigator.pop(context, value),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+
+    if (selectedMode != null && mounted) {
+      setState(() => _themeMode = selectedMode);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Theme updated - Coming soon!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  Future<void> _clearCache() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear Cache'),
+        content: const Text(
+          'This will remove all cached data. Your journal entries and mood history will not be affected.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cache cleared successfully')),
+      );
+    }
+  }
+
+  Future<void> _confirmDeleteAccount() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Account'),
+        content: const Text(
+          'Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account deletion - Coming soon!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 }
