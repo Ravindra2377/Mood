@@ -42,6 +42,7 @@ from app.controllers import (
     consent,
     journal,
     meditation,
+    exercises,
 )
 
 from app.controllers import timers as timers_controller
@@ -226,6 +227,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(moods.router, prefix="/api", tags=["moods"])
 app.include_router(journal.router, prefix="/api", tags=["journal"])
 app.include_router(meditation.router, prefix="/api", tags=["meditation"])
+app.include_router(exercises.router, prefix="/api", tags=["exercises"])
 app.include_router(profile.router, prefix="/api", tags=["profile"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
 app.include_router(gamification.router, prefix="/api", tags=["gamification"])

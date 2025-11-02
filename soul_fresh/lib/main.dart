@@ -33,6 +33,8 @@ import 'screens/mental_health/wellness_screen.dart';
 import 'features/exercises/screens/exercises_main_screen.dart';
 import 'features/analytics/services/analytics_service.dart';
 import 'features/analytics/screens/unified_analytics_screen.dart';
+import 'features/home/screens/improved_home_screen.dart';
+import 'core/theme/app_theme.dart' as soul_theme;
 import 'config/app_colors.dart';
 
 /// SOUL Flutter application entry point
@@ -75,8 +77,9 @@ class SoulApp extends ConsumerWidget {
       title: 'SOUL',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
+      // Use the redesigned global theme
+      theme: soul_theme.AppTheme.lightTheme,
+      darkTheme: soul_theme.AppTheme.darkTheme,
 
       // Use the AuthGate to decide between Login and Home based on token state.
       home: const _AuthGate(),
@@ -89,7 +92,8 @@ class SoulApp extends ConsumerWidget {
       routes: {
   Routes.login: (_) => const NewLogin.LoginScreen(),
         OnboardingScreen.route: (_) => const OnboardingScreen(),
-        HomeScreen.route: (_) => const HomeScreen(),
+  // Route alias for legacy '/home' now points to the improved home screen
+  HomeScreen.route: (_) => const ImprovedHomeScreen(),
         '/mental-health': (_) => const MentalHealthDashboard(),
         MoodScreen.route: (_) => const MoodScreen(),
         ExpressionScreen.route: (_) => const ExpressionScreen(),
@@ -223,7 +227,7 @@ class _AuthGate extends ConsumerWidget {
         onRetry: () => ref.invalidate(authControllerProvider),
       ),
     data: (state) => state.isAuthenticated
-      ? const HomeScreen()
+      ? const ImprovedHomeScreen()
       : const NewLogin.LoginScreen(),
     );
   }

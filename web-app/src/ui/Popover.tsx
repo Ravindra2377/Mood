@@ -5,13 +5,15 @@ import React from 'react'
 export default function Popover(props: any) {
   const { children, id } = props
   const [open, setOpen] = React.useState(false)
-  const rootRef = React.useRef(null)
+  const rootRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function onDoc(e: any) {
       if (!rootRef.current) return
-      if (rootRef.current.contains(e.target)) return
+      if (rootRef.current.Implement the remaining screens (Activities, Journal, Meditation full UI) to match the design images.
+Make the BottomNavigation responsive to the current route (highlight active item) by wiring into your existing navigation logic (App.tsx uses a custom navigate helper). I can adapt it to use that helper if you prefer not to use react-router for navigation.
+Check the backend too(e.target)) return
       setOpen(false)
     }
     document.addEventListener('click', onDoc)

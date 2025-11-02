@@ -1,11 +1,41 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_typography.dart';
 import '../widgets/exercise_info_dialog.dart';
 
-class ExercisesMainScreen extends StatelessWidget {
+class ExercisesMainScreen extends StatefulWidget {
   static const String route = '/exercises';
 
   const ExercisesMainScreen({super.key});
+
+  @override
+  State<ExercisesMainScreen> createState() => _ExercisesMainScreenState();
+}
+
+class _ExercisesMainScreenState extends State<ExercisesMainScreen> {
+  static const List<_FocusOption> _focusOptions = <_FocusOption>[
+    _FocusOption(
+      id: 'steady',
+      label: 'Find calm',
+      emoji: '😌',
+      description: 'Steady anxious moments with paced breathing and grounding.',
+    ),
+    _FocusOption(
+      id: 'energize',
+      label: 'Boost energy',
+      emoji: '⚡',
+      description: 'Refresh a tired mind with uplifting movement and focus resets.',
+    ),
+    _FocusOption(
+      id: 'reset',
+      label: 'Quick reset',
+      emoji: '🌿',
+      description: 'Take a short pause to clear your head before the next task.',
+    ),
+  ];
+
+  String _selectedFocusId = _focusOptions.first.id;
 
   final List<_ExerciseListItem> _allExercises = const <_ExerciseListItem>[
     _ExerciseListItem(
@@ -120,23 +150,117 @@ class ExercisesMainScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('All Exercises')),
       body: ListView.builder(
-        itemCount: _allExercises.length,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        itemCount: _allExercises.length + 1,
         itemBuilder: (BuildContext context, int index) {
-          final _ExerciseListItem item = _allExercises[index];
-          return ListTile(
-            title: Text(item.name),
-            subtitle: const Text('Tap to learn how this exercise helps'),
-            trailing: const Icon(Icons.info_outline),
-            onTap: () => showExerciseInfoDialog(
-              context,
-              exerciseId: item.id,
-              onStartExercise: () =>
-                  Navigator.of(context).pushNamed(item.route),
+          if (index == 0) {
+            return Column(
+              children: [
+                _buildFocusHeader(),
+                const SizedBox(height: 20),
+              ],
+            );
+          }
+
+          final _ExerciseListItem item = _allExercises[index - 1];
+          return Card(
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            margin: const EdgeInsets.only(bottom: 12),
+            child: ListTile(
+              title: Text(
+                item.name,
+                style: AppTypography.body1.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: const Text('Tap to learn how this exercise helps'),
+              trailing: const Icon(Icons.info_outline),
+              onTap: () {
+                showExerciseInfoDialog(
+                  context,
+                  exerciseId: item.id,
+                  onStartExercise: () {
+                    Navigator.of(context).pushNamed(item.route);
+                  },
+                );
+              },
             ),
           );
         },
       ),
     );
+  }
+
+  Widget _buildFocusHeader() {
+    final _FocusOption activeFocus = _focusOptions
+        .firstWhere((option) => option.id == _selectedFocusId);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.secondaryPastel.withOpacity(0.6)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.secondaryPastel.withOpacity(0.2),
+            blurRadius: 18,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Guided exercises for any moment',
+            style: AppTypography.h4.copyWith(
+              color: AppColors.charcoal,
+              fontWeight: FontWeight.w700,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            activeFocus.description,
+            style: AppTypography.body1.copyWith(
+              color: AppColors.charcoal.withOpacity(0.8),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            children: [
+              for (final _FocusOption option in _focusOptions)
+                ChoiceChip(
+                  avatar: Text(option.emoji),
+                  label: Text(option.label),
+                  selected: option.id == _selectedFocusId,
+                  onSelected: (bool selected) {
+                    if (selected) {
+                      _updateFocus(option.id);
+                    }
+                  },
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _updateFocus(String id) {
+    if (id == _selectedFocusId) {
+      return;
+    }
+    setState(() {
+      _selectedFocusId = id;
+    });
   }
 }
 
@@ -150,4 +274,18 @@ class _ExerciseListItem {
   final String id;
   final String name;
   final String route;
+}
+
+class _FocusOption {
+  const _FocusOption({
+    required this.id,
+    required this.label,
+    required this.emoji,
+    required this.description,
+  });
+
+  final String id;
+  final String label;
+  final String emoji;
+  final String description;
 }

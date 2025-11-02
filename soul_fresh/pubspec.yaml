@@ -42,6 +42,7 @@ dependencies:
 
   collection: ^1.18.0
   webview_flutter: ^4.7.0
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +57,19 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-Regular.ttf
+        - asset: assets/fonts/OpenSans-Bold.ttf
+          weight: 700
   assets:
     - assets/web/soul_web.html
     - assets/audio/
@@ -66,3 +80,4 @@ flutter:
     - assets/images/mood_neutral.png
     - assets/images/mood_happy.png
     - assets/images/mood_veryhappy.png
+    - assets/images/panda_mascot_green.png

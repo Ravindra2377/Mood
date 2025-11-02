@@ -8,6 +8,12 @@ import '../screens/profile_screen.dart';
 import '../screens/privacy_settings_screen.dart';
 import '../features/exercises/exercise_routes.dart';
 
+// New redesigned screens
+import '../features/mood/screens/mood_screen.dart';
+import '../features/analytics/screens/unified_analytics_screen.dart';
+import '../features/exercises/screens/exercises_main_screen.dart';
+import '../features/home/screens/improved_home_screen.dart';
+
 /// App router configuration
 class AppRouter {
   /// Generate routes
@@ -56,6 +62,15 @@ class AppRouter {
                     },
                     child: const Text('Go to Profile'),
                   ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(_).push(MaterialPageRoute(
+                        builder: (_) => const ImprovedHomeScreen(),
+                      ));
+                    },
+                    child: const Text('Open Improved Home'),
+                  ),
                 ],
               ),
             ),
@@ -73,6 +88,27 @@ class AppRouter {
       case Routes.privacySettings:
         return MaterialPageRoute(
           builder: (_) => const PrivacySettingsScreen(),
+          settings: settings,
+        );
+
+      // Redesigned feature screens
+      case Routes.moodEntry:
+        return MaterialPageRoute(
+          builder: (_) => const MoodScreen(),
+          settings: settings,
+        );
+
+      case Routes.analytics:
+      case Routes.analyticsDashboard:
+        return MaterialPageRoute(
+          builder: (_) => const UnifiedAnalyticsScreen(),
+          settings: settings,
+        );
+
+      // Exercises main screen (new)
+      case '/exercises':
+        return MaterialPageRoute(
+          builder: (_) => const ExercisesMainScreen(),
           settings: settings,
         );
 

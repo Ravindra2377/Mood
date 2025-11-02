@@ -13,6 +13,9 @@ from . import (
     privacy,
     timers,
     consent,
+    journal,
+    meditation,
+    exercises,
 )
 
 __all__ = [
@@ -30,4 +33,7 @@ __all__ = [
     "privacy",
     "timers",
     "consent",
+    "journal",
+    "meditation",
+    "exercises",
 ]

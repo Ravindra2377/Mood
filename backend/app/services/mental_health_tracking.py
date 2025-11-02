@@ -12,11 +12,12 @@ from app.models.mental_health_tracking import (
     StressLog, StressExercise, StressJournalEntry,
     MoodActivity, MoodCorrelation, GratitudeEntry,
     SleepLog, SleepFactor, SleepMeditation,
-    MeditationSession, MeditationAchievement, MeditationContent,
-    AnxietyLog, AnxietyCopingTechnique, SafetyPlan, CrisisAlert,
+    MeditationSession, MeditationContent,
+    AnxietyLog, AnxietyCopingTechnique, SafetyPlan,
     WellnessScore, LifestyleLog, WellnessGoal, DailyCheckin,
     UserGoalSelection
 )
+from app.models.crisis import CrisisAlert
 from app.models.user import User
 from app.schemas.mental_health_tracking import (
     StressLogCreate, StressExerciseCreate, StressJournalEntryCreate,

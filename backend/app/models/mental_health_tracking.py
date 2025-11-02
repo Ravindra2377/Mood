@@ -302,24 +302,6 @@ class SafetyPlan(Base):
     user = relationship("User", back_populates="safety_plan")
 
 
-class CrisisAlert(Base):
-    """Track crisis alerts and interventions."""
-    __tablename__ = 'crisis_alerts'
-    
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
-    alert_level = Column(String, nullable=False)  # low, medium, high, critical
-    trigger_reason = Column(String, nullable=False)
-    description = Column(Text, nullable=True)
-    intervention_provided = Column(String, nullable=True)  # What help was offered
-    is_resolved = Column(Boolean, default=False)
-    resolved_at = Column(DateTime(timezone=True), nullable=True)
-    triggered_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-    
-    user = relationship("User", back_populates="crisis_alerts")
-
-
 # ===========================
 # 6. GENERAL WELLNESS MODELS
 # ===========================

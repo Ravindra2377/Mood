@@ -1,11 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../widgets/mood_trend_chart.dart';
+
+import '../../../core/ai/panda_ai.dart';
+import '../../../core/ai/panda_preferences.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/animated_panda_companion.dart';
 import '../widgets/activity_summary_card.dart';
-import '../widgets/wellness_score_card.dart';
-import '../widgets/streak_calendar_widget.dart';
-import '../widgets/exercise_stats_card.dart';
 import '../widgets/assessment_history_card.dart';
+import '../widgets/exercise_stats_card.dart';
+import '../widgets/mood_trend_chart.dart';
+import '../widgets/streak_calendar_widget.dart';
 import '../widgets/weekly_insights_card.dart';
 
 class AnalyticsDashboardScreen extends ConsumerStatefulWidget {
@@ -21,16 +28,32 @@ class _AnalyticsDashboardScreenState
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String selectedPeriod = 'Week';
+  final PandaAI _pandaAI = PandaAI();
+  PandaMood _analyticsMood = PandaMood.focus;
+  late String _analyticsMessage;
+  Timer? _pandaTimer;
+  PandaPreferences? _pandaPreferences;
+  PandaPersona _persona = PandaPersona.mindfulMentor;
+  String _pandaName = 'Mochi';
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _analyticsMessage = _pandaAI.personalizedMessage(
+      _analyticsMood,
+      persona: _persona,
+      name: _pandaName,
+    );
+    _initializePreferences();
+    _startPandaRotation();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _pandaTimer?.cancel();
+    _pandaPreferences?.removeListener(_handlePreferencesChanged);
     super.dispose();
   }
 
@@ -102,10 +125,13 @@ class _AnalyticsDashboardScreenState
     return RefreshIndicator(
       onRefresh: () async {
         await Future.delayed(const Duration(seconds: 1));
+        _updateAnalyticsMood(PandaMood.focus);
       },
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          _buildAnalyticsPandaCard(),
+          const SizedBox(height: 16),
           // Period Selector
           _buildPeriodSelector(),
           const SizedBox(height: 16),
@@ -159,6 +185,8 @@ class _AnalyticsDashboardScreenState
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        _buildAnalyticsPandaCard(compact: true),
+        const SizedBox(height: 16),
         // Exercise Stats
         const ExerciseStatsCard(),
         const SizedBox(height: 16),
@@ -181,6 +209,8 @@ class _AnalyticsDashboardScreenState
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        _buildAnalyticsPandaCard(compact: true, headline: 'Here are the trends I spotted'),
+        const SizedBox(height: 16),
         // Weekly Insights
         const WeeklyInsightsCard(),
         const SizedBox(height: 16),
@@ -640,6 +670,7 @@ class _AnalyticsDashboardScreenState
                         setState(() {
                           selectedPeriod = period;
                         });
+                        _updateAnalyticsMood(PandaMood.focus);
                         Navigator.pop(context);
                       },
                     )),
@@ -660,6 +691,7 @@ class _AnalyticsDashboardScreenState
             onPressed: () {
               Navigator.pop(context);
               // Export as CSV
+              _updateAnalyticsMood(PandaMood.focus);
             },
             child: const Text('CSV'),
           ),
@@ -667,6 +699,7 @@ class _AnalyticsDashboardScreenState
             onPressed: () {
               Navigator.pop(context);
               // Export as PDF
+              _updateAnalyticsMood(PandaMood.focus);
             },
             child: const Text('PDF'),
           ),
@@ -676,11 +709,132 @@ class _AnalyticsDashboardScreenState
   }
 
   void _shareProgress() {
+    _updateAnalyticsMood(PandaMood.celebrate);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Progress shared successfully!'),
         backgroundColor: Colors.green,
       ),
     );
+  }
+
+  Widget _buildAnalyticsPandaCard({bool compact = false, String? headline}) {
+    final title = headline ?? '$_displayName is cheering every insight';
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.coolPastel.withOpacity(0.55)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.coolPastel.withOpacity(0.25),
+            blurRadius: 20,
+            offset: const Offset(0, 14),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            title,
+            style: AppTypography.h4.copyWith(
+              color: AppColors.charcoal,
+              fontWeight: FontWeight.w700,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          AnimatedPandaCompanion(
+            mood: _analyticsMood,
+            message: _analyticsMessage,
+            size: compact ? 130 : 160,
+            onTap: _refreshAnalyticsMessage,
+            persona: _persona,
+            heroTag: 'panda-companion',
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ActionChip(
+                label: const Text('Celebrate wins'),
+                avatar: const Text('🎉'),
+                onPressed: () => _updateAnalyticsMood(PandaMood.celebrate),
+              ),
+              ActionChip(
+                label: const Text('Need motivation'),
+                avatar: const Text('✨'),
+                onPressed: () => _updateAnalyticsMood(PandaMood.focus),
+              ),
+              ActionChip(
+                label: const Text('Feeling stuck'),
+                avatar: const Text('🤔'),
+                onPressed: () => _updateAnalyticsMood(PandaMood.lonely),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _initializePreferences() async {
+    final prefs = await PandaPreferences.instance();
+    if (!mounted) return;
+
+    _pandaPreferences?.removeListener(_handlePreferencesChanged);
+    _pandaPreferences = prefs;
+    prefs.addListener(_handlePreferencesChanged);
+
+    setState(() {
+      _persona = prefs.persona;
+      _pandaName = prefs.displayName;
+      _updateAnalyticsMessage();
+    });
+  }
+
+  void _handlePreferencesChanged() {
+    final prefs = _pandaPreferences;
+    if (prefs == null || !mounted) return;
+    setState(() {
+      _persona = prefs.persona;
+      _pandaName = prefs.displayName;
+      _updateAnalyticsMessage();
+    });
+  }
+
+  String get _displayName => _pandaName.isEmpty ? 'Mochi' : _pandaName;
+
+  void _updateAnalyticsMessage([PandaMood? mood]) {
+    final targetMood = mood ?? _analyticsMood;
+    _analyticsMessage = _pandaAI.personalizedMessage(
+      targetMood,
+      persona: _persona,
+      name: _displayName,
+    );
+  }
+
+  void _updateAnalyticsMood(PandaMood mood) {
+    setState(() {
+      _analyticsMood = mood;
+      _updateAnalyticsMessage(mood);
+    });
+  }
+
+  void _refreshAnalyticsMessage() {
+    setState(_updateAnalyticsMessage);
+  }
+
+  void _startPandaRotation() {
+    _pandaTimer?.cancel();
+    _pandaTimer = Timer.periodic(const Duration(seconds: 22), (_) {
+      if (!mounted) return;
+      _refreshAnalyticsMessage();
+    });
   }
 }

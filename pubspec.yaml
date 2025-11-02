@@ -1,0 +1,27 @@
+name: mood_app
+description: A mental health and mood tracking application
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.7
+  flutter_riverpod: ^2.4.0
+  uuid: ^4.0.0
+  timeago: ^3.5.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  go_router: ^12.0.0
+  http: ^1.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true

@@ -8,7 +8,8 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
 
-from app.dependencies import get_db, get_current_user
+from app.dependencies import get_current_user
+from app.database import get_db
 from app.models.user import User
 from app.schemas.mental_health_tracking import (
     # Stress

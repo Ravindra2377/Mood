@@ -1,5 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/ai/panda_ai.dart';
+import '../core/ai/panda_preferences.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_typography.dart';
+import '../core/widgets/animated_panda_companion.dart';
 import '../services/auth_service.dart';
 import '../services/secure_storage_service.dart';
 import '../widgets/loading_widget.dart';
@@ -25,6 +33,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
   int _meditationMinutes = 128;
   int _wellnessScore = 78;
   late TabController _tabController;
+  final PandaAI _pandaAI = PandaAI();
+  PandaMood _pandaMood = PandaMood.welcome;
+  late String _pandaMessage;
+  Timer? _pandaTimer;
+  PandaPreferences? _pandaPreferences;
+  PandaPersona _pandaPersona = PandaPersona.gentleGuide;
+  String _pandaCompanionName = 'Mochi';
   
   // Settings state
   bool _notificationsEnabled = true;
@@ -35,12 +50,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _pandaMessage = _pandaAI.personalizedMessage(
+      _pandaMood,
+      persona: _pandaPersona,
+      name: _pandaCompanionName,
+    );
+    _initializePandaPreferences();
+    _startPandaRotation();
     _loadUserData();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _pandaTimer?.cancel();
+    _pandaPreferences?.removeListener(_handlePandaPreferencesChanged);
     super.dispose();
   }
 
@@ -58,8 +82,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
         _displayName = email?.split('@').first.toUpperCase() ?? 'SOUL User';
         _isLoading = false;
       });
+      _updatePandaMood(PandaMood.happy);
     } catch (e) {
       setState(() => _isLoading = false);
+      _updatePandaMood(PandaMood.lonely);
     }
   }
 
@@ -215,6 +241,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                       ],
                     ),
                   ),
+
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: _buildPandaCompanionStrip(),
+                  ),
+                  const SizedBox(height: 20),
 
                   // Tab navigation
                   Container(
@@ -466,6 +499,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                     content: Text('Add goal - Coming soon!'),
                   ),
                 );
+                _updatePandaMood(PandaMood.focus);
               },
             ),
           ),
@@ -499,6 +533,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
               value: _notificationsEnabled,
               onChanged: (value) {
                 setState(() => _notificationsEnabled = value);
+                _updatePandaMood(value ? PandaMood.focus : PandaMood.calm);
               },
             ),
             _buildMenuItem(
@@ -513,6 +548,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                     duration: Duration(seconds: 2),
                   ),
                 );
+                _updatePandaMood(PandaMood.focus);
               },
             ),
             _buildMenuItem(
@@ -520,14 +556,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
               icon: Icons.notifications,
               title: 'Meditation Reminder',
               subtitle: 'Daily at 7:00 AM',
-              onTap: () {},
+              onTap: () {
+                _updatePandaMood(PandaMood.focus);
+              },
             ),
             _buildMenuItem(
               context,
               icon: Icons.notifications,
               title: 'Weekly Insights',
               subtitle: 'Every Sunday',
-              onTap: () {},
+              onTap: () {
+                _updatePandaMood(PandaMood.focus);
+              },
             ),
           ]),
           const SizedBox(height: 24),
@@ -538,7 +578,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
               context,
               icon: Icons.privacy_tip,
               title: 'Privacy Settings',
-              onTap: () => Navigator.pushNamed(context, '/privacy-settings'),
+              onTap: () {
+                Navigator.pushNamed(context, '/privacy-settings');
+                _updatePandaMood(PandaMood.focus);
+              },
             ),
             _buildMenuItem(
               context,
@@ -551,6 +594,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                     duration: Duration(seconds: 2),
                   ),
                 );
+                _updatePandaMood(PandaMood.focus);
               },
             ),
           ]),
@@ -570,6 +614,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                     duration: Duration(seconds: 2),
                   ),
                 );
+                _updatePandaMood(PandaMood.focus);
               },
             ),
             _buildMenuItem(
@@ -595,6 +640,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                     duration: Duration(seconds: 2),
                   ),
                 );
+                _updatePandaMood(PandaMood.focus);
               },
             ),
             _buildMenuItem(
@@ -608,6 +654,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                     duration: Duration(seconds: 2),
                   ),
                 );
+                _updatePandaMood(PandaMood.focus);
               },
             ),
             _buildMenuItem(
@@ -630,6 +677,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                     ),
                   ],
                 );
+                _updatePandaMood(PandaMood.happy);
               },
             ),
           ]),
@@ -661,6 +709,69 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
             ),
           ),
           const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPandaCompanionStrip() {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.primaryPastel.withOpacity(0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryPastel.withOpacity(0.25),
+            blurRadius: 22,
+            offset: const Offset(0, 16),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$_pandaDisplayName loves keeping you company on this journey',
+            style: AppTypography.h4.copyWith(
+              color: AppColors.charcoal,
+              fontWeight: FontWeight.w700,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          AnimatedPandaCompanion(
+            mood: _pandaMood,
+            message: _pandaMessage,
+            size: 160,
+            onTap: _refreshPandaMessage,
+            persona: _pandaPersona,
+            heroTag: 'panda-companion',
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ActionChip(
+                label: const Text('Cheer me up'),
+                avatar: const Text('🌈'),
+                onPressed: () => _updatePandaMood(PandaMood.happy),
+              ),
+              ActionChip(
+                label: const Text('I need a hug'),
+                avatar: const Text('🤗'),
+                onPressed: () => _updatePandaMood(PandaMood.lonely),
+              ),
+              ActionChip(
+                label: const Text('Keep me focused'),
+                avatar: const Text('🎯'),
+                onPressed: () => _updatePandaMood(PandaMood.focus),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -833,6 +944,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
   }
 
   Future<void> _handleLogout() async {
+    _updatePandaMood(PandaMood.lonely);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -933,6 +1045,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
           duration: Duration(seconds: 2),
         ),
       );
+      _updatePandaMood(PandaMood.focus);
     }
   }
 
@@ -961,10 +1074,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cache cleared successfully')),
       );
+      _updatePandaMood(PandaMood.celebrate);
     }
   }
 
   Future<void> _confirmDeleteAccount() async {
+    _updatePandaMood(PandaMood.lonely);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -993,6 +1108,63 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
           duration: Duration(seconds: 2),
         ),
       );
+      _updatePandaMood(PandaMood.lonely);
     }
+  }
+
+  Future<void> _initializePandaPreferences() async {
+    final prefs = await PandaPreferences.instance();
+    if (!mounted) return;
+
+    _pandaPreferences?.removeListener(_handlePandaPreferencesChanged);
+    _pandaPreferences = prefs;
+    prefs.addListener(_handlePandaPreferencesChanged);
+
+    setState(() {
+      _pandaPersona = prefs.persona;
+      _pandaCompanionName = prefs.displayName;
+      _updatePandaMessage();
+    });
+  }
+
+  void _handlePandaPreferencesChanged() {
+    final prefs = _pandaPreferences;
+    if (prefs == null || !mounted) return;
+    setState(() {
+      _pandaPersona = prefs.persona;
+      _pandaCompanionName = prefs.displayName;
+      _updatePandaMessage();
+    });
+  }
+
+  String get _pandaDisplayName =>
+      _pandaCompanionName.isEmpty ? 'Mochi' : _pandaCompanionName;
+
+  void _updatePandaMessage([PandaMood? mood]) {
+    final targetMood = mood ?? _pandaMood;
+    _pandaMessage = _pandaAI.personalizedMessage(
+      targetMood,
+      persona: _pandaPersona,
+      name: _pandaDisplayName,
+    );
+  }
+
+  void _updatePandaMood(PandaMood mood) {
+    setState(() {
+      _pandaMood = mood;
+      _updatePandaMessage(mood);
+    });
+  }
+
+  void _refreshPandaMessage() {
+    setState(_updatePandaMessage);
+  }
+
+  void _startPandaRotation() {
+    _pandaTimer?.cancel();
+    _pandaTimer = Timer.periodic(const Duration(seconds: 25), (_) {
+      if (!mounted) return;
+      _refreshPandaMessage();
+    });
   }
 }
