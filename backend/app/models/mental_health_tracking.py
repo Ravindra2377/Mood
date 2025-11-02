@@ -239,7 +239,7 @@ class MeditationContent(Base):
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     is_active = Column(Boolean, default=True)
     
-    plays = relationship("MeditationSession", foreign_keys=[MeditationSession.meditation_id])
+    # Relationship removed until meditation_session.meditation_id stores an FK into meditation_content
 
 
 # ===========================

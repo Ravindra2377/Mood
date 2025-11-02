@@ -3,7 +3,7 @@ Chat session and message models for AI-powered mental health conversations.
 Includes crisis detection logging and moderation capabilities.
 """
 
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, ForeignKey, JSON, ARRAY
+from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from uuid import uuid4
@@ -26,7 +26,7 @@ class ChatSession(Base):
     # Session context
     session_mood = Column(String(50), nullable=True)  # anxiety, depression, stress, etc.
     session_intensity = Column(Integer, nullable=True)  # 1-10 scale
-    session_triggers = Column(ARRAY(String), default=list)  # Array of trigger keywords
+    session_triggers = Column(JSON, default=list, nullable=True)  # Stored as JSON array for cross-dialect compatibility
     
     # Statistics
     total_messages = Column(Integer, default=0)

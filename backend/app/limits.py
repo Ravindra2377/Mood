@@ -156,6 +156,47 @@ def get_phone_key(request: Request) -> str:
     return f"ip:{get_client_ip(request)}"
 
 
+def _extract_bearer_user_id(request: Request) -> Optional[int]:
+    """Best-effort extraction of the authenticated user id from a bearer token."""
+    try:
+        auth_header = request.headers.get("authorization") or request.headers.get(
+            "Authorization"
+        )
+        if not auth_header or " " not in auth_header:
+            return None
+        scheme, token = auth_header.split(" ", 1)
+        if scheme.lower() != "bearer":
+            return None
+        token = token.strip()
+        if not token:
+            return None
+        try:
+            # local import to avoid circular dependency during app startup
+            from app.services import security
+
+            payload = security.decode_access_token(token)
+        except Exception:
+            return None
+        if not payload or "sub" not in payload:
+            return None
+        return int(payload["sub"])
+    except Exception:
+        return None
+
+
+def user_or_ip_rate_key(request: Request) -> str:
+    """Rate-limit key preferring authenticated user id, falling back to client IP."""
+    user_id = _extract_bearer_user_id(request)
+    if user_id is not None:
+        # Cache the resolved user id on the request so downstream code can reuse it
+        try:
+            request.state.rate_limit_user_id = user_id
+        except Exception:
+            pass
+        return f"user:{user_id}"
+    return f"ip:{get_client_ip(request)}"
+
+
 # Create a single shared Limiter instance
 limiter: Limiter = Limiter(
     key_func=get_client_ip,
@@ -193,4 +234,5 @@ __all__ = [
     "rate_limit_handler",
     "get_client_ip",
     "get_phone_key",
+    "user_or_ip_rate_key",
 ]

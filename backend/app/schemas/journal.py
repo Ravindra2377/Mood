@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from datetime import datetime
 from typing import Literal
 
@@ -25,6 +25,11 @@ class JournalRead(BaseModel):
     progress: int | None
 
     model_config = {"from_attributes": True}
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def _coerce_id(cls, value: object) -> str:
+        return str(value)
 
 class JournalUpdate(BaseModel):
     title: str | None = None

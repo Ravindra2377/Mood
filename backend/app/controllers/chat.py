@@ -23,13 +23,11 @@ from app.services import nlp_engine, crisis
 from app.services.crisis_detection import crisis_detector
 from app.services.ai_service import get_ai_service
 from app.dependencies import get_current_user
-from app.main import SessionLocal
 from app.models.conversation import Conversation, Message
 from app.models.chat_session import ChatSession, ChatMessage, ModerationLog, UserContextCache
 from app.models.profile import Profile
 from app.models.mood_entry import MoodEntry
 from app.models.exercise import Exercise, ExerciseSession
-from app.models.personalization import UserPathway
 from app.limits import limiter
 
 logger = logging.getLogger(__name__)
@@ -46,11 +44,11 @@ def post_message(payload: MessageIn, request: Request, user = Depends(get_curren
     """Post a user message. Creates (or reuses) a conversation, persists the user message,
     generates a bot response using the NLP engine with context and modality, and persists the bot reply.
     """
+    from app.main import SessionLocal
+
     text = payload.text
     # safety: crisis detection
     if crisis.contains_crisis_language(text):
-        from app.main import SessionLocal
-        from app.models.conversation import Conversation, Message
         db = SessionLocal()
         try:
             conv = Conversation(user_id=user.id)
@@ -70,8 +68,6 @@ def post_message(payload: MessageIn, request: Request, user = Depends(get_curren
             db.close()
 
     # normal flow: gather context messages if conversation specified
-    from app.main import SessionLocal
-    from app.models.conversation import Conversation, Message
     db = SessionLocal()
     try:
         conv = None
@@ -110,7 +106,7 @@ def post_message(payload: MessageIn, request: Request, user = Depends(get_curren
 @router.get('/chat/conversations', response_model=List[ConversationRead])
 def list_conversations(user = Depends(get_current_user)):
     from app.main import SessionLocal
-    from app.models.conversation import Conversation, Message
+
     db = SessionLocal()
     try:
         convs = db.query(Conversation).filter(Conversation.user_id == user.id).order_by(Conversation.id.desc()).all()
@@ -125,7 +121,7 @@ def list_conversations(user = Depends(get_current_user)):
 @router.get('/chat/conversations/{conversation_id}', response_model=ConversationRead)
 def get_conversation(conversation_id: int, user = Depends(get_current_user)):
     from app.main import SessionLocal
-    from app.models.conversation import Conversation, Message
+
     db = SessionLocal()
     try:
         conv = db.query(Conversation).filter(Conversation.id == conversation_id, Conversation.user_id == user.id).first()
@@ -175,12 +171,17 @@ async def _get_user_context(db, user_id: int) -> dict:
         ).all()
         context['completed_activities'] = [e.exercise_id for e in recent_exercises]
 
-        # Get active pathways
-        active_pathways = db.query(UserPathway).filter(
-            UserPathway.user_id == user_id,
-            UserPathway.is_active == True
-        ).all()
-        context['active_pathways'] = [p.pathway_name for p in active_pathways]
+        # Get active pathways if model is available
+        try:
+            from app.models.personalization import UserPathway  # optional dependency
+
+            active_pathways = db.query(UserPathway).filter(
+                UserPathway.user_id == user_id,
+                UserPathway.is_active == True
+            ).all()
+            context['active_pathways'] = [p.pathway_name for p in active_pathways]
+        except Exception:
+            context['active_pathways'] = []
 
     except Exception as e:
         logger.warning(f"Error fetching user context: {str(e)}")
@@ -199,6 +200,8 @@ async def chat_interactive(
     Main AI chat endpoint with streaming response.
     Accepts user message, performs crisis detection, and streams back AI response.
     """
+    from app.main import SessionLocal
+
     db = SessionLocal()
 
     try:
@@ -347,6 +350,8 @@ async def get_sessions(
     limit: int = 10,
 ):
     """Get user's recent chat sessions."""
+    from app.main import SessionLocal
+
     db = SessionLocal()
 
     try:
@@ -367,6 +372,8 @@ async def get_session_messages(
     current_user = Depends(get_current_user),
 ):
     """Get all messages in a session."""
+    from app.main import SessionLocal
+
     db = SessionLocal()
 
     try:
@@ -395,6 +402,8 @@ async def delete_session(
     current_user = Depends(get_current_user),
 ):
     """Delete a chat session and all its messages."""
+    from app.main import SessionLocal
+
     db = SessionLocal()
 
     try:

@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Text
+from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 from app.models import Base
 
@@ -12,6 +13,8 @@ class CrisisAlert(Base):
     details = Column(Text, nullable=True)
     resolved = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    user = relationship("User", back_populates="crisis_alerts")
 
 
 class CrisisAudit(Base):
