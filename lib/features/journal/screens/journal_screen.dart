@@ -57,8 +57,8 @@ class _JournalScreenState extends State<JournalScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 40),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -105,92 +105,97 @@ class _JournalScreenState extends State<JournalScreen> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 16),
-            _entries.isEmpty
-                ? CustomCard(
-                    backgroundColor: AppColors.lightGrey,
-                    padding: const EdgeInsets.all(18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Nothing written yet',
-                          style: AppTypography.body1.copyWith(
-                            color: AppColors.charcoal,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Use the prompt above or start free-writing to begin your journaling streak.',
-                          style: AppTypography.body2.copyWith(
-                            color: AppColors.darkGrey,
-                            height: 1.4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Column(
-                    children: _entries
-                        .map(
-                          (entry) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: CustomCard(
-                              backgroundColor: AppColors.white,
-                              border: Border.all(
-                                color: AppColors.mediumGrey.withOpacity(0.6),
+            const SizedBox(height: 12),
+            Expanded(
+              child: _entries.isEmpty
+                  ? Align(
+                      alignment: Alignment.topCenter,
+                      child: CustomCard(
+                        backgroundColor: AppColors.lightGrey,
+                        padding: const EdgeInsets.all(18),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Nothing written yet',
+                              style: AppTypography.body1.copyWith(
+                                color: AppColors.charcoal,
+                                fontWeight: FontWeight.w600,
                               ),
-                              child: Column(
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Use the prompt above or start free-writing to begin your journaling streak.',
+                              style: AppTypography.body2.copyWith(
+                                color: AppColors.darkGrey,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : ListView.separated(
+                      itemCount: _entries.length,
+                      padding: const EdgeInsets.only(bottom: 12),
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder: (context, index) {
+                        final entry = _entries[index];
+                        return CustomCard(
+                          backgroundColor: AppColors.white,
+                          border: Border.all(
+                            color: AppColors.mediumGrey.withOpacity(0.6),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              entry.title ?? 'Untitled entry',
-                                              style: AppTypography.body1.copyWith(
-                                                color: AppColors.charcoal,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              _formatTimestamp(entry.createdAt),
-                                              style: AppTypography.labelSmall.copyWith(
-                                                color: AppColors.mediumGrey,
-                                              ),
-                                            ),
-                                          ],
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          entry.title ?? 'Untitled entry',
+                                          style: AppTypography.body1.copyWith(
+                                            color: AppColors.charcoal,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () => _deleteEntry(entry),
-                                        icon: const Icon(Icons.delete_outline),
-                                        color: AppColors.mediumGrey,
-                                        tooltip: 'Remove entry',
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    entry.body,
-                                    style: AppTypography.body2.copyWith(
-                                      color: AppColors.darkGrey,
-                                      height: 1.5,
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          entry.formattedTimestamp,
+                                          style: AppTypography.labelSmall.copyWith(
+                                            color: AppColors.mediumGrey,
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () => _deleteEntry(entry),
+                                    icon: const Icon(Icons.delete_outline),
+                                    color: AppColors.mediumGrey,
+                                    tooltip: 'Remove entry',
                                   ),
                                 ],
                               ),
-                            ),
+                              const SizedBox(height: 12),
+                              Text(
+                                entry.body,
+                                style: AppTypography.body2.copyWith(
+                                  color: AppColors.darkGrey,
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
                           ),
-                        )
-                        .toList(),
-                  ),
+                        );
+                      },
+                    ),
+            ),
           ],
         ),
       ),
@@ -303,8 +308,18 @@ class _JournalScreenState extends State<JournalScreen> {
       return;
     }
 
+    final now = DateTime.now();
+
     setState(() {
-      _entries.insert(0, _JournalEntry(title: title, body: body, createdAt: DateTime.now()));
+      _entries.insert(
+        0,
+        _JournalEntry(
+          title: title,
+          body: body,
+          createdAt: now,
+          formattedTimestamp: _formatTimestamp(now),
+        ),
+      );
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -361,10 +376,12 @@ class _JournalEntry {
   _JournalEntry({
     required this.body,
     required this.createdAt,
+    required this.formattedTimestamp,
     this.title,
   });
 
   final String? title;
   final String body;
   final DateTime createdAt;
+  final String formattedTimestamp;
 }
