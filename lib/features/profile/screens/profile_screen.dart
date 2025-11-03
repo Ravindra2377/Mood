@@ -2,12 +2,23 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/custom_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../auth/controllers/auth_controller.dart';
+import '../../auth/models/auth_state.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authControllerProvider);
+    final isLoggingOut = authState.operation == AuthOperation.loggingOut;
+    final emailAddress =
+        authState.user?.email ?? authState.email ?? 'you@soul.app';
+    final displayName = authState.user?.email?.split('@').first ??
+        authState.email?.split('@').first ??
+        'Soul member';
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: CustomScrollView(
@@ -105,7 +116,7 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // Avatar Section
-                  _buildAvatarSection(),
+                  _buildAvatarSection(displayName, emailAddress),
                   const SizedBox(height: 24),
 
                   // Personal Stats
@@ -125,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Account Actions
-                  _buildAccountActions(),
+                  _buildAccountActions(ref, isLoggingOut),
                 ],
               ),
             ),
@@ -135,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAvatarSection() {
+  Widget _buildAvatarSection(String displayName, String emailAddress) {
     return CustomCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -193,14 +204,14 @@ class ProfileScreen extends StatelessWidget {
 
             // User Info
             Text(
-              'Olivia',
+              displayName,
               style: AppTypography.h2.copyWith(
                 color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              'olivia@soul.com',
+              emailAddress,
               style: AppTypography.body2.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -504,7 +515,8 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 _buildBadge('😊', 'Mood Tracker', '50 entries', true),
                 const SizedBox(width: 12),
-                _buildBadge('🌙', 'Sleep Champion', 'Good sleep 30 days', false),
+                _buildBadge(
+                    '🌙', 'Sleep Champion', 'Good sleep 30 days', false),
                 const SizedBox(width: 12),
                 _buildBadge('💪', 'Exercise Pro', '200 minutes', false),
               ],
@@ -515,7 +527,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBadge(String emoji, String title, String description, bool unlocked) {
+  Widget _buildBadge(
+      String emoji, String title, String description, bool unlocked) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -536,14 +549,18 @@ class ProfileScreen extends StatelessWidget {
               emoji,
               style: TextStyle(
                 fontSize: 24,
-                color: unlocked ? AppColors.primary : AppColors.textSecondary.withOpacity(0.5),
+                color: unlocked
+                    ? AppColors.primary
+                    : AppColors.textSecondary.withOpacity(0.5),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               title,
               style: AppTypography.label.copyWith(
-                color: unlocked ? AppColors.textPrimary : AppColors.textSecondary.withOpacity(0.7),
+                color: unlocked
+                    ? AppColors.textPrimary
+                    : AppColors.textSecondary.withOpacity(0.7),
                 fontWeight: FontWeight.w600,
                 fontSize: 10,
               ),
@@ -555,22 +572,25 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountActions() {
+  Widget _buildAccountActions(WidgetRef ref, bool isLoggingOut) {
     return Column(
       children: [
         CustomButton(
           text: 'Export My Data',
+          isOutlined: true,
+          backgroundColor: AppColors.primaryPastel,
           onPressed: () {},
-          type: ButtonType.secondary,
-          icon: Icons.download,
         ),
         const SizedBox(height: 12),
         CustomButton(
-          text: 'Sign Out',
-          onPressed: () {},
-          type: ButtonType.outline,
-          icon: Icons.logout,
+          text: 'Sign out',
+          isOutlined: true,
+          backgroundColor: AppColors.error,
           textColor: AppColors.error,
+          isLoading: isLoggingOut,
+          onPressed: isLoggingOut
+              ? null
+              : () => ref.read(authControllerProvider.notifier).logout(),
         ),
       ],
     );

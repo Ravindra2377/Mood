@@ -1,62 +1,83 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/journal_entry.dart';
 import '../models/journal_entry_view_model.dart';
+import '../services/journal_service.dart';
 
-class JournalNotifier extends StateNotifier<List<JournalEntry>> {
-  JournalNotifier() : super(const <JournalEntry>[]);
+class JournalNotifier extends StateNotifier<AsyncValue<List<JournalEntry>>> {
+  JournalNotifier(this._service) : super(const AsyncValue.loading()) {
+    _loadEntries();
+  }
 
-  static const _uuid = Uuid();
+  final JournalService _service;
 
-  void addEntry({String? title, required String body}) {
-    final trimmedBody = body.trim();
-    if (trimmedBody.isEmpty) {
+  Future<void> _loadEntries() async {
+    final previous = state;
+    state = const AsyncValue.loading();
+    try {
+      final entries = await _service.fetchEntries();
+      state = AsyncValue.data(entries);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace, previous: previous);
+    }
+  }
+
+  Future<void> refresh() => _loadEntries();
+
+  Future<void> addEntry({String? title, required String body}) async {
+    final previous = state;
+    try {
+      final created = await _service.createEntry(title: title, body: body);
+      final existing = state.asData?.value ?? const <JournalEntry>[];
+      state = AsyncValue.data([created, ...existing]);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace, previous: previous);
+      rethrow;
+    }
+  }
+
+  Future<void> deleteEntry(String id) async {
+    final previous = state;
+    final existing = state.asData?.value;
+    if (existing == null) {
       return;
     }
 
-    final trimmedTitle = title?.trim();
-    final entry = JournalEntry(
-      id: _uuid.v4(),
-      title: trimmedTitle?.isEmpty ?? true ? null : trimmedTitle,
-      body: trimmedBody,
-      createdAt: DateTime.now(),
-    );
+    final optimistic = existing
+        .where((entry) => entry.id != id)
+        .toList(growable: false);
+    state = AsyncValue.data(optimistic);
 
-  state = [entry, ...state];
-  }
-
-  void deleteEntry(String id) {
-    if (id.isEmpty) {
-      return;
+    try {
+      await _service.deleteEntry(id);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace, previous: previous);
+      rethrow;
     }
-
-    state = state.where((entry) => entry.id != id).toList(growable: false);
-  }
-
-  void clearAll() {
-    state = const <JournalEntry>[];
   }
 }
 
 final journalProvider =
-    StateNotifierProvider<JournalNotifier, List<JournalEntry>>((ref) {
-  return JournalNotifier();
-});
+    StateNotifierProvider<JournalNotifier, AsyncValue<List<JournalEntry>>>(
+  (ref) {
+    final service = ref.watch(journalServiceProvider);
+    return JournalNotifier(service);
+  },
+);
 
-final journalViewModelProvider = Provider<List<JournalEntryViewModel>>((ref) {
-  final entries = ref.watch(journalProvider);
-
-  return entries
-      .map(
-        (entry) => JournalEntryViewModel(
-          id: entry.id,
-          title: entry.title,
-          body: entry.body,
-          formattedTimestamp: _formatTimestamp(entry.createdAt),
-        ),
-      )
-      .toList(growable: false);
+final journalViewModelProvider =
+    Provider<AsyncValue<List<JournalEntryViewModel>>>((ref) {
+  final entriesAsync = ref.watch(journalProvider);
+  return entriesAsync.whenData((entries) {
+    return entries
+        .map(
+          (entry) => JournalEntryViewModel.fromEntry(
+            entry: entry,
+            formattedTimestamp: _formatTimestamp(entry.createdAt),
+          ),
+        )
+        .toList(growable: false);
+  });
 });
 
 String _formatTimestamp(DateTime dateTime) {
