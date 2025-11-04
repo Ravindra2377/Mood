@@ -29,11 +29,181 @@ class AuthInterceptor extends Interceptor {
   }
 }
 
+class TokenRefreshException implements Exception {
+  const TokenRefreshException(this.message);
+  final String message;
+
+  @override
+  String toString() => 'TokenRefreshException: $message';
+}
+
+/// Interceptor that handles automatic access token refresh using a stored refresh token.
+class TokenRefreshInterceptor extends Interceptor {
+  TokenRefreshInterceptor({
+    required this.dio,
+    required this.getAccessToken,
+    required this.getRefreshToken,
+    required this.saveAccessToken,
+    required this.saveRefreshToken,
+    this.clearTokens,
+    this.onUnauthorized,
+    this.refreshEndpoint = '/auth/refresh',
+  }) : _refreshDio = Dio(
+          BaseOptions(
+            baseUrl: dio.options.baseUrl.isNotEmpty
+                ? dio.options.baseUrl
+                : AppConfig.apiBaseUrl,
+            connectTimeout: dio.options.connectTimeout,
+            receiveTimeout: dio.options.receiveTimeout,
+            sendTimeout: dio.options.sendTimeout,
+            headers: const {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          ),
+        );
+
+  static const _skipKey = '__skip_token_refresh__';
+
+  final Dio dio;
+  final Dio _refreshDio;
+  final TokenGetter getAccessToken;
+  final TokenGetter getRefreshToken;
+  final TokenSetter saveAccessToken;
+  final TokenSetter saveRefreshToken;
+  final FutureOr<void> Function()? clearTokens;
+  final FutureOr<void> Function()? onUnauthorized;
+  final String refreshEndpoint;
+
+  Future<void>? _refreshing;
+
+  bool _shouldSkip(RequestOptions options) => options.extra[_skipKey] == true;
+
+  bool _isUnauthorized(DioException err) {
+    if (err.type != DioExceptionType.badResponse) {
+      return false;
+    }
+    final status = err.response?.statusCode;
+    if (status != 401 || _shouldSkip(err.requestOptions)) {
+      return false;
+    }
+    final path = err.requestOptions.path;
+    // Avoid attempting refresh loops on auth endpoints.
+    if (path.endsWith('/auth/refresh') ||
+        path.endsWith('/auth/login') ||
+        path.endsWith('/auth/token')) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _performRefresh() async {
+    final refreshToken = await getRefreshToken();
+    if (refreshToken == null || refreshToken.isEmpty) {
+      throw const TokenRefreshException('Missing refresh token');
+    }
+
+    final response = await _refreshDio.post<dynamic>(
+      refreshEndpoint,
+      data: {'old_refresh_token': refreshToken},
+    );
+
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw const TokenRefreshException('Unexpected refresh response');
+    }
+
+    final newAccess = data['access_token'] as String?;
+    final newRefresh = data['refresh_token'] as String?;
+
+    if (newAccess == null || newAccess.isEmpty) {
+      throw const TokenRefreshException('Refresh response missing access_token');
+    }
+    if (newRefresh == null || newRefresh.isEmpty) {
+      throw const TokenRefreshException('Refresh response missing refresh_token');
+    }
+
+    await Future.sync(() => saveAccessToken(newAccess));
+    await Future.sync(() => saveRefreshToken(newRefresh));
+  }
+
+  Future<void> _ensureRefreshing() {
+    final existing = _refreshing;
+    if (existing != null) {
+      return existing;
+    }
+
+    Future<void> futureCallback() async {
+      try {
+        await _performRefresh();
+      } catch (error) {
+        await Future.sync(() => clearTokens?.call());
+        rethrow;
+      }
+    }
+
+    final future = futureCallback().whenComplete(() {
+      _refreshing = null;
+    });
+
+    _refreshing = future;
+    return future;
+  }
+
+  @override
+  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (!_isUnauthorized(err)) {
+      handler.next(err);
+      return;
+    }
+
+    final requestOptions = err.requestOptions;
+
+    try {
+      await _ensureRefreshing();
+    } catch (_) {
+      await Future.sync(() => onUnauthorized?.call());
+      handler.next(err);
+      return;
+    }
+
+    try {
+      final token = await getAccessToken();
+      if (token != null && token.isNotEmpty) {
+        requestOptions.headers['Authorization'] = 'Bearer $token';
+      } else {
+        requestOptions.headers.remove('Authorization');
+      }
+
+      requestOptions.extra[_skipKey] = true;
+      final response = await dio.fetch<dynamic>(requestOptions);
+      handler.resolve(response);
+    } catch (retryErr) {
+      if (retryErr is DioException && retryErr.response?.statusCode == 401) {
+        await Future.sync(() => clearTokens?.call());
+        await Future.sync(() => onUnauthorized?.call());
+      }
+      handler.next(
+        retryErr is DioException
+            ? retryErr
+            : DioException(requestOptions: requestOptions, error: retryErr),
+      );
+    } finally {
+      requestOptions.extra.remove(_skipKey);
+    }
+  }
+}
+
 /// Factory to build a configured [Dio] and [ApiClient].
 class ApiClientFactory {
   static Dio createDio({
     String? baseUrl,
     required TokenGetter getToken,
+    required TokenGetter getRefreshToken,
+    required TokenSetter saveAccessToken,
+    required TokenSetter saveRefreshToken,
+    FutureOr<void> Function()? clearTokens,
+    FutureOr<void> Function()? onUnauthorized,
     List<Interceptor> extraInterceptors = const [],
   }) {
     final dio = Dio(
@@ -52,6 +222,15 @@ class ApiClientFactory {
 
     dio.interceptors.addAll([
       AuthInterceptor(getToken: getToken),
+      TokenRefreshInterceptor(
+        dio: dio,
+        getAccessToken: getToken,
+        getRefreshToken: getRefreshToken,
+        saveAccessToken: saveAccessToken,
+        saveRefreshToken: saveRefreshToken,
+        clearTokens: clearTokens,
+        onUnauthorized: onUnauthorized,
+      ),
       // Log basic info in debug mode. You can swap with pretty logger.
       LogInterceptor(
         request: true,
@@ -68,11 +247,21 @@ class ApiClientFactory {
   static ApiClient create({
     String? baseUrl,
     required TokenGetter getToken,
+    required TokenGetter getRefreshToken,
+    required TokenSetter saveAccessToken,
+    required TokenSetter saveRefreshToken,
+    FutureOr<void> Function()? clearTokens,
+    FutureOr<void> Function()? onUnauthorized,
     List<Interceptor> extraInterceptors = const [],
   }) {
     final dio = createDio(
       baseUrl: baseUrl,
       getToken: getToken,
+      getRefreshToken: getRefreshToken,
+      saveAccessToken: saveAccessToken,
+      saveRefreshToken: saveRefreshToken,
+      clearTokens: clearTokens,
+      onUnauthorized: onUnauthorized,
       extraInterceptors: extraInterceptors,
     );
     return ApiClient(dio);

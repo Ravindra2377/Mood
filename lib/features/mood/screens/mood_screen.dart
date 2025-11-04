@@ -304,7 +304,7 @@ class _MoodScreenState extends State<MoodScreen> {
           child: Row(
             children: [
               Text(
-                entry['emoji'],
+                entry['emoji'] as String,
                 style: const TextStyle(fontSize: 24),
               ),
               const SizedBox(width: 12),
@@ -313,14 +313,14 @@ class _MoodScreenState extends State<MoodScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      entry['mood'],
+                      entry['mood'] as String,
                       style: AppTypography.body1.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AppColors.charcoal,
                       ),
                     ),
                     Text(
-                      entry['time'],
+                      entry['time'] as String,
                       style: AppTypography.labelSmall.copyWith(
                         color: AppColors.mediumGrey,
                       ),

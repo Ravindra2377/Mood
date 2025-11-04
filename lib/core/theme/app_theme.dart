@@ -20,13 +20,12 @@ class AppTheme {
           color: AppColors.charcoal,
         ),
       ),
-      cardTheme: CardThemeData(
+  cardTheme: CardThemeData(
         color: AppColors.white,
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        shadowColor: AppColors.lightGrey.withOpacity(0.3),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -90,7 +89,6 @@ class AppTheme {
         selectedLabelStyle: AppTypography.labelSmall,
         unselectedLabelStyle: AppTypography.labelSmall,
         elevation: 8,
-        shadowColor: AppColors.lightGrey.withOpacity(0.3),
       ),
     );
   }
@@ -112,13 +110,12 @@ class AppTheme {
           color: AppColors.white,
         ),
       ),
-      cardTheme: CardThemeData(
+  cardTheme: CardThemeData(
         color: AppColors.darkGrey,
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        shadowColor: AppColors.black.withOpacity(0.3),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -182,7 +179,6 @@ class AppTheme {
         selectedLabelStyle: AppTypography.labelSmall,
         unselectedLabelStyle: AppTypography.labelSmall,
         elevation: 8,
-        shadowColor: AppColors.black.withOpacity(0.3),
       ),
     );
   }

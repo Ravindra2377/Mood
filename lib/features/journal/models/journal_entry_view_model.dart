@@ -7,6 +7,9 @@ class JournalEntryViewModel {
     required this.formattedTimestamp,
     this.title,
     this.mood,
+    this.sentiment,
+    this.sentimentScore,
+    this.keywords = const <String>[],
   });
 
   final String id;
@@ -14,6 +17,9 @@ class JournalEntryViewModel {
   final String body;
   final String formattedTimestamp;
   final String? mood;
+  final String? sentiment;
+  final double? sentimentScore;
+  final List<String> keywords;
 
   factory JournalEntryViewModel.fromEntry({
     required JournalEntry entry,
@@ -25,6 +31,9 @@ class JournalEntryViewModel {
       body: entry.body,
       mood: entry.mood,
       formattedTimestamp: formattedTimestamp,
+      sentiment: entry.sentiment,
+      sentimentScore: entry.sentimentScore,
+      keywords: List<String>.unmodifiable(entry.keywords),
     );
   }
 }

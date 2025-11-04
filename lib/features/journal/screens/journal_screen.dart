@@ -211,6 +211,24 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                                   height: 1.5,
                                 ),
                               ),
+                              if ((entry.sentiment?.isNotEmpty ?? false) ||
+                                  entry.keywords.isNotEmpty) ...[
+                                const SizedBox(height: 12),
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: [
+                                    if (entry.sentiment != null &&
+                                        entry.sentiment!.trim().isNotEmpty)
+                                      _buildSentimentChip(entry),
+                                    ...entry.keywords
+                                        .map((keyword) => keyword.trim())
+                                        .where((keyword) => keyword.isNotEmpty)
+                                        .map(_buildKeywordChip)
+                                        .toList(growable: false),
+                                  ],
+                                ),
+                              ],
                             ],
                           ),
                         );
@@ -382,6 +400,105 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
       ),
     );
   }
+
+  Widget _buildSentimentChip(JournalEntryViewModel entry) {
+    final sentimentRaw = entry.sentiment ?? '';
+    final sentimentKey = sentimentRaw.toLowerCase();
+    final label = _formatSentimentLabel(sentimentRaw);
+  final double? normalizedScore = entry.sentimentScore != null
+    ? (entry.sentimentScore!.clamp(0.0, 1.0) as num).toDouble()
+    : null;
+    final scoreText = normalizedScore != null
+        ? '${(normalizedScore * 100).round()}%'
+        : null;
+    final chipText = scoreText != null ? '$label • $scoreText' : label;
+
+    final _SentimentStyle style = _sentimentStyleFor(sentimentKey);
+
+    return Chip(
+      avatar: Icon(
+        style.icon,
+        color: style.foreground,
+        size: 18,
+      ),
+      label: Text(
+        chipText,
+        style: AppTypography.labelSmall.copyWith(
+          color: style.foreground,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      backgroundColor: style.background,
+      shape: StadiumBorder(
+        side: BorderSide(color: style.foreground.withOpacity(0.25)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    );
+  }
+
+  Widget _buildKeywordChip(String keyword) {
+    return Chip(
+      label: Text(
+        '#$keyword',
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.charcoal,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      backgroundColor: AppColors.lightGrey.withOpacity(0.5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    );
+  }
+
+  String _formatSentimentLabel(String raw) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) {
+      return 'Unknown';
+    }
+    final lower = trimmed.toLowerCase();
+    return lower[0].toUpperCase() + lower.substring(1);
+  }
+
+  _SentimentStyle _sentimentStyleFor(String sentimentKey) {
+    switch (sentimentKey) {
+      case 'positive':
+        return _SentimentStyle(
+          background: AppColors.success.withOpacity(0.18),
+          foreground: AppColors.success,
+          icon: Icons.sentiment_satisfied_alt,
+        );
+      case 'negative':
+        return _SentimentStyle(
+          background: AppColors.error.withOpacity(0.16),
+          foreground: AppColors.error,
+          icon: Icons.sentiment_dissatisfied,
+        );
+      case 'neutral':
+        return _SentimentStyle(
+          background: AppColors.lightGrey.withOpacity(0.7),
+          foreground: AppColors.darkGrey,
+          icon: Icons.sentiment_neutral,
+        );
+      default:
+        return _SentimentStyle(
+          background: AppColors.lightGrey.withOpacity(0.6),
+          foreground: AppColors.mediumGrey,
+          icon: Icons.insights_outlined,
+        );
+    }
+  }
+}
+
+class _SentimentStyle {
+  const _SentimentStyle({
+    required this.background,
+    required this.foreground,
+    required this.icon,
+  });
+
+  final Color background;
+  final Color foreground;
+  final IconData icon;
 }
 
 class _JournalErrorState extends StatelessWidget {

@@ -33,7 +33,9 @@ class AuthState {
 
 /// Storage keys used for secure storage
 class _StorageKeys {
-  static const accessToken = 'auth_access_token';
+  static const accessToken = 'access_token';
+  static const refreshToken = 'refresh_token';
+  static const legacyAccessToken = 'auth_access_token';
 }
 
 /// Secure token repository (uses FlutterSecureStorage).
@@ -42,13 +44,44 @@ class TokenRepository {
 
   final FlutterSecureStorage _storage;
 
-  Future<String?> readAccessToken() =>
-      _storage.read(key: _StorageKeys.accessToken);
+  Future<String?> readAccessToken() async {
+    final token = await _storage.read(key: _StorageKeys.accessToken);
+    if (token != null && token.isNotEmpty) {
+      return token;
+    }
+    // Seamless migration from legacy key used in earlier builds.
+    final legacy = await _storage.read(key: _StorageKeys.legacyAccessToken);
+    if (legacy != null && legacy.isNotEmpty) {
+      await saveAccessToken(legacy);
+      await _storage.delete(key: _StorageKeys.legacyAccessToken);
+      return legacy;
+    }
+    return null;
+  }
 
-  Future<void> saveAccessToken(String token) =>
-      _storage.write(key: _StorageKeys.accessToken, value: token);
+  Future<void> saveAccessToken(String token) async {
+    await _storage.write(key: _StorageKeys.accessToken, value: token);
+    await _storage.delete(key: _StorageKeys.legacyAccessToken);
+  }
 
-  Future<void> clear() => _storage.delete(key: _StorageKeys.accessToken);
+  Future<void> clearAccessToken() async {
+    await _storage.delete(key: _StorageKeys.accessToken);
+    await _storage.delete(key: _StorageKeys.legacyAccessToken);
+  }
+
+  Future<String?> readRefreshToken() =>
+      _storage.read(key: _StorageKeys.refreshToken);
+
+  Future<void> saveRefreshToken(String token) =>
+      _storage.write(key: _StorageKeys.refreshToken, value: token);
+
+  Future<void> clearRefreshToken() =>
+      _storage.delete(key: _StorageKeys.refreshToken);
+
+  Future<void> clear() async {
+    await clearAccessToken();
+    await clearRefreshToken();
+  }
 }
 
 /// Providers
@@ -79,6 +112,26 @@ final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClientFactory.create(
     baseUrl: baseUrl,
     getToken: () => tokenRepo.readAccessToken(),
+    getRefreshToken: () => tokenRepo.readRefreshToken(),
+    saveAccessToken: (token) async {
+      if (token == null || token.isEmpty) {
+        await tokenRepo.clearAccessToken();
+      } else {
+        await tokenRepo.saveAccessToken(token);
+      }
+    },
+    saveRefreshToken: (token) async {
+      if (token == null || token.isEmpty) {
+        await tokenRepo.clearRefreshToken();
+      } else {
+        await tokenRepo.saveRefreshToken(token);
+      }
+    },
+    clearTokens: () => tokenRepo.clear(),
+    onUnauthorized: () {
+      // Trigger auth controller rebuild so the UI reacts to forced logouts.
+      ref.invalidate(authControllerProvider);
+    },
   );
 });
 
@@ -110,6 +163,9 @@ class AuthController extends AsyncNotifier<AuthState> {
     try {
       final res = await _api.verifyOtp(VerifyOtpRequest(email: email, code: code));
       await _tokens.saveAccessToken(res.accessToken);
+      if ((res.refreshToken ?? '').isNotEmpty) {
+        await _tokens.saveRefreshToken(res.refreshToken!);
+      }
       state = AsyncData(AuthState(initialized: true, accessToken: res.accessToken));
     } catch (e, st) {
       state = AsyncError(e, st);
@@ -123,6 +179,9 @@ class AuthController extends AsyncNotifier<AuthState> {
     try {
       final res = await _api.login(LoginRequest(email: email, password: password));
       await _tokens.saveAccessToken(res.accessToken);
+      if ((res.refreshToken ?? '').isNotEmpty) {
+        await _tokens.saveRefreshToken(res.refreshToken!);
+      }
       state = AsyncData(AuthState(initialized: true, accessToken: res.accessToken));
     } catch (e, st) {
       state = AsyncError(e, st);

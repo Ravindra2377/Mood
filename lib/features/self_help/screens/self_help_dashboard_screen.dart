@@ -78,7 +78,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                _buildTherapyTools(),
+                _buildTherapyTools(context),
                 const SizedBox(height: 32),
 
                 // Guided Programs
@@ -89,7 +89,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                _buildGuidedPrograms(),
+                _buildGuidedPrograms(context),
                 const SizedBox(height: 32),
 
                 // Quick Assessments
@@ -100,7 +100,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                _buildAssessments(),
+                _buildAssessments(context),
                 const SizedBox(height: 32),
 
                 // Resources & Support
@@ -111,7 +111,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                _buildResources(),
+                _buildResources(context),
               ]),
             ),
           ),
@@ -186,7 +186,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTherapyTools() {
+  Widget _buildTherapyTools(BuildContext context) {
     final tools = [
       {
         'name': 'CBT Tools',
@@ -216,7 +216,10 @@ class SelfHelpDashboardScreen extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: CustomCard(
-            onTap: () => _openTherapyTool(tool['name'] as String),
+            onTap: () => _openTherapyTool(
+              context,
+              tool['name'] as String,
+            ),
             child: Row(
               children: [
                 Container(
@@ -288,7 +291,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGuidedPrograms() {
+  Widget _buildGuidedPrograms(BuildContext context) {
     final programs = [
       {
         'title': 'Anxiety Management',
@@ -315,7 +318,10 @@ class SelfHelpDashboardScreen extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: CustomCard(
-            onTap: () => _startProgram(program['title'] as String),
+            onTap: () => _startProgram(
+              context,
+              program['title'] as String,
+            ),
             child: Row(
               children: [
                 Container(
@@ -384,7 +390,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAssessments() {
+  Widget _buildAssessments(BuildContext context) {
     final assessments = [
       {
         'title': 'Anxiety Level Check',
@@ -411,7 +417,10 @@ class SelfHelpDashboardScreen extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: CustomCard(
-            onTap: () => _takeAssessment(assessment['title'] as String),
+            onTap: () => _takeAssessment(
+              context,
+              assessment['title'] as String,
+            ),
             child: Row(
               children: [
                 Container(
@@ -462,7 +471,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildResources() {
+  Widget _buildResources(BuildContext context) {
     final resources = [
       {
         'title': 'Crisis Support',
@@ -489,7 +498,10 @@ class SelfHelpDashboardScreen extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: CustomCard(
-            onTap: () => _openResource(resource['title'] as String),
+            onTap: () => _openResource(
+              context,
+              resource['title'] as String,
+            ),
             child: Row(
               children: [
                 Container(
@@ -573,7 +585,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
     );
   }
 
-  void _openTherapyTool(String tool) {
+  void _openTherapyTool(BuildContext context, String tool) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -585,7 +597,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
     );
   }
 
-  void _startProgram(String program) {
+  void _startProgram(BuildContext context, String program) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -597,7 +609,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
     );
   }
 
-  void _takeAssessment(String assessment) {
+  void _takeAssessment(BuildContext context, String assessment) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -609,7 +621,7 @@ class SelfHelpDashboardScreen extends StatelessWidget {
     );
   }
 
-  void _openResource(String resource) {
+  void _openResource(BuildContext context, String resource) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

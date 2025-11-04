@@ -43,6 +43,13 @@ class AppTypography {
     height: 1.4,
   );
 
+  static const TextStyle h5 = TextStyle(
+    fontFamily: primaryFont,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+  );
+
   // Body text
   static const TextStyle body1 = TextStyle(
     fontFamily: secondaryFont,

@@ -119,8 +119,7 @@ class JournalApiException implements Exception {
 
   @override
   String toString() {
-    return 'JournalApiException(statusCode: ' \
-        '$statusCode, uri: $uri, message: $message, body: $body)';
+    return 'JournalApiException(statusCode: $statusCode, uri: $uri, message: $message, body: $body)';
   }
 }
 

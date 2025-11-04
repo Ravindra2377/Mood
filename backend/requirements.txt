@@ -21,3 +21,8 @@ twilio==9.3.1
 slowapi==0.1.9
 redis==5.0.1
 phonenumbers==8.13.36
+
+# AI-powered journal analysis
+transformers==4.46.2
+torch>=2.9.0
+google-generativeai==0.7.2

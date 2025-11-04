@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, Date, Enum as SQLEnum
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, Date, Enum as SQLEnum, Float
 from datetime import datetime, timezone, date
 from enum import Enum
 from app.models import Base
@@ -29,3 +29,9 @@ class JournalEntry(Base):
     entry_date = Column(Date, nullable=True, default=lambda: date.today())
     # optional daily progress metric (e.g., 0-100) stored as integer
     progress = Column(Integer, nullable=True)
+    # ai-generated sentiment label (e.g., positive/neutral/negative)
+    sentiment = Column(String(32), nullable=True)
+    # confidence score from sentiment model (0-1)
+    sentiment_score = Column(Float, nullable=True)
+    # comma-separated keywords extracted from entry text
+    keywords = Column(Text, nullable=True)

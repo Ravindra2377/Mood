@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 # Revision identifiers, used by Alembic.
 revision = "20251011_01_create_consent_events"
-down_revision = "k1"
+down_revision = "k1_add_journal_entry_date_progress"
 branch_labels = None
 depends_on = None
 

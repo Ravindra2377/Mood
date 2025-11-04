@@ -18,7 +18,8 @@ class JournalNotifier extends StateNotifier<AsyncValue<List<JournalEntry>>> {
       final entries = await _service.fetchEntries();
       state = AsyncValue.data(entries);
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace, previous: previous);
+      state = AsyncError(error, stackTrace);
+      state = previous;
     }
   }
 
@@ -31,13 +32,14 @@ class JournalNotifier extends StateNotifier<AsyncValue<List<JournalEntry>>> {
       final existing = state.asData?.value ?? const <JournalEntry>[];
       state = AsyncValue.data([created, ...existing]);
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace, previous: previous);
+      state = AsyncError(error, stackTrace);
+      state = previous;
       rethrow;
     }
   }
 
   Future<void> deleteEntry(String id) async {
-    final previous = state;
+  final previous = state;
     final existing = state.asData?.value;
     if (existing == null) {
       return;
@@ -51,7 +53,8 @@ class JournalNotifier extends StateNotifier<AsyncValue<List<JournalEntry>>> {
     try {
       await _service.deleteEntry(id);
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace, previous: previous);
+      state = AsyncError(error, stackTrace);
+      state = previous;
       rethrow;
     }
   }

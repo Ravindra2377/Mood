@@ -68,7 +68,7 @@ class ExercisesScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                _buildExerciseCategories(),
+                _buildExerciseCategories(context),
                 const SizedBox(height: 32),
 
                 // Recommended for You
@@ -79,7 +79,7 @@ class ExercisesScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                _buildRecommendedExercises(),
+                _buildRecommendedExercises(context),
               ]),
             ),
           ),
@@ -124,7 +124,7 @@ class ExercisesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildExerciseCategories() {
+  Widget _buildExerciseCategories(BuildContext context) {
     final categories = [
       {
         'title': 'Breathing Exercises',
@@ -161,7 +161,10 @@ class ExercisesScreen extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: CustomCard(
-            onTap: () => _navigateToCategory(category['title'] as String),
+            onTap: () => _navigateToCategory(
+              context,
+              category['title'] as String,
+            ),
             child: Row(
               children: [
                 Container(
@@ -219,7 +222,7 @@ class ExercisesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecommendedExercises() {
+  Widget _buildRecommendedExercises(BuildContext context) {
     final exercises = [
       {
         'title': '4-7-8 Breathing',
@@ -246,7 +249,10 @@ class ExercisesScreen extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: CustomCard(
-            onTap: () => _startExercise(exercise['title'] as String),
+            onTap: () => _startExercise(
+              context,
+              exercise['title'] as String,
+            ),
             child: Row(
               children: [
                 Container(
@@ -319,7 +325,7 @@ class ExercisesScreen extends StatelessWidget {
     );
   }
 
-  void _navigateToCategory(String category) {
+  void _navigateToCategory(BuildContext context, String category) {
     // In a real app, this would navigate to a category screen
     // For now, just show a snackbar
     ScaffoldMessenger.of(context).showSnackBar(
@@ -333,7 +339,7 @@ class ExercisesScreen extends StatelessWidget {
     );
   }
 
-  void _startExercise(String exercise) {
+  void _startExercise(BuildContext context, String exercise) {
     // In a real app, this would start the exercise
     // For now, just show a snackbar
     ScaffoldMessenger.of(context).showSnackBar(

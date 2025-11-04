@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/custom_card.dart';
+import '../../../screens/journal_list.dart';
 import '../../../screens/profile_screen.dart';
 import '../../../screens/self_help_screen.dart';
 import '../../analytics/screens/unified_analytics_screen.dart';
@@ -26,6 +27,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
         index: _currentIndex,
         children: [
           _buildHomeContent(),
+          const JournalListScreen(),
           const ExercisesMainScreen(),
           const SelfHelpScreen(),
           const UnifiedAnalyticsScreen(),
@@ -232,9 +234,57 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
         ),
         const SizedBox(height: 12),
         CustomCard(
-          backgroundColor: AppColors.secondaryPastel.withOpacity(0.15),
+          backgroundColor: AppColors.secondaryPastel.withOpacity(0.18),
           borderColor: AppColors.secondaryPastel,
           onTap: () => _switchTab(1),
+          child: Row(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  gradient: AppColors.peacePastelGradient,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.book_outlined,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Open your journal',
+                      style: AppTypography.h4.copyWith(
+                        color: AppColors.charcoal,
+                      ),
+                    ),
+                    Text(
+                      'Review past reflections or start a fresh entry.',
+                      style: AppTypography.body2.copyWith(
+                        color: AppColors.darkGrey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: AppColors.secondaryPastel,
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        CustomCard(
+          backgroundColor: AppColors.secondaryPastel.withOpacity(0.15),
+          borderColor: AppColors.secondaryPastel,
+          onTap: () => _switchTab(2),
           child: Row(
             children: [
               Container(
@@ -372,10 +422,11 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
           elevation: 0,
           items: [
             _buildNavItem(Icons.home_outlined, 'Home', 0),
-            _buildNavItem(Icons.self_improvement_outlined, 'Exercises', 1),
-            _buildNavItem(Icons.psychology_outlined, 'Self-Help', 2),
-            _buildNavItem(Icons.analytics_outlined, 'Analytics', 3),
-            _buildNavItem(Icons.person_outline, 'Profile', 4),
+            _buildNavItem(Icons.book_outlined, 'Journal', 1),
+            _buildNavItem(Icons.self_improvement_outlined, 'Exercises', 2),
+            _buildNavItem(Icons.psychology_outlined, 'Self-Help', 3),
+            _buildNavItem(Icons.analytics_outlined, 'Analytics', 4),
+            _buildNavItem(Icons.person_outline, 'Profile', 5),
           ],
         ),
       ),

@@ -36,6 +36,18 @@ class AppColors {
   static const Color charcoal = Color(0xFF4A4A4A);
   static const Color black = Color(0xFF1A1A1A);
 
+  // Brand anchors
+  static const Color primary = Color(0xFF6C5CE7);             // Indigo
+  static const Color secondary = Color(0xFF00B894);           // Mint
+  static const Color accent = Color(0xFFFF7675);              // Coral
+
+  // Text pairs
+  static const Color textPrimary = charcoal;
+  static const Color textSecondary = darkGrey;
+
+  // Background surface
+  static const Color background = whiteBg;
+
   // ==========================================
   // SEMANTIC COLORS
   // ==========================================

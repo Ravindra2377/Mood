@@ -136,10 +136,15 @@ class AuthService {
   Future<void> logout() async {
     try {
       final token = await _storage.getAccessToken();
+      final refresh = await _storage.getRefreshToken();
       if (token != null) {
-        await _dio.post('/auth/logout', options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ));
+        await _dio.post(
+          '/auth/logout',
+          data: refresh == null ? null : {'refresh_token': refresh},
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
       }
     } catch (e) {
       // Best effort - continue even if API call fails
@@ -167,14 +172,24 @@ class AuthService {
       }
 
       final response = await _dio.post('/auth/refresh', data: {
-        'refresh_token': refreshToken,
+        'old_refresh_token': refreshToken,
       });
 
       final data = response.data;
-      if (data.containsKey('access_token')) {
-        await _storage.saveAccessToken(data['access_token']);
+      final newAccess = data['access_token'] as String?;
+      final newRefresh = data['refresh_token'] as String?;
+
+      if ((newAccess ?? '').isEmpty || (newRefresh ?? '').isEmpty) {
+        await _storage.clearAll();
+        throw Exception('Session refresh failed. Please login again.');
       }
-    } on DioException catch (e) {
+
+  await _storage.saveAccessToken(newAccess!);
+  await _storage.saveRefreshToken(newRefresh!);
+    } on DioException catch (_) {
+      await _storage.clearAll();
+      throw Exception('Session expired. Please login again.');
+    } catch (_) {
       await _storage.clearAll();
       throw Exception('Session expired. Please login again.');
     }

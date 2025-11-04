@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 from typing import Literal
 
@@ -23,6 +23,9 @@ class JournalRead(BaseModel):
     updated_at: datetime | None = None
     entry_date: datetime | None
     progress: int | None
+    sentiment: str | None = None
+    sentiment_score: float | None = None
+    keywords: list[str] = Field(default_factory=list)
 
     model_config = {"from_attributes": True}
 
@@ -30,6 +33,18 @@ class JournalRead(BaseModel):
     @classmethod
     def _coerce_id(cls, value: object) -> str:
         return str(value)
+
+    @field_validator("keywords", mode="before")
+    @classmethod
+    def _parse_keywords(cls, value: object) -> list[str]:
+        if value is None:
+            return []
+        if isinstance(value, list):
+            return value
+        if isinstance(value, str):
+            items = [item.strip() for item in value.split(",") if item.strip()]
+            return items
+        return []
 
 class JournalUpdate(BaseModel):
     title: str | None = None
@@ -46,3 +61,13 @@ class JournalStats(BaseModel):
     mood_breakdown: dict  # { "angry": 2, "sad": 1, "neutral": 3, "happy": 4, "excited": 1 }
     average_length: float
     last_entry_date: datetime | None = None
+
+
+class JournalAnalysisRequest(BaseModel):
+    text: str
+
+
+class JournalAnalysisResponse(BaseModel):
+    sentiment: str
+    sentiment_score: float
+    keywords: list[str]

@@ -2,11 +2,19 @@ from fastapi import APIRouter, Depends, HTTPException, Header, Query
 from typing import List, Optional
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import func, and_
-from app.schemas.journal import JournalCreate, JournalRead, JournalUpdate, JournalStats
+from app.schemas.journal import (
+    JournalCreate,
+    JournalRead,
+    JournalUpdate,
+    JournalStats,
+    JournalAnalysisRequest,
+    JournalAnalysisResponse,
+)
 from app.models.journal_entry import JournalEntry, JournalMood
 from app.models.user import User
 from app.services import security
 from app.services.analytics import record_event
+from app.services import journal_ai
 
 router = APIRouter()
 
@@ -85,7 +93,7 @@ def list_journal_entries(
         db.close()
 
 @router.post('/journal', response_model=JournalRead)
-def create_journal_entry(
+async def create_journal_entry(
     entry: JournalCreate,
     user: User = Depends(get_current_user)
 ):
@@ -98,6 +106,9 @@ def create_journal_entry(
         # Calculate character count
         char_count = len(entry.content) if entry.content else 0
         
+        analysis = await journal_ai.analyze_journal_text(entry.content)
+        keywords_str = ",".join(analysis.keywords) if analysis.keywords else None
+
         journal_entry = JournalEntry(
             user_id=user.id,
             title=entry.title,
@@ -105,7 +116,10 @@ def create_journal_entry(
             mood=JournalMood(entry.mood.lower()) if entry.mood else JournalMood.NEUTRAL,
             character_count=char_count,
             entry_date=entry.entry_date,
-            progress=entry.progress
+            progress=entry.progress,
+            sentiment=analysis.sentiment,
+            sentiment_score=analysis.sentiment_score,
+            keywords=keywords_str,
         )
         
         db.add(journal_entry)
@@ -151,7 +165,7 @@ def get_journal_entry(
         db.close()
 
 @router.put('/journal/{entry_id}', response_model=JournalRead)
-def update_journal_entry(
+async def update_journal_entry(
     entry_id: int,
     update_data: JournalUpdate,
     user: User = Depends(get_current_user)
@@ -178,6 +192,10 @@ def update_journal_entry(
         if update_data.content is not None:
             entry.content = update_data.content
             entry.character_count = len(update_data.content)
+            analysis = await journal_ai.analyze_journal_text(update_data.content)
+            entry.sentiment = analysis.sentiment
+            entry.sentiment_score = analysis.sentiment_score
+            entry.keywords = ",".join(analysis.keywords) if analysis.keywords else None
         if update_data.mood is not None:
             entry.mood = JournalMood(update_data.mood.lower())
         if update_data.entry_date is not None:
@@ -199,6 +217,17 @@ def update_journal_entry(
         raise HTTPException(status_code=400, detail=str(e))
     finally:
         db.close()
+
+
+@router.post('/journal/analyze', response_model=JournalAnalysisResponse)
+async def analyze_journal_entry(
+    payload: JournalAnalysisRequest,
+    user: User = Depends(get_current_user)
+):
+    """Analyze journal content without persisting it."""
+
+    analysis = await journal_ai.analyze_journal_text(payload.text)
+    return JournalAnalysisResponse(**analysis.model_dump())
 
 @router.delete('/journal/{entry_id}')
 def delete_journal_entry(

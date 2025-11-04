@@ -4,6 +4,7 @@ import '../providers/analytics_provider.dart';
 import '../widgets/exercise_analytics_widget.dart';
 import '../widgets/self_help_analytics_widget.dart';
 import '../widgets/mood_analytics_widget.dart';
+import '../../../models/analytics/analytics_models.dart';
 
 class AnalyticsDashboardScreen extends ConsumerWidget {
   const AnalyticsDashboardScreen({Key? key}) : super(key: key);
