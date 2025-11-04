@@ -184,6 +184,8 @@ web-app/build/
 # ------------------------------------------------------------
 # VS Code
 .vscode/
+# Root Flutter metadata
+/.metadata
 # JetBrains
 .idea/
 *.iml
