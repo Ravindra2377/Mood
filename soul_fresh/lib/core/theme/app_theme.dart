@@ -43,12 +43,14 @@ class AppTheme {
 
     return base.copyWith(
       textTheme: textTheme,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.whiteBg,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
-        iconTheme: IconThemeData(color: AppColors.charcoal),
+        // Let Flutter use colorScheme.onSurface for icons
+        iconTheme: IconThemeData(color: base.colorScheme.onSurface),
+        // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
       cardTheme: CardThemeData(
@@ -69,7 +71,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(20),
           side: const BorderSide(color: AppColors.mediumGrey),
         ),
-        labelStyle: AppTypography.label.copyWith(color: AppColors.charcoal),
+        // Let Flutter use the theme's default text color
+        labelStyle: AppTypography.label,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -87,8 +90,13 @@ class AppTheme {
           borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: AppColors.primaryPastel, width: 2),
         ),
-        hintStyle: AppTypography.body2.copyWith(color: AppColors.darkGrey),
-        labelStyle: AppTypography.label.copyWith(color: AppColors.darkGrey),
+        // Use a lighter variant of the onSurface color for hints/labels
+        hintStyle: AppTypography.body2.copyWith(
+          color: base.colorScheme.onSurface.withOpacity(0.6),
+        ),
+        labelStyle: AppTypography.label.copyWith(
+          color: base.colorScheme.onSurface.withOpacity(0.7),
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -130,7 +138,8 @@ class AppTheme {
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.charcoal,
-        contentTextStyle: AppTypography.body2.copyWith(color: AppColors.white),
+        // Since we're using a dark background, explicitly set white text
+        contentTextStyle: AppTypography.body2.copyWith(color: Colors.white),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -172,21 +181,34 @@ class AppTheme {
       ),
     );
 
-    final textTheme = base.textTheme.apply(
-      fontFamily: AppTypography.secondaryFont,
-      bodyColor: AppColors.white,
-      displayColor: AppColors.white,
-    ).copyWith(
-      titleLarge: AppTypography.h3.copyWith(color: AppColors.white),
+    // --- FIX: Remove hard-coded text colors ---
+    // Let Flutter automatically use colorScheme.onBackground and onSurface
+    final textTheme = base.textTheme.copyWith(
+      displayLarge: AppTypography.h1,
+      displayMedium: AppTypography.h2,
+      displaySmall: AppTypography.h3,
+      headlineMedium: AppTypography.h3,
+      headlineSmall: AppTypography.h4,
+      titleLarge: AppTypography.h4,
+      titleMedium: AppTypography.body1.copyWith(fontWeight: FontWeight.w600),
+      titleSmall: AppTypography.label,
+      bodyLarge: AppTypography.body1,
+      bodyMedium: AppTypography.body2,
+      bodySmall: AppTypography.labelSmall,
+      labelLarge: AppTypography.button,
+      labelMedium: AppTypography.label,
+      labelSmall: AppTypography.labelSmall,
     );
 
     return base.copyWith(
       textTheme: textTheme,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF101114),
+      appBarTheme: AppBarTheme(
+        backgroundColor: const Color(0xFF101114),
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.white),
+        // Let Flutter use colorScheme.onSurface for icons
+        iconTheme: IconThemeData(color: base.colorScheme.onSurface),
+        // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
       cardTheme: CardThemeData(
@@ -202,7 +224,8 @@ class AppTheme {
       chipTheme: base.chipTheme.copyWith(
         backgroundColor: const Color(0xFF2A2D32),
         selectedColor: AppColors.primaryPastel.withOpacity(0.25),
-        labelStyle: AppTypography.label.copyWith(color: AppColors.white),
+        // Let Flutter use the theme's default text color
+        labelStyle: AppTypography.label,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: const BorderSide(color: Color(0xFF373B40)),
@@ -224,8 +247,13 @@ class AppTheme {
           borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: AppColors.primaryPastel, width: 2),
         ),
-        hintStyle: AppTypography.body2.copyWith(color: AppColors.lightGrey),
-        labelStyle: AppTypography.label.copyWith(color: AppColors.lightGrey),
+        // Use a lighter variant of the onSurface color for hints/labels
+        hintStyle: AppTypography.body2.copyWith(
+          color: base.colorScheme.onSurface.withOpacity(0.6),
+        ),
+        labelStyle: AppTypography.label.copyWith(
+          color: base.colorScheme.onSurface.withOpacity(0.7),
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -263,7 +291,8 @@ class AppTheme {
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: const Color(0xFF2A2D32),
-        contentTextStyle: AppTypography.body2.copyWith(color: AppColors.white),
+        // Let Flutter determine the text color based on background
+        contentTextStyle: AppTypography.body2,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
@@ -271,8 +300,9 @@ class AppTheme {
         backgroundColor: const Color(0xFF191C1F),
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-        titleTextStyle: AppTypography.h3.copyWith(color: AppColors.white),
-        contentTextStyle: AppTypography.body1.copyWith(color: AppColors.white),
+        // Let Flutter use the theme's default text colors
+        titleTextStyle: AppTypography.h3,
+        contentTextStyle: AppTypography.body1,
       ),
       scrollbarTheme: ScrollbarThemeData(
         thumbColor: MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.5)),
