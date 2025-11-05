@@ -15,6 +15,7 @@ from . import (
     timers,
     consent,
     journal,
+    insights_controller,
     meditation,
     exercises,
 )
@@ -36,6 +37,7 @@ __all__ = [
     "timers",
     "consent",
     "journal",
+    "insights_controller",
     "meditation",
     "exercises",
 ]

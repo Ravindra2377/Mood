@@ -8,6 +8,7 @@ import '../../../screens/profile_screen.dart';
 import '../../../screens/self_help_screen.dart';
 import '../../analytics/screens/unified_analytics_screen.dart';
 import '../../exercises/screens/exercises_main_screen.dart';
+import '../../insights/screens/insights_screen.dart';
 
 class ImprovedHomeScreen extends StatefulWidget {
   const ImprovedHomeScreen({Key? key}) : super(key: key);
@@ -31,6 +32,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
           const ExercisesMainScreen(),
           const SelfHelpScreen(),
           const UnifiedAnalyticsScreen(),
+          const InsightsScreen(),
           const ProfileScreen(),
         ],
       ),
@@ -426,7 +428,8 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
             _buildNavItem(Icons.self_improvement_outlined, 'Exercises', 2),
             _buildNavItem(Icons.psychology_outlined, 'Self-Help', 3),
             _buildNavItem(Icons.analytics_outlined, 'Analytics', 4),
-            _buildNavItem(Icons.person_outline, 'Profile', 5),
+            _buildNavItem(Icons.bar_chart_outlined, 'Insights', 5),
+            _buildNavItem(Icons.person_outline, 'Profile', 6),
           ],
         ),
       ),

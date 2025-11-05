@@ -52,6 +52,7 @@ from app.controllers import analytics as analytics_controller
 from app.controllers import privacy as privacy_controller
 from app.controllers import mental_health_tracking
 from app.controllers import chat_controller
+from app.controllers import insights_controller
 
 # SQLAlchemy setup
 DATABASE_URL = settings.DATABASE_URL
@@ -232,6 +233,7 @@ app.include_router(exercises.router, prefix="/api", tags=["exercises"])
 app.include_router(profile.router, prefix="/api", tags=["profile"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
 app.include_router(chat_controller.router, prefix="/api/v1", tags=["chat-companion"])
+app.include_router(insights_controller.router, prefix="/api/v1", tags=["insights"])
 app.include_router(gamification.router, prefix="/api", tags=["gamification"])
 app.include_router(personalization.router, prefix="/api", tags=["personalization"])
 app.include_router(community.router, prefix="/api", tags=["community"])

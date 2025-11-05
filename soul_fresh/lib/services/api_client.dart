@@ -117,10 +117,12 @@ class TokenRefreshInterceptor extends Interceptor {
     final newRefresh = data['refresh_token'] as String?;
 
     if (newAccess == null || newAccess.isEmpty) {
-      throw const TokenRefreshException('Refresh response missing access_token');
+      throw const TokenRefreshException(
+          'Refresh response missing access_token');
     }
     if (newRefresh == null || newRefresh.isEmpty) {
-      throw const TokenRefreshException('Refresh response missing refresh_token');
+      throw const TokenRefreshException(
+          'Refresh response missing refresh_token');
     }
 
     await Future.sync(() => saveAccessToken(newAccess));
@@ -151,7 +153,8 @@ class TokenRefreshInterceptor extends Interceptor {
   }
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+      DioException err, ErrorInterceptorHandler handler) async {
     if (!_isUnauthorized(err)) {
       handler.next(err);
       return;
@@ -336,6 +339,23 @@ abstract class ApiClient {
 
   @DELETE('/journals/{id}')
   Future<MessageResponse> deleteJournal(@Path('id') String id);
+
+  // -----------------------
+  // Profile
+  // -----------------------
+
+  @GET('/profile')
+  Future<ProfileRead> getProfile();
+
+  @PATCH('/profile')
+  Future<ProfileRead> updateProfile(@Body() ProfileUpdate body);
+
+  // -----------------------
+  // Insights
+  // -----------------------
+
+  @GET('/v1/insights')
+  Future<Map<String, dynamic>> getInsights();
 }
 
 // ============================================================================
@@ -416,7 +436,8 @@ class UserRead {
 
   UserRead({required this.id, required this.email});
 
-  factory UserRead.fromJson(Map<String, dynamic> json) => _$UserReadFromJson(json);
+  factory UserRead.fromJson(Map<String, dynamic> json) =>
+      _$UserReadFromJson(json);
   Map<String, dynamic> toJson() => _$UserReadToJson(this);
 }
 
@@ -527,6 +548,108 @@ class UpdateJournalRequest {
   factory UpdateJournalRequest.fromJson(Map<String, dynamic> json) =>
       _$UpdateJournalRequestFromJson(json);
   Map<String, dynamic> toJson() => _$UpdateJournalRequestToJson(this);
+}
+
+// -----------------------
+// Profile DTOs
+// -----------------------
+
+@JsonSerializable()
+class ProfileRead {
+  final int id;
+  @JsonKey(name: 'user_id')
+  final int userId;
+  @JsonKey(name: 'display_name')
+  final String? displayName;
+  final String? language;
+  final String? timezone;
+  @JsonKey(name: 'consent_privacy')
+  final bool? consentPrivacy;
+  @JsonKey(name: 'notify_email')
+  final bool? notifyEmail;
+  @JsonKey(name: 'notify_push')
+  final bool? notifyPush;
+  @JsonKey(name: 'notify_sms')
+  final bool? notifySms;
+  @JsonKey(name: 'created_at')
+  final DateTime? createdAt;
+  @JsonKey(name: 'next_notification_at')
+  final DateTime? nextNotificationAt;
+  @JsonKey(name: 'preferred_notify_start')
+  final int? preferredNotifyStart;
+  @JsonKey(name: 'preferred_notify_end')
+  final int? preferredNotifyEnd;
+  @JsonKey(name: 'last_notification_sent_at')
+  final DateTime? lastNotificationSentAt;
+  @JsonKey(name: 'engagement_status')
+  final String? engagementStatus;
+
+  ProfileRead({
+    required this.id,
+    required this.userId,
+    this.displayName,
+    this.language,
+    this.timezone,
+    this.consentPrivacy,
+    this.notifyEmail,
+    this.notifyPush,
+    this.notifySms,
+    this.createdAt,
+    this.nextNotificationAt,
+    this.preferredNotifyStart,
+    this.preferredNotifyEnd,
+    this.lastNotificationSentAt,
+    this.engagementStatus,
+  });
+
+  factory ProfileRead.fromJson(Map<String, dynamic> json) =>
+      _$ProfileReadFromJson(json);
+  Map<String, dynamic> toJson() => _$ProfileReadToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
+class ProfileUpdate {
+  @JsonKey(name: 'display_name')
+  final String? displayName;
+  final String? language;
+  final String? timezone;
+  @JsonKey(name: 'consent_privacy')
+  final bool? consentPrivacy;
+  @JsonKey(name: 'notify_email')
+  final bool? notifyEmail;
+  @JsonKey(name: 'notify_push')
+  final bool? notifyPush;
+  @JsonKey(name: 'notify_sms')
+  final bool? notifySms;
+  @JsonKey(name: 'next_notification_at')
+  final DateTime? nextNotificationAt;
+  @JsonKey(name: 'preferred_notify_start')
+  final int? preferredNotifyStart;
+  @JsonKey(name: 'preferred_notify_end')
+  final int? preferredNotifyEnd;
+  @JsonKey(name: 'last_notification_sent_at')
+  final DateTime? lastNotificationSentAt;
+  @JsonKey(name: 'engagement_status')
+  final String? engagementStatus;
+
+  const ProfileUpdate({
+    this.displayName,
+    this.language,
+    this.timezone,
+    this.consentPrivacy,
+    this.notifyEmail,
+    this.notifyPush,
+    this.notifySms,
+    this.nextNotificationAt,
+    this.preferredNotifyStart,
+    this.preferredNotifyEnd,
+    this.lastNotificationSentAt,
+    this.engagementStatus,
+  });
+
+  factory ProfileUpdate.fromJson(Map<String, dynamic> json) =>
+      _$ProfileUpdateFromJson(json);
+  Map<String, dynamic> toJson() => _$ProfileUpdateToJson(this);
 }
 
 // ============================================================================

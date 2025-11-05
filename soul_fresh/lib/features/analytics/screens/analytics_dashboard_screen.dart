@@ -209,7 +209,8 @@ class _AnalyticsDashboardScreenState
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildAnalyticsPandaCard(compact: true, headline: 'Here are the trends I spotted'),
+        _buildAnalyticsPandaCard(
+            compact: true, headline: 'Here are the trends I spotted'),
         const SizedBox(height: 16),
         // Weekly Insights
         const WeeklyInsightsCard(),
@@ -372,7 +373,8 @@ class _AnalyticsDashboardScreenState
             const SizedBox(height: 8),
             _buildSessionStat('Avg Session', '15 min', Icons.trending_up),
             const SizedBox(height: 8),
-            _buildSessionStat('Longest Streak', '5 days', Icons.local_fire_department),
+            _buildSessionStat(
+                'Longest Streak', '5 days', Icons.local_fire_department),
           ],
         ),
       ),
@@ -457,7 +459,8 @@ class _AnalyticsDashboardScreenState
     );
   }
 
-  Widget _buildPatternItem(String title, String description, String suggestion) {
+  Widget _buildPatternItem(
+      String title, String description, String suggestion) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -569,39 +572,40 @@ class _AnalyticsDashboardScreenState
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.emoji_events, color: Colors.amber),
-              const SizedBox(width: 8),
-              Text(
-                'Milestones',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildMilestoneItem(
-            '🔥',
-            '7-Day Streak',
-            'Achieved',
-            true,
-          ),
-          _buildMilestoneItem(
-            '📊',
-            '10 Assessments',
-            '7/10',
-            false,
-          ),
-          _buildMilestoneItem(
-            '🧘',
-            '50 Exercise Sessions',
-            '18/50',
-            false,
-          ),
-        ],
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.emoji_events, color: Colors.amber),
+                const SizedBox(width: 8),
+                Text(
+                  'Milestones',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildMilestoneItem(
+              '🔥',
+              '7-Day Streak',
+              'Achieved',
+              true,
+            ),
+            _buildMilestoneItem(
+              '📊',
+              '10 Assessments',
+              '7/10',
+              false,
+            ),
+            _buildMilestoneItem(
+              '🧘',
+              '50 Exercise Sessions',
+              '18/50',
+              false,
+            ),
+          ],
+        ),
       ),
     );
   }

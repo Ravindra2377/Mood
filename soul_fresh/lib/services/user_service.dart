@@ -5,23 +5,23 @@ import 'api_client.dart';
 
 /// Service for user profile API calls
 class UserService {
-  final ApiClient _apiClient;
-
   UserService(this._apiClient);
 
+  final ApiClient _apiClient;
+
   /// Fetch user profile
-  Future<Map<String, dynamic>> getUserProfile() async {
+  Future<ProfileRead> getUserProfile() async {
     try {
-  return await (_apiClient as dynamic).getUserProfile();
+      return await _apiClient.getProfile();
     } catch (e) {
       throw Exception('Failed to fetch user profile: $e');
     }
   }
 
   /// Update user profile
-  Future<void> updateUserProfile(Map<String, dynamic> data) async {
+  Future<ProfileRead> updateUserProfile(ProfileUpdate update) async {
     try {
-  await (_apiClient as dynamic).updateUserProfile(data);
+      return await _apiClient.updateProfile(update);
     } catch (e) {
       throw Exception('Failed to update user profile: $e');
     }
@@ -35,7 +35,7 @@ final userServiceProvider = Provider<UserService>((ref) {
 });
 
 /// Provider for user profile
-final userProfileProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final userProfileProvider = FutureProvider<ProfileRead>((ref) async {
   final userService = ref.watch(userServiceProvider);
   return await userService.getUserProfile();
 });
