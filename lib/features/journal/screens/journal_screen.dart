@@ -7,6 +7,8 @@ import '../../../core/widgets/custom_input_field.dart';
 import '../../../core/widgets/custom_widgets.dart';
 import '../models/journal_entry_view_model.dart';
 import '../providers/journal_provider.dart';
+import '../utils/journal_sentiment_style.dart';
+import 'journal_detail_screen.dart';
 
 class JournalScreen extends ConsumerStatefulWidget {
   const JournalScreen({super.key});
@@ -15,7 +17,8 @@ class JournalScreen extends ConsumerStatefulWidget {
   ConsumerState<JournalScreen> createState() => _JournalScreenState();
 }
 
-class _JournalScreenState extends ConsumerState<JournalScreen> {
+class _JournalScreenState extends ConsumerState<JournalScreen>
+    with AutomaticKeepAliveClientMixin {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _entryController = TextEditingController();
 
@@ -37,7 +40,11 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final AsyncValue<List<JournalEntryViewModel>> entriesAsync =
         ref.watch(journalViewModelProvider);
 
@@ -109,138 +116,172 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: entriesAsync.when(
-                loading: () => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                error: (error, _) => _JournalErrorState(
-                  message: error.toString(),
-                  onRetry: () => ref.read(journalProvider.notifier).refresh(),
-                ),
-                data: (entries) {
-                  if (entries.isEmpty) {
-                    return Align(
-                      alignment: Alignment.topCenter,
-                      child: CustomCard(
-                        backgroundColor: AppColors.lightGrey,
-                        padding: const EdgeInsets.all(18),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Nothing written yet',
-                              style: AppTypography.body1.copyWith(
-                                color: AppColors.charcoal,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Use the prompt above or start free-writing to begin your journaling streak.',
-                              style: AppTypography.body2.copyWith(
-                                color: AppColors.darkGrey,
-                                height: 1.4,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  return RefreshIndicator(
-                    onRefresh: () =>
-                        ref.read(journalProvider.notifier).refresh(),
-                    child: ListView.separated(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: entries.length,
-                      padding: const EdgeInsets.only(bottom: 12),
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        final entry = entries[index];
-                        return CustomCard(
-                          backgroundColor: AppColors.white,
-                          border: Border.all(
-                            color: AppColors.mediumGrey.withOpacity(0.6),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          entry.title ?? 'Untitled entry',
-                                          style: AppTypography.body1.copyWith(
-                                            color: AppColors.charcoal,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          entry.formattedTimestamp,
-                                          style:
-                                              AppTypography.labelSmall.copyWith(
-                                            color: AppColors.mediumGrey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () async {
-                                      await _deleteEntry(entry.id);
-                                    },
-                                    icon: const Icon(Icons.delete_outline),
-                                    color: AppColors.mediumGrey,
-                                    tooltip: 'Remove entry',
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                entry.body,
-                                style: AppTypography.body2.copyWith(
-                                  color: AppColors.darkGrey,
-                                  height: 1.5,
-                                ),
-                              ),
-                              if ((entry.sentiment?.isNotEmpty ?? false) ||
-                                  entry.keywords.isNotEmpty) ...[
-                                const SizedBox(height: 12),
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: [
-                                    if (entry.sentiment != null &&
-                                        entry.sentiment!.trim().isNotEmpty)
-                                      _buildSentimentChip(entry),
-                                    ...entry.keywords
-                                        .map((keyword) => keyword.trim())
-                                        .where((keyword) => keyword.isNotEmpty)
-                                        .map(_buildKeywordChip)
-                                        .toList(growable: false),
-                                  ],
-                                ),
-                              ],
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: _buildEntriesBody(context, entriesAsync),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildEntriesBody(
+    BuildContext context,
+    AsyncValue<List<JournalEntryViewModel>> entriesAsync,
+  ) {
+    return entriesAsync.when(
+      loading: () => const Center(
+        key: ValueKey('journal_loading'),
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, _) => KeyedSubtree(
+        key: const ValueKey('journal_error'),
+        child: _JournalErrorState(
+          message: error.toString(),
+          onRetry: () => ref.read(journalProvider.notifier).refresh(),
+        ),
+      ),
+      data: (entries) {
+        if (entries.isEmpty) {
+          return KeyedSubtree(
+            key: const ValueKey('journal_empty'),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: CustomCard(
+                backgroundColor: AppColors.lightGrey,
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Nothing written yet',
+                      style: AppTypography.body1.copyWith(
+                        color: AppColors.charcoal,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Use the prompt above or start free-writing to begin your journaling streak.',
+                      style: AppTypography.body2.copyWith(
+                        color: AppColors.darkGrey,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        return KeyedSubtree(
+          key: const ValueKey('journal_list'),
+          child: RefreshIndicator(
+            onRefresh: () => ref.read(journalProvider.notifier).refresh(),
+            child: ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: entries.length,
+              padding: const EdgeInsets.only(bottom: 12),
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final entry = entries[index];
+                return Hero(
+                  tag: 'journal_entry_${entry.id}',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: CustomCard(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => JournalDetailScreen(
+                              viewModel: entry,
+                            ),
+                          ),
+                        );
+                      },
+                      backgroundColor: AppColors.white,
+                      border: Border.all(
+                        color: AppColors.mediumGrey.withOpacity(0.6),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      entry.title ?? 'Untitled entry',
+                                      style: AppTypography.body1.copyWith(
+                                        color: AppColors.charcoal,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      entry.formattedTimestamp,
+                                      style: AppTypography.labelSmall.copyWith(
+                                        color: AppColors.mediumGrey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  await _deleteEntry(entry.id);
+                                },
+                                icon: const Icon(Icons.delete_outline),
+                                color: AppColors.mediumGrey,
+                                tooltip: 'Remove entry',
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            entry.body,
+                            style: AppTypography.body2.copyWith(
+                              color: AppColors.darkGrey,
+                              height: 1.5,
+                            ),
+                          ),
+                          if ((entry.sentiment?.isNotEmpty ?? false) ||
+                              entry.keywords.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                if (entry.sentiment != null &&
+                                    entry.sentiment!.trim().isNotEmpty)
+                                  _buildSentimentChip(entry),
+                                ...entry.keywords
+                                    .map((keyword) => keyword.trim())
+                                    .where(
+                                      (keyword) => keyword.isNotEmpty,
+                                    )
+                                    .map(_buildKeywordChip)
+                                    .toList(growable: false),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -403,17 +444,15 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
 
   Widget _buildSentimentChip(JournalEntryViewModel entry) {
     final sentimentRaw = entry.sentiment ?? '';
-    final sentimentKey = sentimentRaw.toLowerCase();
     final label = _formatSentimentLabel(sentimentRaw);
-  final double? normalizedScore = entry.sentimentScore != null
-    ? (entry.sentimentScore!.clamp(0.0, 1.0) as num).toDouble()
-    : null;
-    final scoreText = normalizedScore != null
-        ? '${(normalizedScore * 100).round()}%'
+    final double? normalizedScore = entry.sentimentScore != null
+        ? (entry.sentimentScore!.clamp(0.0, 1.0) as num).toDouble()
         : null;
-    final chipText = scoreText != null ? '$label • $scoreText' : label;
+    final scoreText =
+        normalizedScore != null ? '${(normalizedScore * 100).round()}%' : null;
+    final chipText = scoreText != null ? '$label ($scoreText)' : label;
 
-    final _SentimentStyle style = _sentimentStyleFor(sentimentKey);
+    final JournalSentimentStyle style = journalSentimentStyleFor(sentimentRaw);
 
     return Chip(
       avatar: Icon(
@@ -458,47 +497,6 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
     final lower = trimmed.toLowerCase();
     return lower[0].toUpperCase() + lower.substring(1);
   }
-
-  _SentimentStyle _sentimentStyleFor(String sentimentKey) {
-    switch (sentimentKey) {
-      case 'positive':
-        return _SentimentStyle(
-          background: AppColors.success.withOpacity(0.18),
-          foreground: AppColors.success,
-          icon: Icons.sentiment_satisfied_alt,
-        );
-      case 'negative':
-        return _SentimentStyle(
-          background: AppColors.error.withOpacity(0.16),
-          foreground: AppColors.error,
-          icon: Icons.sentiment_dissatisfied,
-        );
-      case 'neutral':
-        return _SentimentStyle(
-          background: AppColors.lightGrey.withOpacity(0.7),
-          foreground: AppColors.darkGrey,
-          icon: Icons.sentiment_neutral,
-        );
-      default:
-        return _SentimentStyle(
-          background: AppColors.lightGrey.withOpacity(0.6),
-          foreground: AppColors.mediumGrey,
-          icon: Icons.insights_outlined,
-        );
-    }
-  }
-}
-
-class _SentimentStyle {
-  const _SentimentStyle({
-    required this.background,
-    required this.foreground,
-    required this.icon,
-  });
-
-  final Color background;
-  final Color foreground;
-  final IconData icon;
 }
 
 class _JournalErrorState extends StatelessWidget {

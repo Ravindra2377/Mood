@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../home/screens/home_screen.dart';
+import '../../shell/screens/main_screen.dart';
 import '../controllers/auth_controller.dart';
 import '../models/auth_state.dart';
 import 'login_screen.dart';
@@ -21,7 +21,7 @@ class AuthGate extends ConsumerWidget {
     }
 
     if (authState.isAuthenticated) {
-      return const HomeScreen();
+      return const MainScreen();
     }
 
     return const LoginScreen();

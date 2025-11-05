@@ -18,6 +18,7 @@ class ProfileScreen extends ConsumerWidget {
     final displayName = authState.user?.email?.split('@').first ??
         authState.email?.split('@').first ??
         'Soul member';
+    final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -97,10 +98,12 @@ class ProfileScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
+            leading: canPop
+                ? IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                : null,
             actions: [
               IconButton(
                 icon: const Icon(Icons.settings, color: Colors.white),
