@@ -141,3 +141,4 @@ class MoodHistoryItem {
     required this.value,
   });
 }
+

@@ -1,5 +1,6 @@
 /// Chat bubble widget for displaying individual messages.
 /// Includes streaming indicator, timestamps, and styling.
+library;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,11 +13,11 @@ class ChatBubble extends StatelessWidget {
   final VoidCallback? onTap;
 
   const ChatBubble({
-    Key? key,
+    super.key,
     required this.message,
     required this.isDarkMode,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

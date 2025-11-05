@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GuidedPathwaysCard extends StatelessWidget {
-  const GuidedPathwaysCard({Key? key}) : super(key: key);
+  const GuidedPathwaysCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -117,3 +117,4 @@ class GuidedPathwaysCard extends StatelessWidget {
     );
   }
 }
+

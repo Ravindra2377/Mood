@@ -13,7 +13,7 @@ class JournalsService {
 
   /// Open the local box. Optionally provide an [ApiClient] for immediate sync.
   static Future<JournalsService> create(
-      {api_client.ApiClient? apiClient}) async {
+      {api_client.ApiClient? apiClient,}) async {
     final box = await Hive.openBox<JournalEntry>(boxName);
     return JournalsService._(box, apiClient: apiClient);
   }

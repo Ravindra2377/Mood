@@ -1,20 +1,20 @@
 /// Crisis response dialog widget.
 /// Displays emergency resources and immediate action steps.
+library;
 
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:soul/models/chat_models.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CrisisDialog extends StatelessWidget {
   final CrisisResponse crisis;
   final VoidCallback onDismiss;
 
   const CrisisDialog({
-    Key? key,
+    super.key,
     required this.crisis,
     required this.onDismiss,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +151,7 @@ class CrisisDialog extends StatelessWidget {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                )),
+                                ),),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -164,7 +164,7 @@ class CrisisDialog extends StatelessWidget {
                       ],
                     ),
                   );
-                }).toList(),
+                }),
 
                 const SizedBox(height: 24),
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AssessmentHistoryCard extends StatelessWidget {
-  const AssessmentHistoryCard({Key? key}) : super(key: key);
+  const AssessmentHistoryCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class AssessmentHistoryCard extends StatelessWidget {
   }
 
   Widget _buildAssessmentItem(
-      String name, String score, String date, Color color, String trend) {
+      String name, String score, String date, Color color, String trend,) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -136,3 +136,4 @@ class AssessmentHistoryCard extends StatelessWidget {
     );
   }
 }
+

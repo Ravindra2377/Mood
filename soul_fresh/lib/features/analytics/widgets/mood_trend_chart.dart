@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MoodTrendChart extends StatelessWidget {
-  const MoodTrendChart({Key? key}) : super(key: key);
+  const MoodTrendChart({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,13 @@ class MoodTrendChart extends StatelessWidget {
                     color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.trending_up,
-                          size: 14, color: Colors.green),
-                      const SizedBox(width: 4),
-                      const Text(
+                      Icon(Icons.trending_up,
+                          size: 14, color: Colors.green,),
+                      SizedBox(width: 4),
+                      Text(
                         '↑ 15%',
                         style: TextStyle(
                           fontSize: 12,
@@ -117,3 +117,4 @@ class MoodTrendChart extends StatelessWidget {
     );
   }
 }
+

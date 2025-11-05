@@ -16,7 +16,7 @@ class CustomInputField extends StatefulWidget {
   final int minLines;
 
   const CustomInputField({
-    Key? key,
+    super.key,
     required this.label,
     this.hint,
     this.controller,
@@ -28,7 +28,7 @@ class CustomInputField extends StatefulWidget {
     this.validator,
     this.maxLines = 1,
     this.minLines = 1,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomInputField> createState() => _CustomInputFieldState();
@@ -101,7 +101,6 @@ class _CustomInputFieldState extends State<CustomInputField> {
               borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(
                 color: AppColors.mediumGrey,
-                width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
@@ -121,3 +120,4 @@ class _CustomInputFieldState extends State<CustomInputField> {
     );
   }
 }
+

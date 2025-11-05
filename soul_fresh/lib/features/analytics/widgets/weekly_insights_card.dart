@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class WeeklyInsightsCard extends StatelessWidget {
-  const WeeklyInsightsCard({Key? key}) : super(key: key);
+  const WeeklyInsightsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -133,3 +133,4 @@ class WeeklyInsightsCard extends StatelessWidget {
     );
   }
 }
+

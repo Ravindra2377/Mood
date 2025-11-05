@@ -105,7 +105,7 @@ class _SoulWebShellState extends ConsumerState<SoulWebShell> {
   ///   call the native bridge instead of Firebase.
 
   Future<void> _injectBridgeJs() async {
-    final js = r'''
+    const js = r'''
 
 (function() {
 
@@ -343,12 +343,12 @@ class _SoulWebShellState extends ConsumerState<SoulWebShell> {
       // If parsing fails, we cannot correlate to an id; best effort log in JS
 
       await _controller.runJavaScript(
-          "console.error('[SOUL] Bridge message error:', ${jsonEncode(e.toString())});");
+          "console.error('[SOUL] Bridge message error:', ${jsonEncode(e.toString())});",);
     }
   }
 
   Future<void> _handleRequestOtp(
-      String id, Map<String, dynamic> payload) async {
+      String id, Map<String, dynamic> payload,) async {
     final email = (payload['email'] as String?)?.trim() ??
         (payload['phone'] as String?)?.trim();
 
@@ -398,14 +398,14 @@ class _SoulWebShellState extends ConsumerState<SoulWebShell> {
     final arg = jsonEncode(data);
 
     await _controller.runJavaScript(
-        "window.SoulBridge && window.SoulBridge._resolve(${jsonEncode(id)}, $arg);");
+        'window.SoulBridge && window.SoulBridge._resolve(${jsonEncode(id)}, $arg);',);
   }
 
   Future<void> _rejectJs(String id, String error) async {
     final arg = jsonEncode(error);
 
     await _controller.runJavaScript(
-        "window.SoulBridge && window.SoulBridge._reject(${jsonEncode(id)}, $arg);");
+        'window.SoulBridge && window.SoulBridge._reject(${jsonEncode(id)}, $arg);',);
   }
 
   @override

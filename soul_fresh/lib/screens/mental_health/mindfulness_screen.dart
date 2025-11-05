@@ -65,7 +65,7 @@ class Achievement {
 }
 
 class MindfulnessScreen extends ConsumerStatefulWidget {
-  const MindfulnessScreen({Key? key}) : super(key: key);
+  const MindfulnessScreen({super.key});
 
   @override
   ConsumerState<MindfulnessScreen> createState() => _MindfulnessScreenState();
@@ -182,7 +182,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
             itemBuilder: (context, index) {
               return _SessionCard(
                 title: ['Guided Breathing', 'Body Scan', 'Loving Kindness',
-                    'Mindful Walking', 'Sleep Meditation'][index],
+                    'Mindful Walking', 'Sleep Meditation',][index],
                 duration: (5 + index * 5),
                 focus: 4 - (index % 2),
                 date: DateTime.now().subtract(Duration(days: index)),
@@ -253,7 +253,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
               final cat = categories[index];
               return GestureDetector(
                 onTap: () => _showCategoryMeditations(
-                    context, cat['name'] as String),
+                    context, cat['name'] as String,),
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -289,7 +289,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
                             cat['duration'] as String,
                             style: const TextStyle(
                               fontSize: 11,
-                              color: const Color(0xFF00B894),
+                              color: Color(0xFF00B894),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -380,7 +380,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
             childAspectRatio: 1.2,
-            children: [
+            children: const [
               _StatCard(
                 icon: '🧘',
                 label: 'Total Sessions',
@@ -446,7 +446,6 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: unlocked ? const Color(0xFF00B894) : Colors.grey,
-                    width: 1,
                   ),
                 ),
                 child: Column(
@@ -514,7 +513,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
                   ),
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -665,7 +664,7 @@ class _StatCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF00B894),
+              color: Color(0xFF00B894),
             ),
           ),
           Text(

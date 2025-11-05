@@ -5,55 +5,55 @@ import '../models/app_models.dart';
 
 class AppMockData {
   // User data
-  static const String userName = "Olivia";
-  static const String userAvatarUrl = "https://i.pravatar.cc/150?img=1";
+  static const String userName = 'Olivia';
+  static const String userAvatarUrl = 'https://i.pravatar.cc/150?img=1';
   
   // Activities
   static final List<Activity> activities = [
-    Activity(
-      id: "act-1",
+    const Activity(
+      id: 'act-1',
       type: ActivityType.yoga,
-      title: "Meditation",
-      color: const Color(0xFFE8B4F0),
+      title: 'Meditation',
+      color: Color(0xFFE8B4F0),
       icon: Icons.self_improvement,
     ),
-    Activity(
-      id: "act-2",
+    const Activity(
+      id: 'act-2',
       type: ActivityType.journal,
-      title: "Journal",
-      color: const Color(0xFFB4D4F0),
+      title: 'Journal',
+      color: Color(0xFFB4D4F0),
       icon: Icons.menu_book,
     ),
-    Activity(
-      id: "act-3",
+    const Activity(
+      id: 'act-3',
       type: ActivityType.exercises,
-      title: "Exercises",
-      color: const Color(0xFFA8E6CF),
+      title: 'Exercises',
+      color: Color(0xFFA8E6CF),
       icon: Icons.auto_awesome,
     ),
   ];
 
   // Activity statistics
   static final List<ActivityStat> activityStats = [
-    ActivityStat(
-      id: "stat-1",
-      title: "Sleeping Time",
-      value: "8h 34m",
-      color: const Color(0xFFE8B4F0),
+    const ActivityStat(
+      id: 'stat-1',
+      title: 'Sleeping Time',
+      value: '8h 34m',
+      color: Color(0xFFE8B4F0),
       icon: Icons.bedtime,
     ),
-    ActivityStat(
-      id: "stat-2",
-      title: "Mood Level",
-      value: "8/10",
-      color: const Color(0xFFA8E6CF),
+    const ActivityStat(
+      id: 'stat-2',
+      title: 'Mood Level',
+      value: '8/10',
+      color: Color(0xFFA8E6CF),
       icon: Icons.sentiment_satisfied,
     ),
-    ActivityStat(
-      id: "stat-3",
-      title: "Active Time",
-      value: "2h",
-      color: const Color(0xFFFFE066),
+    const ActivityStat(
+      id: 'stat-3',
+      title: 'Active Time',
+      value: '2h',
+      color: Color(0xFFFFE066),
       icon: Icons.directions_run,
     ),
   ];
@@ -61,9 +61,9 @@ class AppMockData {
   // Physical state
   static const PhysicalState physicalState = PhysicalState(
     percentage: 0.78,
-    sleepGoal: "8h Target",
-    lastNight: "7.5h Achieved",
-    deficit: "1.5 Missing",
+    sleepGoal: '8h Target',
+    lastNight: '7.5h Achieved',
+    deficit: '1.5 Missing',
   );
 
   // Calendar week
@@ -79,25 +79,25 @@ class AppMockData {
 
   // Quote
   static const Quote quote = Quote(
-    text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-    author: "Winston Churchill",
+    text: 'Success is not final, failure is not fatal: it is the courage to continue that counts.',
+    author: 'Winston Churchill',
   );
 
   // Content items
   static final List<ContentItem> contentItems = [
     const ContentItem(
-      id: "content-1",
+      id: 'content-1',
       type: ContentType.article,
-      title: "How to find balance in life despite...",
-      duration: "4 min",
-      thumbnail: "https://images.unsplash.com/photo-1526785033379-75ba86cfacf6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBtZWRpdGF0aW9uJTIwYmFsYW5jZSUyMHBlYWNlZnVsfGVufDB8Mnx8Ymx1ZXwxNzYwNjQwNzg0fDA&ixlib=rb-4.1.0&q=85",
+      title: 'How to find balance in life despite...',
+      duration: '4 min',
+      thumbnail: 'https://images.unsplash.com/photo-1526785033379-75ba86cfacf6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBtZWRpdGF0aW9uJTIwYmFsYW5jZSUyMHBlYWNlZnVsfGVufDB8Mnx8Ymx1ZXwxNzYwNjQwNzg0fDA&ixlib=rb-4.1.0&q=85',
     ),
     const ContentItem(
-      id: "content-2",
+      id: 'content-2',
       type: ContentType.video,
       title: "It's okay to ask for help, you're not alone",
-      duration: "8 min",
-      thumbnail: "https://images.unsplash.com/photo-1705405739947-9449cb52f143?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxicmFpbiUyMGNhcnRvb24lMjBjaGFyYWN0ZXIlMjBwaW5rfGVufDB8Mnx8cHVycGxlfDE3NjA2NDA3ODR8MA&ixlib=rb-4.1.0&q=85",
+      duration: '8 min',
+      thumbnail: 'https://images.unsplash.com/photo-1705405739947-9449cb52f143?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxicmFpbiUyMGNhcnRvb24lMjBjaGFyYWN0ZXIlMjBwaW5rfGVufDB8Mnx8cHVycGxlfDE3NjA2NDA3ODR8MA&ixlib=rb-4.1.0&q=85',
     ),
   ];
 
@@ -116,16 +116,17 @@ class AppMockData {
   ];
 
   // Journal entry
-  static const String journalEntryText = "Sometimes it feels like no matter what we do, things only get worse.";
+  static const String journalEntryText = 'Sometimes it feels like no matter what we do, things only get worse.';
   static const int journalCharacterCount = 68;
   static const int journalMaxCharacters = 240;
 
   // Ambient sounds
   static const List<String> ambientSounds = [
-    "Ocean breeze",
-    "Rain sounds",
-    "Forest birds",
-    "White noise",
-    "Calm piano",
+    'Ocean breeze',
+    'Rain sounds',
+    'Forest birds',
+    'White noise',
+    'Calm piano',
   ];
 }
+

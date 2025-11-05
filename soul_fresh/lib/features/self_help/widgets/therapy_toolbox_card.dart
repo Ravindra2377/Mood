@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TherapyToolboxCard extends StatelessWidget {
-  const TherapyToolboxCard({Key? key}) : super(key: key);
+  const TherapyToolboxCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -111,3 +111,4 @@ class TherapyToolboxCard extends StatelessWidget {
     );
   }
 }
+

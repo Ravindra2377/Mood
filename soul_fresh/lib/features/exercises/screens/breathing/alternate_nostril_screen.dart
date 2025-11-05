@@ -148,10 +148,10 @@ class _AlternateNostrilScreenState extends State<AlternateNostrilScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          Wrap(
+          const Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: const [
+            children: [
               Chip(label: Text('Close right nostril with thumb')),
               Chip(label: Text('Alternate nostrils each phase')),
               Chip(label: Text('Keep breath smooth')),

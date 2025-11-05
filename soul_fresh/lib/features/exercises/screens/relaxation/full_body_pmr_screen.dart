@@ -143,7 +143,7 @@ class _FullBodyPMRScreenState extends State<FullBodyPMRScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(group.tip,
-                      style: Theme.of(context).textTheme.bodyMedium),
+                      style: Theme.of(context).textTheme.bodyMedium,),
                 ],
               ),
             ),
@@ -156,7 +156,7 @@ class _FullBodyPMRScreenState extends State<FullBodyPMRScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Phase: ${_phaseLabel()}',
-                        style: Theme.of(context).textTheme.titleMedium),
+                        style: Theme.of(context).textTheme.titleMedium,),
                     const SizedBox(height: 4),
                     Text('Next up: ${group.nextPhaseLabel(_isTensingPhase)}'),
                   ],
@@ -175,7 +175,7 @@ class _FullBodyPMRScreenState extends State<FullBodyPMRScreen> {
           LinearProgressIndicator(value: completed),
           const SizedBox(height: 16),
           Text('Upcoming groups',
-              style: Theme.of(context).textTheme.titleMedium),
+              style: Theme.of(context).textTheme.titleMedium,),
           const SizedBox(height: 8),
           Expanded(
             child: ListView.builder(
@@ -191,7 +191,7 @@ class _FullBodyPMRScreenState extends State<FullBodyPMRScreen> {
                   ),
                   title: Text(item.name),
                   subtitle: Text(
-                      '${item.tenseSeconds}s tense • ${item.relaxSeconds}s relax'),
+                      '${item.tenseSeconds}s tense • ${item.relaxSeconds}s relax',),
                   trailing: isActive ? Chip(label: Text(_phaseLabel())) : null,
                 );
               },

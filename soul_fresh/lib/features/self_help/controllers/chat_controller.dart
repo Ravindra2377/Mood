@@ -1,5 +1,6 @@
 /// Riverpod state management for AI chat functionality.
 /// Handles message streaming, session management, and crisis responses.
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -61,12 +62,12 @@ class ChatController extends StateNotifier<ChatState> {
             ? state.currentSessionId
             : null;
 
-    String _generateMessageId(String prefix) =>
+    String generateMessageId(String prefix) =>
         '$prefix-${DateTime.now().microsecondsSinceEpoch}-${state.messages.length}';
 
     // Add user message immediately
     final userMessage = ChatMessage(
-      id: _generateMessageId('user'),
+      id: generateMessageId('user'),
       sessionId: state.currentSessionId ?? '',
       role: MessageRole.user,
       content: message,
@@ -76,12 +77,10 @@ class ChatController extends StateNotifier<ChatState> {
     state = state.copyWith(
       messages: [...state.messages, userMessage],
       isStreaming: true,
-      error: null,
-      crisisResponse: null,
     );
 
     // Create placeholder for assistant message
-  final assistantMessageId = _generateMessageId('assistant');
+  final assistantMessageId = generateMessageId('assistant');
     final assistantMessage = ChatMessage(
       id: assistantMessageId,
       sessionId: state.currentSessionId ?? '',
@@ -200,7 +199,7 @@ class ChatController extends StateNotifier<ChatState> {
 
   /// Load chat history for a session
   Future<void> loadHistory(String sessionId) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       final messages = await _apiService.getSessionMessages(sessionId);
@@ -219,7 +218,7 @@ class ChatController extends StateNotifier<ChatState> {
 
   /// Clear crisis response
   void clearCrisisResponse() {
-    state = state.copyWith(crisisResponse: null);
+    state = state.copyWith();
   }
 
   /// Start a new chat session

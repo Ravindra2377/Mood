@@ -151,7 +151,7 @@ class _DeskStretchesScreenState extends State<DeskStretchesScreen> {
           DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Theme.of(context).colorScheme.surfaceVariant,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -288,7 +288,7 @@ List<_Stretch> _buildSequence() {
       cues: [
         'Keep shoulders relaxed',
         'Inhale length, exhale soften',
-        'Switch at 15 seconds'
+        'Switch at 15 seconds',
       ],
     ),
     _Stretch(
@@ -300,7 +300,7 @@ List<_Stretch> _buildSequence() {
       cues: [
         'Smooth circles',
         'Move with breath',
-        'Feel shoulder blades glide'
+        'Feel shoulder blades glide',
       ],
     ),
     _Stretch(

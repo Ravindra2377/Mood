@@ -23,7 +23,7 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
     'Breathe in slowly and deeply',
     'Keep holding your breath',
     'Breathe out slowly and calmly',
-    'Hold empty for a moment'
+    'Hold empty for a moment',
   ];
 
   int _currentPhase = 0;
@@ -31,7 +31,7 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
   int _totalSeconds = 0;
   int _cyclesCompleted = 0;
   bool _isPlaying = false;
-  int _moodBefore = 5; // Default mood (1-10)
+  final int _moodBefore = 5; // Default mood (1-10)
   int _moodAfter = 5;
 
   @override

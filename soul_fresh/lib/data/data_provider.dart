@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/app_models.dart';
+
 import '../config/feature_flags.dart';
-import '../services/mood_service.dart';
+import '../models/app_models.dart';
 import '../services/activity_service.dart';
 import '../services/content_service.dart';
+import '../services/mood_service.dart';
 import 'appMockData.dart';
 
 /// Unified data providers that switch between mock and real data
@@ -119,3 +120,4 @@ final unifiedMoodHistoryProvider = FutureProvider<List<MoodHistoryItem>>((ref) a
 final unifiedCalendarWeekProvider = Provider<List<CalendarDay>>((ref) {
   return AppMockData.calendarWeek;
 });
+

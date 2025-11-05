@@ -1,13 +1,15 @@
 /// API service for chat interactions with the backend.
 /// Handles streaming responses and session management.
+library;
 
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/chat_models.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+
 import '../core/config.dart';
+import '../models/chat_models.dart';
 import 'auth_service.dart';
 import 'secure_storage_service.dart';
 

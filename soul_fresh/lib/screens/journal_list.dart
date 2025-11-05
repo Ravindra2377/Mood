@@ -63,7 +63,7 @@ class _JournalListScreenState extends ConsumerState<JournalListScreen> {
               return ListTile(
                 title: Text(entry.title.isEmpty
                     ? entry.content.split('\n').firstWhere((_) => true, orElse: () => 'Untitled')
-                    : entry.title),
+                    : entry.title,),
                 subtitle: Text(entry.createdAt.toLocal().toString()),
                 onTap: () => Navigator.push(
                   context,

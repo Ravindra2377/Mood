@@ -19,17 +19,18 @@ class ExerciseService {
     if (_sessions.isEmpty) return 0;
     final days = _sessions
         .map((s) =>
-            DateTime(s.startTime.year, s.startTime.month, s.startTime.day))
+            DateTime(s.startTime.year, s.startTime.month, s.startTime.day),)
         .toSet()
         .toList()
       ..sort((a, b) => b.compareTo(a));
 
     int streak = 1;
     for (var i = 0; i < days.length - 1; i++) {
-      if (days[i].difference(days[i + 1]).inDays == 1)
+      if (days[i].difference(days[i + 1]).inDays == 1) {
         streak++;
-      else
+      } else {
         break;
+      }
     }
     return streak;
   }

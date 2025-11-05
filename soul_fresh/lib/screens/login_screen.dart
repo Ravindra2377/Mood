@@ -84,7 +84,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   const SizedBox(height: 40),
                   // Logo or app name
-                  Icon(
+                  const Icon(
                     Icons.self_improvement,
                     size: 80,
                     color: AppColors.primary,
@@ -116,12 +116,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.error_outline, color: AppColors.error),
+                          const Icon(Icons.error_outline, color: AppColors.error),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               _errorMessage!,
-                              style: TextStyle(color: AppColors.error),
+                              style: const TextStyle(color: AppColors.error),
                             ),
                           ),
                         ],

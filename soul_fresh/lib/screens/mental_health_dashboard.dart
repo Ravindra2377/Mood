@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:soul/config/app_colors.dart';
-import 'mental_health/stress_management_screen.dart';
+
+import '../features/exercises/screens/exercises_main_screen.dart';
+import 'mental_health/anxiety_management_screen.dart';
+import 'mental_health/mindfulness_screen.dart';
 import 'mental_health/mood_tracking_screen.dart';
 import 'mental_health/sleep_tracking_screen.dart';
-import 'mental_health/mindfulness_screen.dart';
-import 'mental_health/anxiety_management_screen.dart';
+import 'mental_health/stress_management_screen.dart';
 import 'mental_health/wellness_screen.dart';
-import '../features/exercises/screens/exercises_main_screen.dart';
 
 // Provider to track current tab
 final mentalHealthTabProvider = StateProvider<int>((ref) => 0);
 
 class MentalHealthDashboard extends ConsumerWidget {
-  const MentalHealthDashboard({Key? key}) : super(key: key);
+  const MentalHealthDashboard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

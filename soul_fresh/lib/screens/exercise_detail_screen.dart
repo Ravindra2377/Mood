@@ -106,9 +106,9 @@ class ExerciseDetailScreen extends StatelessWidget {
                           children: [
                             Column(
                               children: [
-                                Text(
+                                const Text(
                                   '⏱',
-                                  style: const TextStyle(fontSize: 24),
+                                  style: TextStyle(fontSize: 24),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
@@ -122,9 +122,9 @@ class ExerciseDetailScreen extends StatelessWidget {
                             ),
                             Column(
                               children: [
-                                Text(
+                                const Text(
                                   '📊',
-                                  style: const TextStyle(fontSize: 24),
+                                  style: TextStyle(fontSize: 24),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
@@ -138,9 +138,9 @@ class ExerciseDetailScreen extends StatelessWidget {
                             ),
                             Column(
                               children: [
-                                Text(
+                                const Text(
                                   '⭐',
-                                  style: const TextStyle(fontSize: 24),
+                                  style: TextStyle(fontSize: 24),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
@@ -199,7 +199,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                  ))
+                                  ),)
                               .toList(),
                         ),
                       ),

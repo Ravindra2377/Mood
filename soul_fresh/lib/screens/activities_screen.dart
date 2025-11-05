@@ -136,7 +136,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
   }
 
   Widget _buildStatsCard(BuildContext context) {
-    final ActivityStats stats = defaultActivityStats;
+    const ActivityStats stats = defaultActivityStats;
     final double weeklyProgress = (stats.minutesToday / stats.weeklyGoalMinutes)
         .clamp(0.0, 1.0);
 
@@ -200,10 +200,10 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
           child: Row(
-            children: const <Widget>[
+            children: <Widget>[
               Text(
                 'Recommended for you',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
@@ -379,7 +379,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const Icon(Icons.sentiment_satisfied_alt,
-                  size: 56, color: Colors.grey),
+                  size: 56, color: Colors.grey,),
               const SizedBox(height: 16),
               Text(
                 'No activities match your filters yet.',
@@ -469,7 +469,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
     }
     return source
         .where((WellnessActivity activity) =>
-            activity.tags.contains(_selectedTag!))
+            activity.tags.contains(_selectedTag!),)
         .toList();
   }
 
@@ -491,36 +491,36 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
         'box_breathing',
         '5_4_3_2_1_sensory',
         'quick_pmr',
-      ]));
+      ]),);
     }
     if (mood == MoodLevel.neutral || mood == MoodLevel.happy) {
       picks.addAll(_activitiesByIds(<String>[
         'gratitude_journal',
         'success_visualization',
-      ]));
+      ]),);
     }
     if (mood == MoodLevel.veryHappy) {
       picks.addAll(_activitiesByIds(<String>[
         'opposite_action',
         'yoga_flow',
-      ]));
+      ]),);
     }
     if (hour >= 20) {
       picks.addAll(_activitiesByIds(<String>[
         'sleep_meditation',
         'body_scan_sleep',
         '4_7_8_breathing',
-      ]));
+      ]),);
     } else if (hour < 12) {
       picks.addAll(_activitiesByIds(<String>[
         'gratitude_journal',
         'yoga_flow',
-      ]));
+      ]),);
     }
     if (_selectedTag != null) {
       picks.addAll(allActivities.where(
         (WellnessActivity activity) => activity.tags.contains(_selectedTag!),
-      ));
+      ),);
     }
     if (_selectedCategory != 'All') {
       picks.addAll(_activitiesForCategory(_selectedCategory));
@@ -544,7 +544,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
     }
     final List<MapEntry<String, int>> entries = counts.entries.toList()
       ..sort((MapEntry<String, int> a, MapEntry<String, int> b) =>
-          b.value.compareTo(a.value));
+          b.value.compareTo(a.value),);
     return entries.map((MapEntry<String, int> e) => e.key).take(8).toList();
   }
 
@@ -599,3 +599,4 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
     }
   }
 }
+

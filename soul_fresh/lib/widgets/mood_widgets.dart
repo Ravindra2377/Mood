@@ -37,7 +37,7 @@ class _DonutPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final stroke = 18.0;
+    const stroke = 18.0;
     final rect = Offset.zero & size;
     final center = rect.center;
     final radius = (size.width - stroke) / 2;
@@ -52,21 +52,21 @@ class _DonutPainter extends CustomPainter {
       ..shader = SweepGradient(colors: [
         Colors.purple.shade200,
         Colors.blue.shade200,
-        Colors.yellow.shade200
-      ]).createShader(Rect.fromCircle(center: center, radius: radius))
+        Colors.yellow.shade200,
+      ],).createShader(Rect.fromCircle(center: center, radius: radius))
       ..style = PaintingStyle.stroke
       ..strokeWidth = stroke
       ..strokeCap = StrokeCap.round;
 
     final sweep = 2 * 3.1415926 * percent;
     canvas.drawArc(Rect.fromCircle(center: center, radius: radius),
-        -3.1415926 / 2, sweep, false, prog);
+        -3.1415926 / 2, sweep, false, prog,);
 
     final tp = TextPainter(
         text: TextSpan(
             text: '${(percent * 100).round()}%',
-            style: const TextStyle(fontWeight: FontWeight.w700)),
-        textDirection: TextDirection.ltr);
+            style: const TextStyle(fontWeight: FontWeight.w700),),
+        textDirection: TextDirection.ltr,);
     tp.layout();
     tp.paint(canvas, center - Offset(tp.width / 2, tp.height / 2));
   }
@@ -79,7 +79,7 @@ class ContentListItem extends StatelessWidget {
   final String title;
   final String subtitle;
   const ContentListItem(
-      {required this.title, required this.subtitle, super.key});
+      {required this.title, required this.subtitle, super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,7 @@ class ContentListItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(12)),
+          color: Colors.white, borderRadius: BorderRadius.circular(12),),
       child: Row(
         children: [
           Container(
@@ -95,17 +95,17 @@ class ContentListItem extends StatelessWidget {
               height: 56,
               decoration: BoxDecoration(
                   color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(8))),
+                  borderRadius: BorderRadius.circular(8),),),
           const SizedBox(width: 12),
           Expanded(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 Text(title,
-                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                    style: const TextStyle(fontWeight: FontWeight.w600),),
                 const SizedBox(height: 4),
-                Text(subtitle, style: const TextStyle(color: Colors.grey))
-              ])),
+                Text(subtitle, style: const TextStyle(color: Colors.grey)),
+              ],),),
         ],
       ),
     );

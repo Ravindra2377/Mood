@@ -26,12 +26,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
   String? _userEmail;
   String? _userId;
   String _displayName = 'SOUL User';
-  String _bio = 'On a journey to better mental health 🌸';
-  int _currentStreak = 14;
-  int _moodEntries = 42;
-  int _journalEntries = 15;
-  int _meditationMinutes = 128;
-  int _wellnessScore = 78;
+  final String _bio = 'On a journey to better mental health 🌸';
+  final int _currentStreak = 14;
+  final int _moodEntries = 42;
+  final int _journalEntries = 15;
+  final int _meditationMinutes = 128;
+  final int _wellnessScore = 78;
   late TabController _tabController;
   final PandaAI _pandaAI = PandaAI();
   PandaMood _pandaMood = PandaMood.welcome;
@@ -43,7 +43,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
   
   // Settings state
   bool _notificationsEnabled = true;
-  bool _darkModeEnabled = false;
+  final bool _darkModeEnabled = false;
   ThemeMode _themeMode = ThemeMode.system;
 
   @override
@@ -744,7 +744,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
           AnimatedPandaCompanion(
             mood: _pandaMood,
             message: _pandaMessage,
-            size: 160,
             onTap: _refreshPandaMessage,
             persona: _pandaPersona,
             heroTag: 'panda-companion',

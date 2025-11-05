@@ -5,9 +5,9 @@ class SelfHelpAnalyticsWidget extends StatelessWidget {
   final SelfHelpStats stats;
 
   const SelfHelpAnalyticsWidget({
-    Key? key,
+    super.key,
     required this.stats,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -129,3 +129,4 @@ class SelfHelpAnalyticsWidget extends StatelessWidget {
     }
   }
 }
+

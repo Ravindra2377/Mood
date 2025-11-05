@@ -69,7 +69,7 @@ class ExerciseStats {
   // Count by category
   Map<String, int> get sessionsByCategory {
     final counts = <String, int>{};
-    for (var session in sessions) {
+    for (final session in sessions) {
       counts[session.category] = (counts[session.category] ?? 0) + 1;
     }
     return counts;
@@ -79,7 +79,7 @@ class ExerciseStats {
   String get mostEffectiveExercise {
     if (sessions.isEmpty) return 'None';
     final improvements = <String, List<int>>{};
-    for (var session in sessions) {
+    for (final session in sessions) {
       improvements
           .putIfAbsent(session.exerciseName, () => [])
           .add(session.moodImprovement);
@@ -149,7 +149,7 @@ class SelfHelpStats {
   // Count by activity type
   Map<String, int> get activitiesByType {
     final counts = <String, int>{};
-    for (var activity in activities) {
+    for (final activity in activities) {
       counts[activity.activityType] = (counts[activity.activityType] ?? 0) + 1;
     }
     return counts;
@@ -232,7 +232,7 @@ class MoodStats {
   String get mostCommonEmotionalState {
     if (entries.isEmpty) return 'Unknown';
     final states = <String, int>{};
-    for (var entry in entries) {
+    for (final entry in entries) {
       if (entry.emotionalState != null) {
         states[entry.emotionalState!] = (states[entry.emotionalState!] ?? 0) + 1;
       }
@@ -254,8 +254,8 @@ class MoodStats {
   List<String> get topTriggers {
     if (entries.isEmpty) return [];
     final triggerCounts = <String, int>{};
-    for (var entry in entries) {
-      for (var trigger in entry.triggers) {
+    for (final entry in entries) {
+      for (final trigger in entry.triggers) {
         triggerCounts[trigger] = (triggerCounts[trigger] ?? 0) + 1;
       }
     }
@@ -308,10 +308,10 @@ class AnalyticsSnapshot {
     if (exerciseStats.sessions.isEmpty && moodStats.entries.isEmpty) return 0;
 
     final allEvents = <DateTime>[];
-    for (var session in exerciseStats.sessions) {
+    for (final session in exerciseStats.sessions) {
       allEvents.add(session.completedAt);
     }
-    for (var entry in moodStats.entries) {
+    for (final entry in moodStats.entries) {
       allEvents.add(entry.recordedAt);
     }
 
@@ -322,7 +322,7 @@ class AnalyticsSnapshot {
     int streak = 0;
     var currentDate = DateTime.now();
 
-    for (var date in allEvents) {
+    for (final date in allEvents) {
       final dateOnly = DateTime(date.year, date.month, date.day);
       final compareDate = DateTime(currentDate.year, currentDate.month, currentDate.day);
 
@@ -339,3 +339,4 @@ class AnalyticsSnapshot {
     return streak;
   }
 }
+

@@ -125,9 +125,7 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
           decoration: BoxDecoration(
             borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
             gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
+              colors: const [
                 AppColors.grey200,
                 AppColors.grey100,
                 AppColors.grey200,
@@ -197,7 +195,7 @@ class InlineLoadingIndicator extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
+          const SizedBox(
             width: 20,
             height: 20,
             child: CircularProgressIndicator(

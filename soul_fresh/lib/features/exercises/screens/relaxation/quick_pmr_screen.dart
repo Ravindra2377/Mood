@@ -156,10 +156,10 @@ class _QuickPMRScreenState extends State<QuickPMRScreen> {
           const SizedBox(height: 12),
           LinearProgressIndicator(value: progress),
           const SizedBox(height: 12),
-          Wrap(
+          const Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: const [
+            children: [
               Chip(label: Text('Breathe calmly')),
               Chip(label: Text('Notice the contrast')),
               Chip(label: Text('Loosen jaw and shoulders')),

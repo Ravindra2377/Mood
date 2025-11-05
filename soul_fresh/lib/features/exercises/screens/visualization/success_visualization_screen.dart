@@ -5,7 +5,7 @@ import '../../services/exercise_service.dart';
 import '../../widgets/exercise_scaffold.dart';
 
 class SuccessVisualizationScreen extends StatefulWidget {
-  const SuccessVisualizationScreen({Key? key}) : super(key: key);
+  const SuccessVisualizationScreen({super.key});
 
   @override
   State<SuccessVisualizationScreen> createState() =>
@@ -75,7 +75,7 @@ class _SuccessVisualizationScreenState
             .map((phase) => {
                   'title': phase.title,
                   'details': phase.controller.text.trim(),
-                })
+                },)
             .toList(),
       };
 
@@ -87,7 +87,7 @@ class _SuccessVisualizationScreenState
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Visualization saved. Carry that confidence forward.')),
+          content: Text('Visualization saved. Carry that confidence forward.'),),
     );
     Navigator.of(context).pop();
   }
@@ -378,7 +378,7 @@ List<_VisualizationPhase> _buildPhases() {
         'Confident posture',
         'Supportive faces',
         'Steady breathing',
-        'Clear intention'
+        'Clear intention',
       ],
     ),
     _VisualizationPhase(

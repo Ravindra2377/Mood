@@ -61,7 +61,7 @@ class ExerciseInfoDialog extends StatelessWidget {
                     if (info.warningNote != null) ...<Widget>[
                       const SizedBox(height: 20),
                       _WarningCallout(
-                          message: info.warningNote!, color: info.color),
+                          message: info.warningNote!, color: info.color,),
                     ],
                   ],
                 ),
@@ -117,14 +117,14 @@ class _DialogHeader extends StatelessWidget {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: <Widget>[
                     const Icon(Icons.access_time,
-                        size: 16, color: Colors.white70),
+                        size: 16, color: Colors.white70,),
                     Text(
                       '${info.estimatedDuration.inMinutes} min',
                       style: const TextStyle(color: Colors.white70),
                     ),
                     const Icon(Icons.category, size: 16, color: Colors.white70),
                     Text(info.category,
-                        style: const TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: Colors.white70),),
                   ],
                 ),
               ],
@@ -198,10 +198,10 @@ class _DialogSection extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                         child: Text(item,
-                            style: Theme.of(context).textTheme.bodyMedium)),
+                            style: Theme.of(context).textTheme.bodyMedium,),),
                   ],
                 ),
-              )),
+              ),),
         if (numberedSteps != null)
           ...numberedSteps!
               .asMap()
@@ -234,12 +234,12 @@ class _DialogSection extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: Text(entry.value,
-                                style: Theme.of(context).textTheme.bodyMedium),
+                                style: Theme.of(context).textTheme.bodyMedium,),
                           ),
                         ),
                       ],
                     ),
-                  )),
+                  ),),
       ],
     );
   }
@@ -302,7 +302,7 @@ class _DialogActions extends StatelessWidget {
             child: OutlinedButton(
               onPressed: () => Navigator.of(context).pop(),
               style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),),
               child: const Text('Maybe later'),
             ),
           ),

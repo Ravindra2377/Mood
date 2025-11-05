@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ActivitySummaryCard extends StatelessWidget {
-  const ActivitySummaryCard({Key? key}) : super(key: key);
+  const ActivitySummaryCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -109,3 +109,4 @@ class ActivitySummaryCard extends StatelessWidget {
     );
   }
 }
+

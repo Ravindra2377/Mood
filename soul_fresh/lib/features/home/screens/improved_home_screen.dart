@@ -11,7 +11,7 @@ import '../../exercises/screens/exercises_main_screen.dart';
 import '../../insights/screens/insights_screen.dart';
 
 class ImprovedHomeScreen extends StatefulWidget {
-  const ImprovedHomeScreen({Key? key}) : super(key: key);
+  const ImprovedHomeScreen({super.key});
 
   @override
   State<ImprovedHomeScreen> createState() => _ImprovedHomeScreenState();
@@ -152,7 +152,6 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
       backgroundColor: color.withOpacity(0.28),
       borderColor: color.withOpacity(0.75),
       onTap: onTap,
-      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -226,7 +225,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
                   ],
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.arrow_forward_ios,
                 color: AppColors.primaryPastel,
                 size: 20,
@@ -274,7 +273,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
                   ],
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.arrow_forward_ios,
                 color: AppColors.secondaryPastel,
                 size: 20,
@@ -322,7 +321,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
                   ],
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.arrow_forward_ios,
                 color: AppColors.secondaryPastel,
                 size: 20,
@@ -410,10 +409,10 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
     return Material(
       elevation: 8,
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.white,
           border: Border(
-            top: BorderSide(color: AppColors.mediumGrey, width: 1),
+            top: BorderSide(color: AppColors.mediumGrey),
           ),
         ),
         child: BottomNavigationBar(

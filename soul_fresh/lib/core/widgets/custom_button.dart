@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_typography.dart';
 
 class CustomButton extends StatelessWidget {
   final String label;
@@ -15,7 +14,7 @@ class CustomButton extends StatelessWidget {
   final EdgeInsets padding;
 
   const CustomButton({
-    Key? key,
+    super.key,
     required this.label,
     this.onPressed,
     this.isLoading = false,
@@ -26,7 +25,7 @@ class CustomButton extends StatelessWidget {
     this.isOutlined = false,
     this.borderRadius = 16,
     this.padding = const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -79,3 +78,4 @@ class CustomButton extends StatelessWidget {
     );
   }
 }
+

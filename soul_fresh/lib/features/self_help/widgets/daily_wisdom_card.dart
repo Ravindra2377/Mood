@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DailyWisdomCard extends StatelessWidget {
-  const DailyWisdomCard({Key? key}) : super(key: key);
+  const DailyWisdomCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,3 +57,4 @@ class DailyWisdomCard extends StatelessWidget {
     );
   }
 }
+

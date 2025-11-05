@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CrisisSupportCard extends StatelessWidget {
-  const CrisisSupportCard({Key? key}) : super(key: key);
+  const CrisisSupportCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -183,3 +183,4 @@ class CrisisSupportCard extends StatelessWidget {
     );
   }
 }
+

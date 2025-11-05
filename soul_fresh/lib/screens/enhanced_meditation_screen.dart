@@ -152,8 +152,8 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: const [
+        title: const Row(
+          children: [
             Icon(Icons.check_circle, color: Colors.green, size: 32),
             SizedBox(width: 12),
             Text('Session Complete!'),
@@ -406,7 +406,7 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
 
   @override
   Widget build(BuildContext context) {
-    final gradient = const LinearGradient(
+    const gradient = LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [Color(0xFF1E88E5), Color(0xFF26A69A)],
@@ -414,7 +414,7 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(gradient: gradient),
+        decoration: const BoxDecoration(gradient: gradient),
         child: SafeArea(
           child: Column(
             children: [
@@ -459,7 +459,7 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                             ),
                             const SizedBox(width: 8),
                             const Icon(Icons.arrow_drop_down,
-                                color: Colors.white),
+                                color: Colors.white,),
                           ],
                         ),
                       ),
@@ -480,7 +480,7 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Icon(Icons.timer,
-                                color: Colors.white, size: 18),
+                                color: Colors.white, size: 18,),
                             const SizedBox(width: 8),
                             Text(
                               _formatDuration(totalSeconds),
@@ -492,7 +492,7 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                             if (!isRunning) ...[
                               const SizedBox(width: 4),
                               const Icon(Icons.edit,
-                                  color: Colors.white, size: 16),
+                                  color: Colors.white, size: 16,),
                             ],
                           ],
                         ),

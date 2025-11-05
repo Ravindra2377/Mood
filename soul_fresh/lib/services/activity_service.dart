@@ -22,7 +22,7 @@ class ActivityService {
         title: item['title'] as String,
         color: Color(int.parse(item['color'].replaceFirst('#', '0xFF'))),
         icon: _getIconForType(item['type']),
-      )).toList();
+      ),).toList();
     } catch (e) {
       throw Exception('Failed to fetch activities: $e');
     }
@@ -41,7 +41,7 @@ class ActivityService {
         value: item['value'] as String,
         color: Color(int.parse(item['color'].replaceFirst('#', '0xFF'))),
         icon: _getIconForStat(item['type']),
-      )).toList();
+      ),).toList();
     } catch (e) {
       throw Exception('Failed to fetch activity stats: $e');
     }
@@ -136,3 +136,4 @@ final physicalStateProvider = FutureProvider<PhysicalState>((ref) async {
   final activityService = ref.watch(activityServiceProvider);
   return await activityService.getPhysicalState();
 });
+

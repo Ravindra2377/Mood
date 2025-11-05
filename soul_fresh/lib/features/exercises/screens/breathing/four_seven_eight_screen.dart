@@ -1,13 +1,15 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../../models/exercise_models.dart';
 import '../../services/exercise_service.dart';
-import '../../widgets/exercise_scaffold.dart';
 import '../../widgets/breathing_circle.dart';
 import '../../widgets/control_bar.dart';
+import '../../widgets/exercise_scaffold.dart';
 
 class FourSevenEightScreen extends StatefulWidget {
-  const FourSevenEightScreen({Key? key}) : super(key: key);
+  const FourSevenEightScreen({super.key});
 
   @override
   _FourSevenEightScreenState createState() => _FourSevenEightScreenState();

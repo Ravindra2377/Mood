@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/routes.dart';
-import '../screens/login_screen.dart';
-import '../screens/signup_screen.dart';
-import '../screens/otp_verification_screen.dart';
-import '../screens/profile_screen.dart';
-import '../screens/privacy_settings_screen.dart';
-import '../features/exercises/exercise_routes.dart';
 
-// New redesigned screens
-import '../features/mood/screens/mood_screen.dart';
+import '../core/routes.dart';
 import '../features/analytics/screens/unified_analytics_screen.dart';
+import '../features/exercises/exercise_routes.dart';
 import '../features/exercises/screens/exercises_main_screen.dart';
 import '../features/home/screens/improved_home_screen.dart';
+// New redesigned screens
+import '../features/mood/screens/mood_screen.dart';
+import '../screens/login_screen.dart';
+import '../screens/otp_verification_screen.dart';
+import '../screens/privacy_settings_screen.dart';
+import '../screens/profile_screen.dart';
+import '../screens/signup_screen.dart';
 
 /// App router configuration
 class AppRouter {
@@ -67,7 +67,7 @@ class AppRouter {
                     onPressed: () {
                       Navigator.of(_).push(MaterialPageRoute(
                         builder: (_) => const ImprovedHomeScreen(),
-                      ));
+                      ),);
                     },
                     child: const Text('Open Improved Home'),
                   ),

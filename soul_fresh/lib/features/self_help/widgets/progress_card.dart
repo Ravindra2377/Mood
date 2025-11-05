@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ProgressCard extends StatelessWidget {
-  const ProgressCard({Key? key}) : super(key: key);
+  const ProgressCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class ProgressCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _StatItem(icon: '🔥', label: '7', value: 'day streak'),
@@ -106,3 +106,4 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
+

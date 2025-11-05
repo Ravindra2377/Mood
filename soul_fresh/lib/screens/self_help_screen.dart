@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/appMockData.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_typography.dart';
+import '../data/appMockData.dart';
 import '../features/exercises/screens/exercises_main_screen.dart';
 import '../features/self_help/data/self_help_data.dart';
 import '../features/self_help/models/self_help_models.dart';
-import '../features/self_help/widgets/progress_card.dart';
-import '../features/self_help/widgets/daily_wisdom_card.dart';
-import '../features/self_help/widgets/therapy_toolbox_card.dart';
-import '../features/self_help/widgets/quick_check_in_card.dart';
-import '../features/self_help/widgets/guided_pathways_card.dart';
 import '../features/self_help/widgets/assessments_card.dart';
 import '../features/self_help/widgets/community_support_card.dart';
-import '../features/self_help/widgets/resources_library_card.dart';
 import '../features/self_help/widgets/crisis_support_card.dart';
+import '../features/self_help/widgets/daily_wisdom_card.dart';
+import '../features/self_help/widgets/guided_pathways_card.dart';
+import '../features/self_help/widgets/progress_card.dart';
+import '../features/self_help/widgets/quick_check_in_card.dart';
+import '../features/self_help/widgets/resources_library_card.dart';
+import '../features/self_help/widgets/therapy_toolbox_card.dart';
 import '../models/app_models.dart';
 import '../state/ui_state.dart';
 import '../widgets/enhanced_quote_card.dart';
@@ -151,28 +151,28 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
             // 1. NEW: Progress Card (replaces AI greeting)
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: const ProgressCard(),
+                padding: EdgeInsets.all(16),
+                child: ProgressCard(),
               ),
             ),
 
             // 2. NEW: Daily Wisdom (replaces AI chat intro)
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: const DailyWisdomCard(),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: DailyWisdomCard(),
               ),
             ),
 
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
             // 3. NEW: Quick Check-In (replaces AI suggestions)
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: const QuickCheckInCard(),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: QuickCheckInCard(),
               ),
             ),
 
@@ -339,10 +339,10 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
             // 9. KEEP: Crisis Support
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: const CrisisSupportCard(),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: CrisisSupportCard(),
               ),
             ),
 
@@ -395,7 +395,7 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
           Container(
             width: 140,
             height: 140,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
               gradient: AppColors.lavenderGradient,
             ),

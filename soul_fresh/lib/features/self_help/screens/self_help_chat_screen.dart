@@ -1,22 +1,22 @@
 /// Main self-help chat screen with AI companion.
 /// Includes message display, input, typing indicator, and crisis detection.
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:soul/models/chat_models.dart';
 import 'package:soul/features/self_help/controllers/chat_controller.dart';
 import 'package:soul/features/self_help/widgets/chat_bubble.dart';
-import 'package:soul/features/self_help/widgets/typing_indicator.dart';
 import 'package:soul/features/self_help/widgets/crisis_dialog.dart';
+import 'package:soul/features/self_help/widgets/typing_indicator.dart';
+import 'package:soul/models/chat_models.dart';
 
 class SelfHelpChatScreen extends ConsumerStatefulWidget {
   final String? initialSessionId;
 
   const SelfHelpChatScreen({
-    Key? key,
+    super.key,
     this.initialSessionId,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<SelfHelpChatScreen> createState() => _SelfHelpChatScreenState();
@@ -276,7 +276,6 @@ class _SelfHelpChatScreenState extends ConsumerState<SelfHelpChatScreen> {
         border: Border(
           top: BorderSide(
             color: Colors.grey.shade300,
-            width: 1,
           ),
         ),
       ),

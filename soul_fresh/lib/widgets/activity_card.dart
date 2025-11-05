@@ -56,3 +56,4 @@ class ActivityCard extends StatelessWidget {
     );
   }
 }
+

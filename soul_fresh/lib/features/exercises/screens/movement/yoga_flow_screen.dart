@@ -8,7 +8,7 @@ import '../../widgets/control_bar.dart';
 import '../../widgets/exercise_scaffold.dart';
 
 class YogaFlowScreen extends StatefulWidget {
-  const YogaFlowScreen({Key? key}) : super(key: key);
+  const YogaFlowScreen({super.key});
 
   @override
   State<YogaFlowScreen> createState() => _YogaFlowScreenState();
@@ -188,7 +188,7 @@ class _YogaFlowScreenState extends State<YogaFlowScreen> {
                   DecoratedBox(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(16),

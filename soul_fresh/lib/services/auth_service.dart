@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../core/config.dart';
-import '../services/secure_storage_service.dart';
 import '../main.dart' show skipOtp;
+import '../services/secure_storage_service.dart';
 
 // Provider for AuthService
 final authServiceProvider = Provider<AuthService>((ref) {
@@ -42,7 +43,7 @@ class AuthService {
       final response = await _dio.post('/auth/signup', data: {
         'email': email,
         'password': password,
-      });
+      },);
       
       // After signup, request OTP
       await requestOtp(email);
@@ -69,7 +70,7 @@ class AuthService {
         'grant_type': 'password',
       }, options: Options(
         contentType: Headers.formUrlEncodedContentType,
-      ));
+      ),);
 
       final data = response.data;
       
@@ -113,7 +114,7 @@ class AuthService {
       final response = await _dio.post('/auth/verify-otp', data: {
         'email': email,
         'code': code,
-      });
+      },);
 
       final data = response.data;
       
@@ -173,7 +174,7 @@ class AuthService {
 
       final response = await _dio.post('/auth/refresh', data: {
         'old_refresh_token': refreshToken,
-      });
+      },);
 
       final data = response.data;
       final newAccess = data['access_token'] as String?;

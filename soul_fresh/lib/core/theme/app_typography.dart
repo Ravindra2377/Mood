@@ -90,3 +90,4 @@ class AppTypography {
     letterSpacing: 0.2,
   );
 }
+

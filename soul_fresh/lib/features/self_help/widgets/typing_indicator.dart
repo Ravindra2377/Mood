@@ -1,12 +1,13 @@
 /// Typing indicator widget showing animated dots.
 /// Displays when AI is generating a response.
+library;
 
 import 'package:flutter/material.dart';
 
 class TypingIndicator extends StatefulWidget {
   final Color? color;
 
-  const TypingIndicator({Key? key, this.color}) : super(key: key);
+  const TypingIndicator({super.key, this.color});
 
   @override
   State<TypingIndicator> createState() => _TypingIndicatorState();
@@ -39,7 +40,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
 
   @override
   void dispose() {
-    for (var controller in _animationControllers) {
+    for (final controller in _animationControllers) {
       controller.dispose();
     }
     super.dispose();
@@ -50,7 +51,6 @@ class _TypingIndicatorState extends State<TypingIndicator>
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             width: 32,

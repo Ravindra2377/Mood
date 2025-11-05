@@ -1,9 +1,11 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../../models/exercise_models.dart';
 import '../../services/exercise_service.dart';
-import '../../widgets/exercise_scaffold.dart';
 import '../../widgets/control_bar.dart';
+import '../../widgets/exercise_scaffold.dart';
 
 class SleepMeditationScreen extends StatefulWidget {
   static const route = '/sleep_meditation';
@@ -24,16 +26,17 @@ class _SleepMeditationScreenState extends State<SleepMeditationScreen> {
   void initState() {
     super.initState();
     session = ExerciseSession(
-        exerciseId: 'sleep_meditation', startTime: DateTime.now());
+        exerciseId: 'sleep_meditation', startTime: DateTime.now(),);
   }
 
   void _start() {
     setState(() => running = true);
-    timer = Timer.periodic(Duration(seconds: 1), (_) {
-      if (remaining > 0)
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (remaining > 0) {
         setState(() => remaining--);
-      else
+      } else {
         _stop();
+      }
     });
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ResourcesLibraryCard extends StatefulWidget {
-  const ResourcesLibraryCard({Key? key}) : super(key: key);
+  const ResourcesLibraryCard({super.key});
 
   @override
   State<ResourcesLibraryCard> createState() => _ResourcesLibraryCardState();
@@ -255,3 +255,4 @@ class _ResourcesLibraryCardState extends State<ResourcesLibraryCard> {
     super.dispose();
   }
 }
+

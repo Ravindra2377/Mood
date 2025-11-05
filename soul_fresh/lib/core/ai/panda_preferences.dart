@@ -50,7 +50,7 @@ extension PandaPersonaDisplay on PandaPersona {
       case PandaPersona.playfulBuddy:
         return '$name wants to party: $message';
       case PandaPersona.gentleGuide:
-        return "$name whispers gently: $message";
+        return '$name whispers gently: $message';
       case PandaPersona.mindfulMentor:
         return '$name strategizes with you: $message';
     }

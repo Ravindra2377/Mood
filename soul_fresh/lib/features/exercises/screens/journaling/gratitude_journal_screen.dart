@@ -5,7 +5,7 @@ import '../../services/exercise_service.dart';
 import '../../widgets/exercise_scaffold.dart';
 
 class GratitudeJournalScreen extends StatefulWidget {
-  const GratitudeJournalScreen({Key? key}) : super(key: key);
+  const GratitudeJournalScreen({super.key});
 
   @override
   State<GratitudeJournalScreen> createState() => _GratitudeJournalScreenState();
@@ -56,12 +56,12 @@ class _GratitudeJournalScreenState extends State<GratitudeJournalScreen> {
         .map((entry) => {
               'gratitude': entry.gratitude.trim(),
               'why': entry.reason.trim(),
-            })
+            },)
         .toList();
 
     if (filledEntries.length < _minimumItems) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
             'Capture at least $_minimumItems gratitudes to finish today\'s entry.',
           ),

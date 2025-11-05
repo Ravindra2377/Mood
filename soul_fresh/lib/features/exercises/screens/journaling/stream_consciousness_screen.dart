@@ -8,7 +8,7 @@ import '../../widgets/control_bar.dart';
 import '../../widgets/exercise_scaffold.dart';
 
 class StreamConsciousnessScreen extends StatefulWidget {
-  const StreamConsciousnessScreen({Key? key}) : super(key: key);
+  const StreamConsciousnessScreen({super.key});
 
   @override
   State<StreamConsciousnessScreen> createState() =>
@@ -128,7 +128,7 @@ class _StreamConsciousnessScreenState extends State<StreamConsciousnessScreen> {
     if (_writingController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Write for a few minutes before finishing.')),
+            content: Text('Write for a few minutes before finishing.'),),
       );
       return;
     }
@@ -166,7 +166,7 @@ class _StreamConsciousnessScreenState extends State<StreamConsciousnessScreen> {
     }
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('10 minutes are up — capture your reflections.')),
+          content: Text('10 minutes are up — capture your reflections.'),),
     );
   }
 

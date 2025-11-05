@@ -1,41 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'state/app_state.dart';
-import 'state/runtime_config.dart';
-import 'state/ui_state.dart';
-import 'screens/journal_list.dart';
-import 'screens/onboarding_screen.dart';
-import 'screens/expression_screen.dart';
-import 'screens/enhanced_meditation_screen.dart';
-import 'screens/activities_screen.dart';
-import 'screens/self_help_screen.dart';
-import 'screens/profile_screen.dart';
-import 'widgets/mood_selector.dart';
-import 'widgets/activity_card.dart';
-import 'models/journal_entry_adapter.dart';
-import 'models/app_models.dart';
-import 'data/appMockData.dart';
-
+import 'config/app_colors.dart';
 // New router and auth screens
 import 'core/router.dart';
 import 'core/routes.dart';
+import 'core/theme/app_theme.dart' as soul_theme;
+import 'data/appMockData.dart';
+import 'features/analytics/screens/unified_analytics_screen.dart';
+import 'features/analytics/services/analytics_service.dart';
+import 'features/exercises/screens/exercises_main_screen.dart';
+import 'features/home/screens/improved_home_screen.dart';
+import 'models/app_models.dart';
+import 'models/journal_entry_adapter.dart';
+import 'screens/activities_screen.dart';
+import 'screens/enhanced_meditation_screen.dart';
+import 'screens/expression_screen.dart';
+import 'screens/journal_list.dart';
 import 'screens/login_screen.dart' as NewLogin;
-import 'screens/mental_health_dashboard.dart';
-import 'screens/mental_health/stress_management_screen.dart';
+import 'screens/mental_health/anxiety_management_screen.dart';
+import 'screens/mental_health/mindfulness_screen.dart';
 import 'screens/mental_health/mood_tracking_screen.dart';
 import 'screens/mental_health/sleep_tracking_screen.dart';
-import 'screens/mental_health/mindfulness_screen.dart';
-import 'screens/mental_health/anxiety_management_screen.dart';
+import 'screens/mental_health/stress_management_screen.dart';
 import 'screens/mental_health/wellness_screen.dart';
-import 'features/exercises/screens/exercises_main_screen.dart';
-import 'features/analytics/services/analytics_service.dart';
-import 'features/analytics/screens/unified_analytics_screen.dart';
-import 'features/home/screens/improved_home_screen.dart';
-import 'core/theme/app_theme.dart' as soul_theme;
-import 'config/app_colors.dart';
+import 'screens/mental_health_dashboard.dart';
+import 'screens/onboarding_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/self_help_screen.dart';
+import 'state/app_state.dart';
+import 'state/runtime_config.dart';
+import 'state/ui_state.dart';
+import 'widgets/activity_card.dart';
+import 'widgets/mood_selector.dart';
 
 /// SOUL Flutter application entry point
 ///
@@ -76,7 +75,6 @@ class SoulApp extends ConsumerWidget {
     return MaterialApp(
       title: 'SOUL',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.system,
       // Use the redesigned global theme
       theme: soul_theme.AppTheme.lightTheme,
       darkTheme: soul_theme.AppTheme.darkTheme,
@@ -143,8 +141,8 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: const Color(0xFFF7F9FC),
       extensions: <ThemeExtension<dynamic>>[
-        SoulGradients(
-          pastel: const LinearGradient(
+        const SoulGradients(
+          pastel: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [_pastelBlue, _softTeal, _warmCoral],
@@ -161,7 +159,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       textTheme: GoogleFonts.poppinsTextTheme(
-          ThemeData(brightness: Brightness.dark).textTheme),
+          ThemeData(brightness: Brightness.dark).textTheme,),
     );
 
     return base.copyWith(
@@ -175,8 +173,8 @@ class AppTheme {
         border: const OutlineInputBorder(),
       ),
       extensions: <ThemeExtension<dynamic>>[
-        SoulGradients(
-          pastel: const LinearGradient(
+        const SoulGradients(
+          pastel: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [_pastelBlue, _softTeal, _warmCoral],
@@ -373,7 +371,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         .setToken('local-debug-token');
                                     if (!mounted) return;
                                     Navigator.pushNamedAndRemoveUntil(
-                                        context, HomeScreen.route, (_) => false);
+                                        context, HomeScreen.route, (_) => false,);
                                   } else {
                                     await ref
                                         .read(authControllerProvider.notifier)
@@ -407,7 +405,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         .setToken('local-debug-token');
                                     if (!mounted) return;
                                     Navigator.pushNamedAndRemoveUntil(
-                                        context, HomeScreen.route, (_) => false);
+                                        context, HomeScreen.route, (_) => false,);
                                   } else {
                                     await ref
                                         .read(authControllerProvider.notifier)
@@ -500,7 +498,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               await ref
                                   .read(authControllerProvider.notifier)
                                   .verifyOtp(
-                                      email: email, code: _otpCtrl.text.trim());
+                                      email: email, code: _otpCtrl.text.trim(),);
 
                               if (!mounted) return;
 
@@ -581,7 +579,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       onTap: () {
                         Navigator.pushNamed(context, ProfileScreen.route);
                       },
-                      child: CircleAvatar(
+                      child: const CircleAvatar(
                         radius: 24,
                         backgroundImage: NetworkImage(AppMockData.userAvatarUrl),
                       ),
@@ -730,7 +728,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(32),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8)
+              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8),
             ],
           ),
           child: Row(
@@ -943,12 +941,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('API Base URL',
-                            style: TextStyle(fontWeight: FontWeight.w600)),
+                            style: TextStyle(fontWeight: FontWeight.w600),),
                         const SizedBox(height: 8),
                         TextField(
                           controller: _controller,
                           decoration: const InputDecoration(
-                              border: OutlineInputBorder()),
+                              border: OutlineInputBorder(),),
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -968,7 +966,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       height: 16,
                                       width: 16,
                                       child: CircularProgressIndicator(
-                                          strokeWidth: 2))
+                                          strokeWidth: 2,),)
                                   : const Text('Save'),
                             ),
                             const SizedBox(width: 8),

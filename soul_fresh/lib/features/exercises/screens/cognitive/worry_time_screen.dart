@@ -83,7 +83,7 @@ class _WorryTimeScreenState extends State<WorryTimeScreen> {
 
     session.endTime = DateTime.now();
     session.extraData = <String, dynamic>{
-      'duration_seconds': elapsed.clamp(0, totalSeconds) as int,
+      'duration_seconds': elapsed.clamp(0, totalSeconds),
       'worries': worries,
     };
 
@@ -98,7 +98,7 @@ class _WorryTimeScreenState extends State<WorryTimeScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Worry time finished'),
         content: const Text(
-            'You captured your concerns during the scheduled window.'),
+            'You captured your concerns during the scheduled window.',),
         actions: <Widget>[
           TextButton(
             onPressed: () {

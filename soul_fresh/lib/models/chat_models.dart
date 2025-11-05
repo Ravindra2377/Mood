@@ -1,5 +1,6 @@
 /// Chat models for AI-powered mental health conversations.
 /// Includes message, session, and crisis response models.
+library;
 
 enum MessageRole { user, assistant, system }
 

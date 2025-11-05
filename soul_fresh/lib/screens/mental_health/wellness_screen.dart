@@ -71,7 +71,7 @@ class WellnessGoal {
 }
 
 class WellnessScreen extends ConsumerStatefulWidget {
-  const WellnessScreen({Key? key}) : super(key: key);
+  const WellnessScreen({super.key});
 
   @override
   ConsumerState<WellnessScreen> createState() => _WellnessScreenState();
@@ -140,7 +140,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
           // Daily Check-in Card
           _DailyCheckinCard(onSubmit: (mood, energy, stress, sleep, activities) {
             // Submit check-in
-          }),
+          },),
           const SizedBox(height: 24),
 
           // Today's Wellness Summary
@@ -156,7 +156,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
             childAspectRatio: 1.1,
-            children: [
+            children: const [
               _WellnessMetricCard(
                 icon: '😊',
                 label: 'Mood',
@@ -167,7 +167,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                 icon: '⚡',
                 label: 'Energy',
                 value: '6/10',
-                color: const Color(0xFFFFB347),
+                color: Color(0xFFFFB347),
               ),
               _WellnessMetricCard(
                 icon: '😰',
@@ -179,7 +179,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                 icon: '😴',
                 label: 'Sleep',
                 value: '7.5h',
-                color: const Color(0xFF6C5CE7),
+                color: Color(0xFF6C5CE7),
               ),
             ],
           ),
@@ -287,7 +287,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       '📈 Up 5 points',
                       style: TextStyle(
                         color: Colors.white,
@@ -354,8 +354,8 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                               child: LinearProgressIndicator(
                                 value: (item['score'] as int) / 10,
                                 backgroundColor: AppColors.borderColor,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  const Color(0xFFFFB347),
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Color(0xFFFFB347),
                                 ),
                               ),
                             ),
@@ -374,7 +374,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                 ),
               ),
             );
-          }).toList(),
+          }),
           const SizedBox(height: 24),
 
           // Weekly Trend
@@ -481,12 +481,12 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                       '5 completed',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
-                    Text(
+                    const Text(
                       '71% complete',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFFFFB347),
+                        color: Color(0xFFFFB347),
                       ),
                     ),
                   ],
@@ -557,7 +557,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                         Row(
                           children: [
                             Text(goal['icon'] as String,
-                                style: const TextStyle(fontSize: 20)),
+                                style: const TextStyle(fontSize: 20),),
                             const SizedBox(width: 8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -579,9 +579,9 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                         ),
                         Text(
                           '${goal['progress']}%',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFFFFB347),
+                            color: Color(0xFFFFB347),
                           ),
                         ),
                       ],
@@ -590,8 +590,8 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                     LinearProgressIndicator(
                       value: (goal['progress'] as int) / 100,
                       backgroundColor: AppColors.borderColor,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        const Color(0xFFFFB347),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color(0xFFFFB347),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -606,7 +606,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                 ),
               ),
             );
-          }).toList(),
+          }),
           const SizedBox(height: 24),
 
           // Add Goal Button
@@ -655,7 +655,6 @@ class _DailyCheckinCardState extends State<_DailyCheckinCard> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFFFFB347),
-          width: 1,
         ),
       ),
       child: Column(
@@ -678,7 +677,6 @@ class _DailyCheckinCardState extends State<_DailyCheckinCard> {
           const SizedBox(height: 8),
           Slider(
             value: mood.toDouble(),
-            min: 0,
             max: 10,
             divisions: 10,
             onChanged: (value) => setState(() => mood = value.toInt()),
@@ -697,7 +695,6 @@ class _DailyCheckinCardState extends State<_DailyCheckinCard> {
           const SizedBox(height: 8),
           Slider(
             value: energy.toDouble(),
-            min: 0,
             max: 10,
             divisions: 10,
             onChanged: (value) => setState(() => energy = value.toInt()),
@@ -716,7 +713,6 @@ class _DailyCheckinCardState extends State<_DailyCheckinCard> {
           const SizedBox(height: 8),
           Slider(
             value: stress.toDouble(),
-            min: 0,
             max: 10,
             divisions: 10,
             onChanged: (value) => setState(() => stress = value.toInt()),

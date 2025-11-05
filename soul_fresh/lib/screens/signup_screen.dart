@@ -118,7 +118,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
       // Navigate to OTP verification or home
       Navigator.of(context).pushReplacementNamed('/otp-verification',
-          arguments: {'email': _emailController.text.trim()});
+          arguments: {'email': _emailController.text.trim()},);
     } catch (e) {
       setState(() {
         _errorMessage = e.toString();
@@ -162,7 +162,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 children: [
                   const SizedBox(height: 16),
                   // Logo
-                  Center(
+                  const Center(
                     child: Icon(
                       Icons.self_improvement,
                       size: 64,
@@ -190,12 +190,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.error_outline, color: AppColors.error),
+                          const Icon(Icons.error_outline, color: AppColors.error),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               _errorMessage!,
-                              style: TextStyle(color: AppColors.error),
+                              style: const TextStyle(color: AppColors.error),
                             ),
                           ),
                         ],
@@ -392,7 +392,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                   // Gender/Pronouns dropdown
                   DropdownButtonFormField<String>(
-                    value: _selectedGender,
+                    initialValue: _selectedGender,
                     decoration: const InputDecoration(
                       labelText: 'Gender/Pronouns',
                       prefixIcon: Icon(Icons.wc_outlined),
@@ -414,7 +414,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                   // Primary Goal dropdown
                   DropdownButtonFormField<String>(
-                    value: _selectedGoal,
+                    initialValue: _selectedGoal,
                     decoration: const InputDecoration(
                       labelText: 'Primary Mental Wellness Goal',
                       prefixIcon: Icon(Icons.psychology_outlined),
@@ -511,7 +511,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           const TextSpan(text: 'Already have an account? '),
                           TextSpan(
                             text: 'Log In',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold,
                             ),
@@ -561,7 +561,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   if (linkText.isNotEmpty)
                     TextSpan(
                       text: linkText,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.primary,
                         decoration: TextDecoration.underline,
                       ),
@@ -571,7 +571,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   if (linkText2.isNotEmpty)
                     TextSpan(
                       text: linkText2,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.primary,
                         decoration: TextDecoration.underline,
                       ),

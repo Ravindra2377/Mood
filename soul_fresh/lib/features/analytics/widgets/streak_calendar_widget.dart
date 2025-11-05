@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StreakCalendarWidget extends StatelessWidget {
-  const StreakCalendarWidget({Key? key}) : super(key: key);
+  const StreakCalendarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -123,3 +123,4 @@ class StreakCalendarWidget extends StatelessWidget {
     );
   }
 }
+

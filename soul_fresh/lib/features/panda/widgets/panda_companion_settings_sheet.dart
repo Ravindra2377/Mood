@@ -70,7 +70,7 @@ class _PandaCompanionSettingsSheetState
             Text('Companion name', style: AppTypography.labelSmall.copyWith(
               color: AppColors.darkGrey,
               fontWeight: FontWeight.w600,
-            )),
+            ),),
             const SizedBox(height: 8),
             TextField(
               controller: _nameController,
@@ -87,7 +87,7 @@ class _PandaCompanionSettingsSheetState
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: AppColors.primaryPastel, width: 2),
+                  borderSide: const BorderSide(color: AppColors.primaryPastel, width: 2),
                 ),
                 prefixIcon: const Icon(Icons.pets_rounded),
               ),
@@ -96,7 +96,7 @@ class _PandaCompanionSettingsSheetState
             Text('Choose a vibe', style: AppTypography.labelSmall.copyWith(
               color: AppColors.darkGrey,
               fontWeight: FontWeight.w600,
-            )),
+            ),),
             const SizedBox(height: 12),
             Wrap(
               spacing: 10,

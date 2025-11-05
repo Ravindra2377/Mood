@@ -8,7 +8,7 @@ import '../../widgets/control_bar.dart';
 import '../../widgets/exercise_scaffold.dart';
 
 class ButterflyHugScreen extends StatefulWidget {
-  const ButterflyHugScreen({Key? key}) : super(key: key);
+  const ButterflyHugScreen({super.key});
 
   @override
   State<ButterflyHugScreen> createState() => _ButterflyHugScreenState();
@@ -163,7 +163,7 @@ class _ButterflyHugScreenState extends State<ButterflyHugScreen> {
                     _TapIndicator(active: _leftTap),
                     const SizedBox(width: 24),
                     Icon(Icons.self_improvement,
-                        size: 72, color: Theme.of(context).primaryColor),
+                        size: 72, color: Theme.of(context).primaryColor,),
                     const SizedBox(width: 24),
                     _TapIndicator(active: !_leftTap),
                   ],
@@ -222,7 +222,7 @@ class _TapIndicator extends StatelessWidget {
         shape: BoxShape.circle,
         color: active
             ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.surfaceVariant,
+            : Theme.of(context).colorScheme.surfaceContainerHighest,
       ),
     );
   }

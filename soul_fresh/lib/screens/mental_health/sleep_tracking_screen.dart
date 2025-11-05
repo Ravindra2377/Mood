@@ -44,7 +44,7 @@ class SleepAnalytics {
 }
 
 class SleepTrackingScreen extends ConsumerStatefulWidget {
-  const SleepTrackingScreen({Key? key}) : super(key: key);
+  const SleepTrackingScreen({super.key});
 
   @override
   ConsumerState<SleepTrackingScreen> createState() =>
@@ -114,7 +114,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
           // Quick Sleep Logger
           _SleepLogCard(onLogSleep: (bedtime, wakeTime, quality) {
             // Log sleep
-          }),
+          },),
           const SizedBox(height: 24),
 
           // Recent Logs
@@ -157,7 +157,6 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFF6C5CE7),
-                width: 1,
               ),
             ),
             child: Column(
@@ -216,7 +215,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
                         color: Colors.green.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Text(
+                      child: const Text(
                         'On Track',
                         style: TextStyle(
                           color: Colors.green,
@@ -257,17 +256,16 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: Colors.orange,
-                width: 1,
               ),
             ),
-            child: Row(
+            child: const Row(
               children: [
-                const Icon(Icons.info, color: Colors.orange),
-                const SizedBox(width: 12),
+                Icon(Icons.info, color: Colors.orange),
+                SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Sleep Debt: 2 hours\nYou\'re sleeping less than recommended.',
-                    style: const TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12),
                   ),
                 ),
               ],
@@ -285,12 +283,12 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
             {
               'factor': 'Caffeine After 2 PM',
               'impact': 'Negative',
-              'score': -0.65
+              'score': -0.65,
             },
             {
               'factor': 'Evening Exercise',
               'impact': 'Negative',
-              'score': -0.45
+              'score': -0.45,
             },
             {'factor': 'Reading Before Bed', 'impact': 'Positive', 'score': 0.72},
             {'factor': 'Regular Bedtime', 'impact': 'Positive', 'score': 0.85},
@@ -307,7 +305,6 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: isPositive ? Colors.green : Colors.red,
-                    width: 1,
                   ),
                 ),
                 child: Row(
@@ -335,7 +332,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
                 ),
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -391,7 +388,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(tip['icon'] as String,
-                    style: const TextStyle(fontSize: 24)),
+                    style: const TextStyle(fontSize: 24),),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -454,7 +451,6 @@ class _SleepLogCardState extends State<_SleepLogCard> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFF6C5CE7),
-          width: 1,
         ),
       ),
       child: Column(
@@ -474,7 +470,7 @@ class _SleepLogCardState extends State<_SleepLogCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Bedtime',
-                      style: Theme.of(context).textTheme.bodySmall),
+                      style: Theme.of(context).textTheme.bodySmall,),
                   const SizedBox(height: 4),
                   Text(
                     bedtime.format(context),
@@ -506,7 +502,7 @@ class _SleepLogCardState extends State<_SleepLogCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Wake Time',
-                      style: Theme.of(context).textTheme.bodySmall),
+                      style: Theme.of(context).textTheme.bodySmall,),
                   const SizedBox(height: 4),
                   Text(
                     wakeTime.format(context),
@@ -535,7 +531,7 @@ class _SleepLogCardState extends State<_SleepLogCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Sleep Quality',
-                  style: Theme.of(context).textTheme.bodySmall),
+                  style: Theme.of(context).textTheme.bodySmall,),
               const SizedBox(height: 8),
               Row(
                 children: List.generate(5, (i) {
@@ -641,13 +637,13 @@ class _SleepHistoryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('$bedtime - $wakeTime',
-                  style: const TextStyle(fontSize: 12)),
+                  style: const TextStyle(fontSize: 12),),
               Text(
                 '${duration.toStringAsFixed(1)} hrs',
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF6C5CE7),
+                  color: Color(0xFF6C5CE7),
                 ),
               ),
             ],

@@ -1,5 +1,6 @@
 /// Feature flags for SOUL app features.
 /// Allows enabling/disabling features via remote config.
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

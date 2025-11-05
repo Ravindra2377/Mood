@@ -20,14 +20,15 @@ class _StopTechniqueScreenState extends State<StopTechniqueScreen> {
   void initState() {
     super.initState();
     session = ExerciseSession(
-        exerciseId: 'stop_technique', startTime: DateTime.now());
+        exerciseId: 'stop_technique', startTime: DateTime.now(),);
   }
 
   void _next() {
-    if (idx < phases.length - 1)
+    if (idx < phases.length - 1) {
       setState(() => idx++);
-    else
+    } else {
       _complete();
+    }
   }
 
   void _complete() async {
@@ -53,7 +54,7 @@ class _StopTechniqueScreenState extends State<StopTechniqueScreen> {
           ElevatedButton(
             onPressed: _next,
             child: Text(idx < phases.length - 1 ? 'Next' : 'Finish'),
-          )
+          ),
         ],
       ),
     );

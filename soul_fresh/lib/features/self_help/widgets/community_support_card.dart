@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CommunitySupportCard extends StatelessWidget {
-  const CommunitySupportCard({Key? key}) : super(key: key);
+  const CommunitySupportCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -161,3 +161,4 @@ class CommunitySupportCard extends StatelessWidget {
     );
   }
 }
+

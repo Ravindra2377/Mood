@@ -47,8 +47,8 @@ class MeditationStateNotifier extends StateNotifier<MeditationState> {
           isPlaying: false,
           timerSeconds: 0,
           duration: 300, // 5 minutes default
-          selectedSound: "Ocean breeze",
-        ));
+          selectedSound: 'Ocean breeze',
+        ),);
 
   void togglePlay() {
     state = state.copyWith(isPlaying: !state.isPlaying);
@@ -73,10 +73,11 @@ final meditationStateProvider =
 );
 
 // Journal entry state
-final journalEntryProvider = StateProvider<String>((ref) => "");
+final journalEntryProvider = StateProvider<String>((ref) => '');
 
 // Selected calendar day state
 final selectedCalendarDayProvider = StateProvider<int>((ref) => 22);
 
 // Search query state
-final searchQueryProvider = StateProvider<String>((ref) => "");
+final searchQueryProvider = StateProvider<String>((ref) => '');
+

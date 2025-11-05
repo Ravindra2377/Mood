@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 
 class MeditationSession {
   final String id;
@@ -102,9 +102,9 @@ class _MeditationScreenState extends State<MeditationScreen>
   }
 
   String _formatTime(int milliseconds) {
-    int seconds = milliseconds ~/ 1000;
-    int minutes = seconds ~/ 60;
-    int remainingSeconds = seconds % 60;
+    final int seconds = milliseconds ~/ 1000;
+    final int minutes = seconds ~/ 60;
+    final int remainingSeconds = seconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
@@ -240,11 +240,11 @@ class _MeditationScreenState extends State<MeditationScreen>
                           ),
                         ),
                         Image.asset('assets/images/meditation_child.png',
-                            width: 150, height: 150, fit: BoxFit.contain),
+                            width: 150, height: 150, fit: BoxFit.contain,),
                         const Positioned(
                           bottom: 16,
                           child: Text('Inhale...',
-                              style: TextStyle(fontWeight: FontWeight.w600)),
+                              style: TextStyle(fontWeight: FontWeight.w600),),
                         ),
                       ],
                     ),
@@ -280,7 +280,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                   label: Text(_playing ? 'Pause' : 'Start'),
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 16),
+                        horizontal: 32, vertical: 16,),
                     backgroundColor: const Color(0xFF00B894),
                   ),
                 ),
@@ -310,10 +310,10 @@ class _MeditationScreenState extends State<MeditationScreen>
                   color: const Color(0xFF00B894).withOpacity(0.3),
                 ),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     '💡 How to get music working:',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -321,8 +321,8 @@ class _MeditationScreenState extends State<MeditationScreen>
                       color: Color(0xFF00B894),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
+                  SizedBox(height: 12),
+                  Text(
                     '1. Add this dependency to pubspec.yaml:\n   audioplayers: ^5.0.0\n\n'
                     '2. Place audio files in assets/audio/:\n'
                     '   • ocean_breeze.mp3\n'

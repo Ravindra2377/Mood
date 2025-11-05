@@ -27,7 +27,7 @@ class MoodService {
         date: DateTime.parse(item['date']),
         mood: _parseMoodLevel(item['mood']),
         value: item['value'] as int,
-      )).toList();
+      ),).toList();
     } catch (e) {
       throw Exception('Failed to fetch mood history: $e');
     }
@@ -80,3 +80,4 @@ final moodHistoryProvider = FutureProvider<List<MoodHistoryItem>>((ref) async {
   final moodService = ref.watch(moodServiceProvider);
   return await moodService.getMoodHistory();
 });
+

@@ -70,7 +70,6 @@ class _MoodScreenState extends State<MoodScreen> {
           // Gradient Header
           SliverAppBar(
             expandedHeight: 200,
-            floating: false,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -228,7 +227,6 @@ class _MoodScreenState extends State<MoodScreen> {
         crossAxisCount: 3,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio: 1,
       ),
       itemCount: _moods.length,
       itemBuilder: (context, index) {
@@ -348,7 +346,7 @@ class _MoodScreenState extends State<MoodScreen> {
                   ],
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.chevron_right,
                 color: AppColors.mediumGrey,
               ),

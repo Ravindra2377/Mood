@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class WellnessScoreCard extends StatelessWidget {
-  const WellnessScoreCard({Key? key}) : super(key: key);
+  const WellnessScoreCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final score = 76; // This should come from your state management
+    const score = 76; // This should come from your state management
 
     return Container(
       decoration: BoxDecoration(
@@ -42,17 +42,17 @@ class WellnessScoreCard extends StatelessWidget {
                   valueColor: const AlwaysStoppedAnimation(Colors.white),
                 ),
               ),
-              Column(
+              const Column(
                 children: [
                   Text(
                     '$score',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                  const Text(
+                  Text(
                     '/100',
                     style: TextStyle(
                       fontSize: 16,
@@ -75,3 +75,4 @@ class WellnessScoreCard extends StatelessWidget {
     );
   }
 }
+

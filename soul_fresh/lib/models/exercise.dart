@@ -131,7 +131,7 @@ class ExerciseSession {
 // Mock exercises data
 final List<Exercise> mockExercises = [
   // Breathing Exercises
-  Exercise(
+  const Exercise(
     id: 'box-breathing',
     name: 'Box Breathing',
     category: ExerciseCategory.breathing,
@@ -143,14 +143,14 @@ final List<Exercise> mockExercises = [
       'Hold for 4 seconds',
       'Exhale for 4 seconds',
       'Hold for 4 seconds',
-      'Repeat 5 times'
+      'Repeat 5 times',
     ],
     benefits: ['Reduces anxiety', 'Improves focus', 'Calms nervous system'],
     emoji: '🫁',
     completions: 2345,
     rating: 4.8,
   ),
-  Exercise(
+  const Exercise(
     id: '4-7-8-breathing',
     name: '4-7-8 Breathing',
     category: ExerciseCategory.breathing,
@@ -161,14 +161,14 @@ final List<Exercise> mockExercises = [
       'Inhale through nose for 4 counts',
       'Hold for 7 counts',
       'Exhale through mouth for 8 counts',
-      'Repeat 4 times'
+      'Repeat 4 times',
     ],
     benefits: ['Better sleep', 'Stress relief', 'Calms anxiety'],
     emoji: '😴',
     completions: 1890,
     rating: 4.7,
   ),
-  Exercise(
+  const Exercise(
     id: 'resonant-breathing',
     name: 'Resonant Breathing',
     category: ExerciseCategory.breathing,
@@ -179,14 +179,14 @@ final List<Exercise> mockExercises = [
       'Inhale for 5 seconds',
       'Exhale for 5 seconds',
       'Continue for 10 minutes',
-      'Focus on smooth, even breaths'
+      'Focus on smooth, even breaths',
     ],
     benefits: ['Nervous system balance', 'Heart rate regulation', 'Calm focus'],
     emoji: '🌊',
     completions: 1234,
     rating: 4.6,
   ),
-  Exercise(
+  const Exercise(
     id: 'alternate-nostril',
     name: 'Alternate Nostril Breathing',
     category: ExerciseCategory.breathing,
@@ -197,7 +197,7 @@ final List<Exercise> mockExercises = [
       'Close right nostril, inhale left',
       'Close left nostril, exhale right',
       'Inhale right, exhale left',
-      'Repeat 10 times'
+      'Repeat 10 times',
     ],
     benefits: ['Mental clarity', 'Balance energy', 'Reduces stress'],
     emoji: '👃',
@@ -206,7 +206,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // Progressive Muscle Relaxation
-  Exercise(
+  const Exercise(
     id: 'full-body-pmr',
     name: 'Full Body PMR',
     category: ExerciseCategory.progressiveMuscleRelaxation,
@@ -217,14 +217,14 @@ final List<Exercise> mockExercises = [
       'Tense each muscle group for 5 seconds',
       'Release and notice the relaxation',
       'Move through: Toes → Legs → Abdomen → Chest → Arms → Shoulders → Neck → Face',
-      'End with full body relaxation'
+      'End with full body relaxation',
     ],
     benefits: ['Reduces physical tension', 'Deep relaxation', 'Better sleep'],
     emoji: '💪',
     completions: 1567,
     rating: 4.9,
   ),
-  Exercise(
+  const Exercise(
     id: 'quick-pmr',
     name: 'Quick PMR (5 min)',
     category: ExerciseCategory.progressiveMuscleRelaxation,
@@ -236,7 +236,7 @@ final List<Exercise> mockExercises = [
       'Tense jaw → Release',
       'Tense hands → Release',
       'Tense forehead → Release',
-      'Full body relaxation'
+      'Full body relaxation',
     ],
     benefits: ['Quick tension relief', 'Improves focus', 'Reduces headaches'],
     emoji: '⚡',
@@ -245,7 +245,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // Grounding Techniques
-  Exercise(
+  const Exercise(
     id: '5-4-3-2-1-sensory',
     name: '5-4-3-2-1 Sensory',
     category: ExerciseCategory.grounding,
@@ -257,7 +257,7 @@ final List<Exercise> mockExercises = [
       'Name 4 things you can touch',
       'Name 3 things you can hear',
       'Name 2 things you can smell',
-      'Name 1 thing you can taste'
+      'Name 1 thing you can taste',
     ],
     benefits: ['Panic attack relief', 'Anxiety reduction', 'Mental clarity'],
     emoji: '🌍',
@@ -266,7 +266,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // CBT Exercises
-  Exercise(
+  const Exercise(
     id: 'thought-challenging',
     name: 'Thought Challenging',
     category: ExerciseCategory.cognitiveBehavioral,
@@ -278,14 +278,14 @@ final List<Exercise> mockExercises = [
       'What\'s evidence for it?',
       'What\'s evidence against it?',
       'Create alternative perspective',
-      'Write balanced thought'
+      'Write balanced thought',
     ],
     benefits: ['Reduces anxiety', 'Better thinking patterns', 'Mood improvement'],
     emoji: '🧠',
     completions: 1876,
     rating: 4.7,
   ),
-  Exercise(
+  const Exercise(
     id: 'worry-time',
     name: 'Worry Time Scheduling',
     category: ExerciseCategory.cognitiveBehavioral,
@@ -297,7 +297,7 @@ final List<Exercise> mockExercises = [
       'Write down all worries',
       'After timer: postpone worries until tomorrow',
       'Redirect thoughts when worries appear',
-      'Practice daily'
+      'Practice daily',
     ],
     benefits: ['Reduces rumination', 'Better control', 'Anxiety relief'],
     emoji: '⏰',
@@ -306,7 +306,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // Journaling
-  Exercise(
+  const Exercise(
     id: 'stream-consciousness',
     name: 'Stream of Consciousness',
     category: ExerciseCategory.journaling,
@@ -318,14 +318,14 @@ final List<Exercise> mockExercises = [
       'Write continuously without editing',
       'Don\'t worry about grammar or meaning',
       'Let thoughts flow naturally',
-      'Read back if desired'
+      'Read back if desired',
     ],
     benefits: ['Emotional clarity', 'Stress relief', 'Self-discovery'],
     emoji: '✍️',
     completions: 2543,
     rating: 4.8,
   ),
-  Exercise(
+  const Exercise(
     id: 'gratitude-journal',
     name: 'Gratitude Journal',
     category: ExerciseCategory.journaling,
@@ -336,7 +336,7 @@ final List<Exercise> mockExercises = [
       'Write 3 specific things you\'re grateful for today',
       'For each, write why it matters',
       'Notice how gratitude feels',
-      'Practice daily for best results'
+      'Practice daily for best results',
     ],
     benefits: ['Improved mood', 'Better perspective', 'Happiness increase'],
     emoji: '🙏',
@@ -345,7 +345,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // Visualization
-  Exercise(
+  const Exercise(
     id: 'safe-place-visualization',
     name: 'Safe Place Visualization',
     category: ExerciseCategory.visualization,
@@ -357,14 +357,14 @@ final List<Exercise> mockExercises = [
       'Engage all 5 senses - what do you see, hear, smell, feel, taste?',
       'Notice colors, textures, sounds',
       'Stay here for 10 minutes',
-      'Return whenever needed'
+      'Return whenever needed',
     ],
     benefits: ['Deep relaxation', 'Anxiety relief', 'Self-soothing tool'],
     emoji: '🌅',
     completions: 2176,
     rating: 4.8,
   ),
-  Exercise(
+  const Exercise(
     id: 'success-visualization',
     name: 'Success Visualization',
     category: ExerciseCategory.visualization,
@@ -376,7 +376,7 @@ final List<Exercise> mockExercises = [
       'Close eyes and imagine success',
       'Feel the emotions of achievement',
       'Notice details - sights, sounds, feelings',
-      'Reinforce positive feelings'
+      'Reinforce positive feelings',
     ],
     benefits: ['Increased confidence', 'Better performance', 'Motivation boost'],
     emoji: '🎯',
@@ -385,7 +385,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // Movement
-  Exercise(
+  const Exercise(
     id: 'gentle-yoga',
     name: 'Gentle Yoga Flow',
     category: ExerciseCategory.movement,
@@ -397,14 +397,14 @@ final List<Exercise> mockExercises = [
       'Cat-Cow Stretch - 2 minutes',
       'Downward Dog - 1 minute',
       'Seated Twists - 2 minutes',
-      'Lying down relaxation - 9 minutes'
+      'Lying down relaxation - 9 minutes',
     ],
     benefits: ['Flexibility', 'Stress relief', 'Body awareness'],
     emoji: '🧘',
     completions: 2345,
     rating: 4.8,
   ),
-  Exercise(
+  const Exercise(
     id: 'desk-stretches',
     name: 'Desk Stretches',
     category: ExerciseCategory.movement,
@@ -416,7 +416,7 @@ final List<Exercise> mockExercises = [
       'Shoulder Shrugs - 30 seconds',
       'Wrist Circles - 30 seconds',
       'Seated Spinal Twist - 30 seconds',
-      'Finish: Deep breathing'
+      'Finish: Deep breathing',
     ],
     benefits: ['Tension relief', 'Improved circulation', 'Better focus'],
     emoji: '🪑',
@@ -425,7 +425,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // Anxiety Management
-  Exercise(
+  const Exercise(
     id: 'tipp-skills',
     name: 'TIPP Skills (Crisis)',
     category: ExerciseCategory.anxiety,
@@ -436,14 +436,14 @@ final List<Exercise> mockExercises = [
       'Temperature: Splash cold water on face',
       'Intense Exercise: 5 minutes of activity',
       'Paced Breathing: Slow, deep breaths',
-      'Paired Muscle Relaxation: Tense and release muscles'
+      'Paired Muscle Relaxation: Tense and release muscles',
     ],
     benefits: ['Crisis relief', 'Immediate calming', 'Emotional regulation'],
     emoji: '🆘',
     completions: 876,
     rating: 4.9,
   ),
-  Exercise(
+  const Exercise(
     id: 'stop-technique',
     name: 'STOP Technique',
     category: ExerciseCategory.anxiety,
@@ -454,7 +454,7 @@ final List<Exercise> mockExercises = [
       'Stop what you\'re doing',
       'Take a step back (literally or mentally)',
       'Observe thoughts and feelings without judgment',
-      'Proceed mindfully with next action'
+      'Proceed mindfully with next action',
     ],
     benefits: ['Reaction control', 'Mindful response', 'Anxiety reduction'],
     emoji: '🛑',
@@ -463,7 +463,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // Sleep
-  Exercise(
+  const Exercise(
     id: 'sleep-meditation',
     name: 'Sleep Meditation',
     category: ExerciseCategory.sleep,
@@ -474,7 +474,7 @@ final List<Exercise> mockExercises = [
       'Lie down comfortably',
       'Body scan: notice sensations from head to toe',
       'Progressive relaxation of each body part',
-      'Drift to sleep naturally'
+      'Drift to sleep naturally',
     ],
     benefits: ['Better sleep', 'Relaxation', 'Insomnia relief'],
     emoji: '😴',
@@ -483,7 +483,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // Emotional Regulation
-  Exercise(
+  const Exercise(
     id: 'emotion-wheel',
     name: 'Emotion Wheel Exercise',
     category: ExerciseCategory.emotionalRegulation,
@@ -495,7 +495,7 @@ final List<Exercise> mockExercises = [
       'Use emotion wheel to get more specific',
       'Name precise emotion (melancholy, frustrated, anxious, joyful)',
       'Understand what triggered it',
-      'Write about the emotion'
+      'Write about the emotion',
     ],
     benefits: ['Emotional awareness', 'Better regulation', 'Self-understanding'],
     emoji: '🎭',
@@ -504,7 +504,7 @@ final List<Exercise> mockExercises = [
   ),
 
   // Quick Relief
-  Exercise(
+  const Exercise(
     id: 'butterfly-hug',
     name: 'Butterfly Hug',
     category: ExerciseCategory.quickRelief,
@@ -515,14 +515,14 @@ final List<Exercise> mockExercises = [
       'Cross arms over chest',
       'Tap alternately - left shoulder, right shoulder',
       'Continue for 2 minutes',
-      'Feel the soothing sensation'
+      'Feel the soothing sensation',
     ],
     benefits: ['Instant calming', 'Stress relief', 'Self-soothing'],
     emoji: '🦋',
     completions: 2987,
     rating: 4.8,
   ),
-  Exercise(
+  const Exercise(
     id: 'hand-warming',
     name: 'Hand Warming',
     category: ExerciseCategory.quickRelief,
@@ -533,7 +533,7 @@ final List<Exercise> mockExercises = [
       'Sit comfortably',
       'Visualize warm light in your hands',
       'Imagine heat spreading',
-      'Notice your hands actually warming'
+      'Notice your hands actually warming',
     ],
     benefits: ['Nervous system shift', 'Grounding', 'Quick calm'],
     emoji: '🔥',

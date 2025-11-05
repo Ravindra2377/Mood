@@ -40,7 +40,7 @@ class StressAnalytics {
 }
 
 class StressManagementScreen extends ConsumerStatefulWidget {
-  const StressManagementScreen({Key? key}) : super(key: key);
+  const StressManagementScreen({super.key});
 
   @override
   ConsumerState<StressManagementScreen> createState() =>
@@ -111,7 +111,7 @@ class _StressManagementScreenState
           // Stress Level Card
           _StressLevelCard(onLevelSelected: (level) {
             // Log stress
-          }),
+          },),
           const SizedBox(height: 20),
           
           // Recent Logs
@@ -127,7 +127,7 @@ class _StressManagementScreenState
             itemBuilder: (context, index) {
               return _StressLogCard(
                 level: 7 - index,
-                triggers: ['work', 'family'],
+                triggers: const ['work', 'family'],
                 time: DateTime.now().subtract(Duration(hours: index)),
               );
             },
@@ -202,7 +202,6 @@ class _StressManagementScreenState
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFFFF6B6B),
-                width: 1,
               ),
             ),
             child: Column(
@@ -230,11 +229,11 @@ class _StressManagementScreenState
                         color: Colors.green.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Row(
+                      child: const Row(
                         children: [
-                          const Icon(Icons.trending_down,
-                              color: Colors.green, size: 16),
-                          const SizedBox(width: 4),
+                          Icon(Icons.trending_down,
+                              color: Colors.green, size: 16,),
+                          SizedBox(width: 4),
                           Text(
                             'Decreasing',
                             style: TextStyle(
@@ -274,7 +273,7 @@ class _StressManagementScreenState
                 ],
               ),
             );
-          }).toList(),
+          }),
 
           const SizedBox(height: 20),
 
@@ -312,7 +311,7 @@ class _StressManagementScreenState
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -448,9 +447,9 @@ class _StressLevelCardState extends State<_StressLevelCard> {
             }),
           ),
           const SizedBox(height: 16),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text('Calm', style: TextStyle(fontSize: 12)),
               Text('Very Stressed', style: TextStyle(fontSize: 12)),
             ],
@@ -563,7 +562,7 @@ class _ExerciseCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color, width: 1),
+          border: Border.all(color: color),
         ),
         child: Row(
           children: [

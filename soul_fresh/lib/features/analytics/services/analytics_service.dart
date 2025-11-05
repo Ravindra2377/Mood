@@ -37,7 +37,7 @@ class AnalyticsService {
           moodBefore: json['moodBefore'],
           moodAfter: json['moodAfter'],
           notes: json['notes'],
-        ))
+        ),)
         .toList();
 
     if (days != null) {
@@ -72,7 +72,7 @@ class AnalyticsService {
           completedAt: DateTime.parse(json['completedAt']),
           completionPercentage: json['completionPercentage'],
           result: json['result'],
-        ))
+        ),)
         .toList();
 
     if (days != null) {
@@ -105,7 +105,7 @@ class AnalyticsService {
           emotionalState: json['emotionalState'],
           triggers: List<String>.from(json['triggers'] ?? []),
           recordedAt: DateTime.parse(json['recordedAt']),
-        ))
+        ),)
         .toList();
 
     if (days != null) {
@@ -134,3 +134,4 @@ class AnalyticsService {
     );
   }
 }
+

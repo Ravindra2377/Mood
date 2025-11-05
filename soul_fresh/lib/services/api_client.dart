@@ -20,7 +20,7 @@ class AuthInterceptor extends Interceptor {
 
   @override
   Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+      RequestOptions options, RequestInterceptorHandler handler,) async {
     final token = await getToken();
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
@@ -118,11 +118,11 @@ class TokenRefreshInterceptor extends Interceptor {
 
     if (newAccess == null || newAccess.isEmpty) {
       throw const TokenRefreshException(
-          'Refresh response missing access_token');
+          'Refresh response missing access_token',);
     }
     if (newRefresh == null || newRefresh.isEmpty) {
       throw const TokenRefreshException(
-          'Refresh response missing refresh_token');
+          'Refresh response missing refresh_token',);
     }
 
     await Future.sync(() => saveAccessToken(newAccess));
@@ -154,7 +154,7 @@ class TokenRefreshInterceptor extends Interceptor {
 
   @override
   Future<void> onError(
-      DioException err, ErrorInterceptorHandler handler) async {
+      DioException err, ErrorInterceptorHandler handler,) async {
     if (!_isUnauthorized(err)) {
       handler.next(err);
       return;
@@ -236,11 +236,8 @@ class ApiClientFactory {
       ),
       // Log basic info in debug mode. You can swap with pretty logger.
       LogInterceptor(
-        request: true,
         requestBody: true,
-        responseBody: false,
         responseHeader: false,
-        error: true,
       ),
       ...extraInterceptors,
     ]);
@@ -673,7 +670,8 @@ String formatDioError(Object error) {
 String? _safeString(dynamic data) {
   if (data == null) return null;
   if (data is String) return data;
-  if (data is Map && data['message'] is String)
+  if (data is Map && data['message'] is String) {
     return data['message'] as String;
+  }
   return null;
 }

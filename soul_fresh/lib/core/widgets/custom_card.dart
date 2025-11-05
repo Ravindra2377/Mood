@@ -12,7 +12,7 @@ class CustomCard extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
 
   const CustomCard({
-    Key? key,
+    super.key,
     required this.child,
     this.padding = const EdgeInsets.all(16),
     this.backgroundColor = AppColors.white,
@@ -21,12 +21,12 @@ class CustomCard extends StatelessWidget {
     this.border,
     this.boxShadow,
     this.borderRadius,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final cardBorder = border ??
-      Border.all(color: borderColor ?? AppColors.mediumGrey, width: 1);
+      Border.all(color: borderColor ?? AppColors.mediumGrey);
 
     final cardRadius = borderRadius ?? BorderRadius.circular(20);
 
@@ -55,3 +55,4 @@ class CustomCard extends StatelessWidget {
     return container;
   }
 }
+

@@ -180,7 +180,6 @@ class _WellnessGoalSelectionScreenState
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: AppColors.borderColor,
-                      width: 1,
                     ),
                   ),
                   child: Text(
@@ -270,7 +269,7 @@ class _WellnessGoalSelectionScreenState
                 const SizedBox(height: 12),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
+                  child: const Text(
                     'Skip for now',
                     style: TextStyle(
                       color: AppColors.secondaryText,
@@ -295,13 +294,12 @@ class _GoalCard extends StatelessWidget {
   final int index;
 
   const _GoalCard({
-    Key? key,
     required this.goal,
     required this.isSelected,
     required this.onTap,
     required this.animationController,
     required this.index,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

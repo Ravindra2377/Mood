@@ -72,3 +72,4 @@ class _FilterPill extends StatelessWidget {
     );
   }
 }
+

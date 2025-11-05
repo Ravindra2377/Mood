@@ -17,7 +17,6 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
           // Multi-color Gradient Header
           SliverAppBar(
             expandedHeight: 200,
-            floating: false,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -57,14 +56,14 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
             ),
             actions: [
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.share,
                   color: AppColors.white,
                 ),
                 onPressed: () {},
               ),
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.download,
                   color: AppColors.white,
                 ),
@@ -136,7 +135,6 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(child: Text('Error: $error')),
       data: (snapshot) => CustomCard(
-        backgroundColor: AppColors.white,
         child: Column(
           children: [
             Row(
@@ -188,7 +186,7 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                     value: snapshot.wellnessScore / 100,
                     strokeWidth: 14,
                     backgroundColor: AppColors.lightGrey,
-                    valueColor: AlwaysStoppedAnimation(AppColors.primaryPastel),
+                    valueColor: const AlwaysStoppedAnimation(AppColors.primaryPastel),
                     strokeCap: StrokeCap.round,
                   ),
                 ),
@@ -446,7 +444,7 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                     color: stat['color'] as Color,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.fitness_center,
                     color: AppColors.white,
                     size: 20,
@@ -563,13 +561,13 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                   ),
                 ),
                 if (achievement['earned'] as bool)
-                  Icon(
+                  const Icon(
                     Icons.check_circle,
                     color: AppColors.success,
                     size: 24,
                   )
                 else
-                  Icon(
+                  const Icon(
                     Icons.lock,
                     color: AppColors.mediumGrey,
                     size: 20,
@@ -584,12 +582,11 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
 
   Widget _buildWeeklySummary() {
     return CustomCard(
-      backgroundColor: AppColors.white,
       child: Column(
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.insights,
                 color: AppColors.primaryPastel,
                 size: 32,
@@ -623,3 +620,4 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
     );
   }
 }
+

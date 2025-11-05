@@ -88,13 +88,13 @@ class RecommendedActivityCard extends StatelessWidget {
 
   Widget _buildBadge(WellnessActivity activity) {
     if (activity.isRecommended) {
-      return _Badge(
+      return const _Badge(
         label: 'Recommended',
         icon: Icons.lightbulb_outline,
       );
     }
     if (activity.isPopular) {
-      return _Badge(
+      return const _Badge(
         label: 'Popular',
         icon: Icons.local_fire_department_outlined,
       );

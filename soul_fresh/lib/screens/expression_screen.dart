@@ -51,8 +51,8 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
   bool _isSaving = false;
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  Set<MoodTrigger> _selectedTriggers = {};
-  List<String> _tags = [];
+  final Set<MoodTrigger> _selectedTriggers = {};
+  final List<String> _tags = [];
   PrivacyLevel _privacyLevel = PrivacyLevel.private;
   final TextEditingController _tagController = TextEditingController();
   bool _showAdvanced = false;
@@ -345,12 +345,12 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                     child: Row(
                       children: [
                         Icon(Icons.calendar_today,
-                            size: 18, color: _getMoodColor(_selectedMood)),
+                            size: 18, color: _getMoodColor(_selectedMood),),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             '${DateFormat('EEEE, MMM d, yyyy').format(_selectedDate)} • ${_selectedTime.format(context)}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: Colors.black87,
@@ -438,7 +438,6 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                       ),
                       Slider(
                         value: _moodIntensity.index.toDouble(),
-                        min: 0,
                         max: 4,
                         divisions: 4,
                         activeColor: _getMoodColor(_selectedMood),
@@ -464,7 +463,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                   ),
                   child: Row(
                     children: [
-                      Text('💡', style: const TextStyle(fontSize: 16)),
+                      const Text('💡', style: TextStyle(fontSize: 16)),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -608,7 +607,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                                     backgroundColor:
                                         _getMoodColor(_selectedMood)
                                             .withOpacity(0.2),
-                                  ))
+                                  ),)
                               .toList(),
                         ),
                       ],
@@ -772,7 +771,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                 ScaleTransition(
                   scale: Tween<double>(begin: 1.0, end: 1.05).animate(
                     CurvedAnimation(
-                        parent: _animationController, curve: Curves.elasticOut),
+                        parent: _animationController, curve: Curves.elasticOut,),
                   ),
                   child: SizedBox(
                     width: double.infinity,
@@ -790,9 +789,9 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                             : Colors.black.withOpacity(0.6),
                       ),
                       child: _isSaving
-                          ? Row(
+                          ? const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 SizedBox(
                                   width: 18,
                                   height: 18,

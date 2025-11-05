@@ -67,7 +67,7 @@ class _ThoughtChallengingScreenState extends State<ThoughtChallengingScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-                'Please add something for ${titles[step].toLowerCase()}.')),
+                'Please add something for ${titles[step].toLowerCase()}.',),),
       );
       return;
     }
@@ -188,7 +188,7 @@ class _ThoughtChallengingScreenState extends State<ThoughtChallengingScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text('Your notes so far',
-                                style: theme.textTheme.titleMedium),
+                                style: theme.textTheme.titleMedium,),
                             const SizedBox(height: 12),
                             for (int i = 0; i < ctrls.length; i++)
                               if (ctrls[i].text.trim().isNotEmpty)
@@ -199,7 +199,7 @@ class _ThoughtChallengingScreenState extends State<ThoughtChallengingScreen> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(titles[i],
-                                          style: theme.textTheme.labelLarge),
+                                          style: theme.textTheme.labelLarge,),
                                       const SizedBox(height: 4),
                                       Text(ctrls[i].text.trim()),
                                     ],

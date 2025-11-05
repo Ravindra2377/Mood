@@ -17,10 +17,7 @@ class AppTheme {
         tertiary: AppColors.accentPastel,
         error: AppColors.error,
         onError: AppColors.charcoal,
-        surface: AppColors.white,
         onSurface: AppColors.charcoal,
-        background: AppColors.whiteBg,
-        onBackground: AppColors.charcoal,
       ),
     );
 
@@ -59,7 +56,7 @@ class AppTheme {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: const BorderSide(color: AppColors.mediumGrey, width: 1),
+          side: const BorderSide(color: AppColors.mediumGrey),
         ),
         elevation: 0,
       ),
@@ -84,7 +81,7 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: AppColors.mediumGrey, width: 1),
+          borderSide: const BorderSide(color: AppColors.mediumGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
@@ -155,7 +152,7 @@ class AppTheme {
         contentTextStyle: AppTypography.body1,
       ),
       scrollbarTheme: ScrollbarThemeData(
-        thumbColor: MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.6)),
+        thumbColor: WidgetStateProperty.all(AppColors.primaryPastel.withOpacity(0.6)),
         radius: const Radius.circular(12),
       ),
     );
@@ -175,9 +172,6 @@ class AppTheme {
         error: AppColors.error,
         onError: AppColors.black,
         surface: Color(0xFF191C1F),
-        onSurface: AppColors.white,
-        background: Color(0xFF101114),
-        onBackground: AppColors.white,
       ),
     );
 
@@ -217,7 +211,7 @@ class AppTheme {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: const BorderSide(color: Color(0xFF2A2D32), width: 1),
+          side: const BorderSide(color: Color(0xFF2A2D32)),
         ),
         elevation: 0,
       ),
@@ -305,9 +299,10 @@ class AppTheme {
         contentTextStyle: AppTypography.body1,
       ),
       scrollbarTheme: ScrollbarThemeData(
-        thumbColor: MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.5)),
+        thumbColor: WidgetStateProperty.all(AppColors.primaryPastel.withOpacity(0.5)),
         radius: const Radius.circular(12),
       ),
     );
   }
 }
+

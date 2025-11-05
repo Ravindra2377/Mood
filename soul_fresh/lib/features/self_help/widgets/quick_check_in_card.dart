@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class QuickCheckInCard extends StatefulWidget {
-  const QuickCheckInCard({Key? key}) : super(key: key);
+  const QuickCheckInCard({super.key});
 
   @override
   State<QuickCheckInCard> createState() => _QuickCheckInCardState();
@@ -146,3 +146,4 @@ class _MoodChip extends StatelessWidget {
     );
   }
 }
+

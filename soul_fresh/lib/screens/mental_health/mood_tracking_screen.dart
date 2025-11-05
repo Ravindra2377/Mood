@@ -40,7 +40,7 @@ class MoodInsights {
 }
 
 class MoodTrackingScreen extends ConsumerStatefulWidget {
-  const MoodTrackingScreen({Key? key}) : super(key: key);
+  const MoodTrackingScreen({super.key});
 
   @override
   ConsumerState<MoodTrackingScreen> createState() =>
@@ -110,7 +110,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
           // Quick Mood Selector
           _MoodSelector(onMoodSelected: (mood) {
             // Save mood
-          }),
+          },),
           const SizedBox(height: 24),
 
           // Activities
@@ -200,7 +200,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('October 2025',
-                        style: Theme.of(context).textTheme.titleSmall),
+                        style: Theme.of(context).textTheme.titleSmall,),
                     Row(
                       children: [
                         IconButton(
@@ -226,7 +226,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                             ),
-                          ))
+                          ),)
                       .toList(),
                 ),
                 const SizedBox(height: 8),
@@ -237,7 +237,6 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                   gridDelegate:
                       const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 7,
-                    childAspectRatio: 1,
                   ),
                   itemCount: 35,
                   itemBuilder: (context, index) {
@@ -256,7 +255,6 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                         border: isCurrentMonth && day % 3 == 0
                             ? Border.all(
                                 color: const Color(0xFFFFD93D),
-                                width: 1,
                               )
                             : null,
                       ),
@@ -283,11 +281,11 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
           const SizedBox(height: 20),
 
           // Legend
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _CalendarLegend(
-                color: const Color(0xFFFFD93D),
+                color: Color(0xFFFFD93D),
                 label: 'Tracked',
               ),
               _CalendarLegend(
@@ -315,7 +313,6 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFFFFD93D),
-                width: 1,
               ),
             ),
             child: Column(
@@ -343,11 +340,11 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                         color: Colors.green.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Row(
+                      child: const Row(
                         children: [
-                          const Icon(Icons.trending_up,
-                              color: Colors.green, size: 16),
-                          const SizedBox(width: 4),
+                          Icon(Icons.trending_up,
+                              color: Colors.green, size: 16,),
+                          SizedBox(width: 4),
                           Text(
                             'Improving',
                             style: TextStyle(
@@ -426,7 +423,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                 ),
               ),
             );
-          }).toList(),
+          }),
 
           const SizedBox(height: 20),
 
@@ -468,7 +465,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -505,7 +502,6 @@ class _MoodSelectorState extends State<_MoodSelector> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFFFFD93D),
-          width: 1,
         ),
       ),
       child: Column(
@@ -561,12 +557,12 @@ class _ActivityGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final activities = [
-      {'name': 'Exercise', 'emoji': '🏃', 'color': Color(0xFF00B894)},
-      {'name': 'Time Out', 'emoji': '🌳', 'color': Color(0xFF00B894)},
-      {'name': 'Social', 'emoji': '👥', 'color': Color(0xFF00B894)},
-      {'name': 'Reading', 'emoji': '📚', 'color': Color(0xFF00B894)},
-      {'name': 'Music', 'emoji': '🎵', 'color': Color(0xFF00B894)},
-      {'name': 'Creative', 'emoji': '🎨', 'color': Color(0xFF00B894)},
+      {'name': 'Exercise', 'emoji': '🏃', 'color': const Color(0xFF00B894)},
+      {'name': 'Time Out', 'emoji': '🌳', 'color': const Color(0xFF00B894)},
+      {'name': 'Social', 'emoji': '👥', 'color': const Color(0xFF00B894)},
+      {'name': 'Reading', 'emoji': '📚', 'color': const Color(0xFF00B894)},
+      {'name': 'Music', 'emoji': '🎵', 'color': const Color(0xFF00B894)},
+      {'name': 'Creative', 'emoji': '🎨', 'color': const Color(0xFF00B894)},
     ];
 
     return GridView.builder(
@@ -576,7 +572,6 @@ class _ActivityGrid extends StatelessWidget {
         crossAxisCount: 3,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
-        childAspectRatio: 1,
       ),
       itemCount: activities.length,
       itemBuilder: (context, index) {
@@ -591,14 +586,13 @@ class _ActivityGrid extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: activity['color'] as Color,
-                width: 1,
               ),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(activity['emoji'] as String,
-                    style: const TextStyle(fontSize: 24)),
+                    style: const TextStyle(fontSize: 24),),
                 const SizedBox(height: 4),
                 Text(
                   activity['name'] as String,

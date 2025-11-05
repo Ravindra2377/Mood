@@ -5,7 +5,7 @@ import '../../services/exercise_service.dart';
 import '../../widgets/exercise_scaffold.dart';
 
 class SafePlaceScreen extends StatefulWidget {
-  const SafePlaceScreen({Key? key}) : super(key: key);
+  const SafePlaceScreen({super.key});
 
   @override
   State<SafePlaceScreen> createState() => _SafePlaceScreenState();
@@ -53,7 +53,7 @@ class _SafePlaceScreenState extends State<SafePlaceScreen> {
         .map((prompt) => {
               'sense': prompt.sense,
               'details': prompt.controller.text.trim(),
-            })
+            },)
         .toList();
 
     if (entries.length < 3) {
@@ -87,7 +87,7 @@ class _SafePlaceScreenState extends State<SafePlaceScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Visualization saved. Carry this feeling with you.')),
+          content: Text('Visualization saved. Carry this feeling with you.'),),
     );
     Navigator.of(context).pop();
   }
@@ -422,7 +422,7 @@ List<_VisualizationPrompt> _buildPrompts() {
         'Soft sunrise light',
         'Ocean horizon',
         'Forest greens',
-        'Candle glow'
+        'Candle glow',
       ],
     ),
     _VisualizationPrompt(
@@ -432,7 +432,7 @@ List<_VisualizationPrompt> _buildPrompts() {
         'Gentle waves',
         'Crackling fire',
         'Birdsong',
-        'Quiet piano'
+        'Quiet piano',
       ],
     ),
     _VisualizationPrompt(
@@ -447,7 +447,7 @@ List<_VisualizationPrompt> _buildPrompts() {
         'Warm blanket',
         'Soft sand',
         'Cool breeze',
-        'Cozy armchair'
+        'Cozy armchair',
       ],
     ),
     _VisualizationPrompt(

@@ -41,7 +41,7 @@ class ContentService {
         title: item['title'] as String,
         duration: item['duration'] as String,
         thumbnail: item['thumbnail'] as String,
-      )).toList();
+      ),).toList();
     } catch (e) {
       throw Exception('Failed to fetch content items: $e');
     }
@@ -78,3 +78,4 @@ final contentItemsProvider = FutureProvider<List<ContentItem>>((ref) async {
   final contentService = ref.watch(contentServiceProvider);
   return await contentService.getContentItems();
 });
+

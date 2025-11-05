@@ -114,7 +114,7 @@ class AppDateUtils {
 
   /// Get start of month
   static DateTime startOfMonth(DateTime date) {
-    return DateTime(date.year, date.month, 1);
+    return DateTime(date.year, date.month);
   }
 
   /// Get end of month
@@ -165,7 +165,7 @@ class AppDateUtils {
       case 'this year':
       case 'year':
         return DateTimeRange(
-          start: DateTime(now.year, 1, 1),
+          start: DateTime(now.year),
           end: DateTime(now.year, 12, 31, 23, 59, 59, 999),
         );
       case 'last 7 days':

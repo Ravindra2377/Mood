@@ -62,3 +62,4 @@ final journalEntriesProvider = FutureProvider<List<Map<String, dynamic>>>((ref) 
   final journalService = ref.watch(journalServiceProvider);
   return await journalService.getJournalEntries();
 });
+

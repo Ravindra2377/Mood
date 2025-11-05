@@ -5,7 +5,7 @@ import '../../services/exercise_service.dart';
 import '../../widgets/exercise_scaffold.dart';
 
 class EmotionWheelScreen extends StatefulWidget {
-  const EmotionWheelScreen({Key? key}) : super(key: key);
+  const EmotionWheelScreen({super.key});
 
   @override
   State<EmotionWheelScreen> createState() => _EmotionWheelScreenState();
@@ -49,7 +49,7 @@ class _EmotionWheelScreenState extends State<EmotionWheelScreen> {
     if (_primary == null || _secondary == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Choose at least a primary and secondary emotion.')),
+            content: Text('Choose at least a primary and secondary emotion.'),),
       );
       return;
     }

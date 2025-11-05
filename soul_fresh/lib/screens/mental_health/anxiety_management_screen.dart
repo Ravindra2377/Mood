@@ -65,7 +65,7 @@ class SafetyPlan {
 }
 
 class AnxietyManagementScreen extends ConsumerStatefulWidget {
-  const AnxietyManagementScreen({Key? key}) : super(key: key);
+  const AnxietyManagementScreen({super.key});
 
   @override
   ConsumerState<AnxietyManagementScreen> createState() =>
@@ -141,7 +141,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
           // Anxiety Intensity Logger
           _AnxietyIntensityCard(onLog: (intensity, trigger, coping) {
             // Log anxiety
-          }),
+          },),
           const SizedBox(height: 24),
 
           // Recent Logs
@@ -162,7 +162,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
                 'Financial worries',
                 'Health concern',
                 'Traffic',
-                'Crowded place'
+                'Crowded place',
               ];
               final copingUsed = [
                 'Deep breathing',
@@ -170,7 +170,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
                 'Journaling',
                 'Meditation',
                 'Music',
-                'None'
+                'None',
               ];
 
               return _AnxietyLogCard(
@@ -286,7 +286,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
                         alignment: Alignment.bottomRight,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                              horizontal: 8, vertical: 4,),
                           decoration: BoxDecoration(
                             color: const Color(0xFF00D2D3).withOpacity(0.2),
                             borderRadius: BorderRadius.circular(4),
@@ -343,19 +343,19 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
                   ],
                 ),
                 const SizedBox(height: 16),
-                _ContactTile(
+                const _ContactTile(
                   label: 'Crisis Text Line',
                   value: 'Text HOME to 741741',
                   icon: '💬',
                 ),
                 const SizedBox(height: 12),
-                _ContactTile(
+                const _ContactTile(
                   label: 'National Suicide Prevention',
                   value: '988 (call or text)',
                   icon: '📞',
                 ),
                 const SizedBox(height: 12),
-                _ContactTile(
+                const _ContactTile(
                   label: 'Emergency Services',
                   value: '911',
                   icon: '🚑',
@@ -417,7 +417,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
                 ),
               ),
             );
-          }).toList(),
+          }),
           const SizedBox(height: 24),
 
           // Support People
@@ -477,7 +477,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
                 ),
               ),
             );
-          }).toList(),
+          }),
           const SizedBox(height: 24),
 
           // Edit Safety Plan Button
@@ -652,7 +652,6 @@ class _AnxietyIntensityCardState extends State<_AnxietyIntensityCard> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFF00D2D3),
-          width: 1,
         ),
       ),
       child: Column(
@@ -687,7 +686,6 @@ class _AnxietyIntensityCardState extends State<_AnxietyIntensityCard> {
               const SizedBox(height: 8),
               Slider(
                 value: intensity.toDouble(),
-                min: 0,
                 max: 10,
                 divisions: 10,
                 onChanged: (value) =>
@@ -791,7 +789,7 @@ class _AnxietyLogCard extends StatelessWidget {
                 copingUsed,
                 style: const TextStyle(
                   fontSize: 12,
-                  color: const Color(0xFF00D2D3),
+                  color: Color(0xFF00D2D3),
                   fontWeight: FontWeight.w500,
                 ),
               ),

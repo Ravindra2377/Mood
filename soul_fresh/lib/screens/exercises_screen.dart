@@ -30,9 +30,9 @@ class ExercisesScreen extends ConsumerWidget {
 
       return Scaffold(
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [const Color(0xFF1E88E5), const Color(0xFF26A69A)],
+              colors: [Color(0xFF1E88E5), Color(0xFF26A69A)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -45,10 +45,10 @@ class ExercisesScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Header
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           'Exercises',
                           style: TextStyle(
                             fontSize: 24,
@@ -112,13 +112,13 @@ class ExercisesScreen extends ConsumerWidget {
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w600,
-                                              )),
+                                              ),),
                                           const SizedBox(width: 8),
                                           Text('5 min',
                                               style: TextStyle(
                                                 fontSize: 11,
                                                 color: Colors.grey.shade600,
-                                              )),
+                                              ),),
                                         ],
                                       ),
                                       const SizedBox(height: 4),
@@ -262,7 +262,7 @@ class ExercisesScreen extends ConsumerWidget {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                   const SizedBox(height: 12),
 
                   // My Progress
@@ -351,9 +351,9 @@ class ExercisesScreen extends ConsumerWidget {
       print('❌ ExercisesScreen Error: $e');
       return Scaffold(
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [const Color(0xFF1E88E5), const Color(0xFF26A69A)],
+              colors: [Color(0xFF1E88E5), Color(0xFF26A69A)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

@@ -8,7 +8,7 @@ import '../../widgets/control_bar.dart';
 import '../../widgets/exercise_scaffold.dart';
 
 class HandWarmingScreen extends StatefulWidget {
-  const HandWarmingScreen({Key? key}) : super(key: key);
+  const HandWarmingScreen({super.key});
 
   @override
   State<HandWarmingScreen> createState() => _HandWarmingScreenState();

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/analytics_service.dart';
+
 import '../../../models/analytics/analytics_models.dart';
+import '../services/analytics_service.dart';
 
 final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
   return AnalyticsService();
@@ -8,7 +9,7 @@ final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
 
 final analyticsSnapshotProvider = FutureProvider<AnalyticsSnapshot>((ref) async {
   final service = ref.watch(analyticsServiceProvider);
-  return service.getAnalyticsSnapshot(days: 7);
+  return service.getAnalyticsSnapshot();
 });
 
 final exerciseStatsProvider = FutureProvider<ExerciseStats>((ref) async {
@@ -25,3 +26,4 @@ final moodStatsProvider = FutureProvider<MoodStats>((ref) async {
   final service = ref.watch(analyticsServiceProvider);
   return service.getMoodStats(days: 7);
 });
+
