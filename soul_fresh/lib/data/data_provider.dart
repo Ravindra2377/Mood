@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/feature_flags.dart';
@@ -24,7 +26,7 @@ final unifiedActivitiesProvider = FutureProvider<List<Activity>>((ref) async {
   } catch (e) {
     // Fallback to mock data on error
     if (FeatureFlags.enableDebugLogging) {
-      print('Error fetching activities, using mock data: $e');
+      dev.log('Error fetching activities, using mock data', error: e);
     }
     return AppMockData.activities;
   }
@@ -41,7 +43,7 @@ final unifiedActivityStatsProvider = FutureProvider<List<ActivityStat>>((ref) as
     return await activityService.getActivityStats();
   } catch (e) {
     if (FeatureFlags.enableDebugLogging) {
-      print('Error fetching activity stats, using mock data: $e');
+      dev.log('Error fetching activity stats, using mock data', error: e);
     }
     return AppMockData.activityStats;
   }
@@ -58,7 +60,7 @@ final unifiedPhysicalStateProvider = FutureProvider<PhysicalState>((ref) async {
     return await activityService.getPhysicalState();
   } catch (e) {
     if (FeatureFlags.enableDebugLogging) {
-      print('Error fetching physical state, using mock data: $e');
+      dev.log('Error fetching physical state, using mock data', error: e);
     }
     return AppMockData.physicalState;
   }
@@ -75,7 +77,7 @@ final unifiedDailyQuoteProvider = FutureProvider<Quote>((ref) async {
     return await contentService.getDailyQuote();
   } catch (e) {
     if (FeatureFlags.enableDebugLogging) {
-      print('Error fetching daily quote, using mock data: $e');
+      dev.log('Error fetching daily quote, using mock data', error: e);
     }
     return AppMockData.quote;
   }
@@ -92,7 +94,7 @@ final unifiedContentItemsProvider = FutureProvider<List<ContentItem>>((ref) asyn
     return await contentService.getContentItems();
   } catch (e) {
     if (FeatureFlags.enableDebugLogging) {
-      print('Error fetching content items, using mock data: $e');
+      dev.log('Error fetching content items, using mock data', error: e);
     }
     return AppMockData.contentItems;
   }
@@ -109,7 +111,7 @@ final unifiedMoodHistoryProvider = FutureProvider<List<MoodHistoryItem>>((ref) a
     return await moodService.getMoodHistory();
   } catch (e) {
     if (FeatureFlags.enableDebugLogging) {
-      print('Error fetching mood history, using mock data: $e');
+      dev.log('Error fetching mood history, using mock data', error: e);
     }
     return AppMockData.moodHistory;
   }

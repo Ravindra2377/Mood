@@ -19,7 +19,7 @@ import 'screens/activities_screen.dart';
 import 'screens/enhanced_meditation_screen.dart';
 import 'screens/expression_screen.dart';
 import 'screens/journal_list.dart';
-import 'screens/login_screen.dart' as NewLogin;
+import 'screens/login_screen.dart' as new_login;
 import 'screens/mental_health/anxiety_management_screen.dart';
 import 'screens/mental_health/mindfulness_screen.dart';
 import 'screens/mental_health/mood_tracking_screen.dart';
@@ -88,7 +88,7 @@ class SoulApp extends ConsumerWidget {
 
       // Keep legacy named routes for existing screens
       routes: {
-  Routes.login: (_) => const NewLogin.LoginScreen(),
+  Routes.login: (_) => const new_login.LoginScreen(),
         OnboardingScreen.route: (_) => const OnboardingScreen(),
   // Route alias for legacy '/home' now points to the improved home screen
   HomeScreen.route: (_) => const ImprovedHomeScreen(),
@@ -226,7 +226,7 @@ class _AuthGate extends ConsumerWidget {
       ),
     data: (state) => state.isAuthenticated
       ? const ImprovedHomeScreen()
-      : const NewLogin.LoginScreen(),
+      : const new_login.LoginScreen(),
     );
   }
 }

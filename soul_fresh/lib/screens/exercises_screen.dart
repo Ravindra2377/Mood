@@ -1,5 +1,8 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/exercise.dart';
 import 'box_breathing_screen.dart';
 import 'exercise_detail_screen.dart';
@@ -22,11 +25,11 @@ class ExercisesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     try {
-      print('🔵 ExercisesScreen.build() called');
+      dev.log('ExercisesScreen.build() called');
       final selectedCategory = ref.watch(selectedCategoryProvider);
-      print('🔵 selectedCategory: $selectedCategory');
+      dev.log('selectedCategory: $selectedCategory');
       final filteredExercises = ref.watch(filteredExercisesProvider(selectedCategory));
-      print('🔵 filteredExercises count: ${filteredExercises.length}');
+      dev.log('filteredExercises count: ${filteredExercises.length}');
 
       return Scaffold(
         body: Container(
@@ -348,7 +351,7 @@ class ExercisesScreen extends ConsumerWidget {
       ),
       );
     } catch (e) {
-      print('❌ ExercisesScreen Error: $e');
+      dev.log('ExercisesScreen Error', error: e);
       return Scaffold(
         body: Container(
           decoration: const BoxDecoration(

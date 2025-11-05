@@ -117,7 +117,6 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     final MoodLevel? mood = ref.watch(selectedMoodProvider);
 
     return Scaffold(
