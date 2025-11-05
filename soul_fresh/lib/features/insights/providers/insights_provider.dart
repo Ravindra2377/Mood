@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:soul_fresh/features/insights/data/insights_api.dart';
-import 'package:soul_fresh/features/insights/models/insights_data.dart';
+import '../data/insights_api.dart';
+import '../models/insights_data.dart';
 
 final insightsProvider =
     AsyncNotifierProvider<InsightsNotifier, InsightsData>(InsightsNotifier.new);

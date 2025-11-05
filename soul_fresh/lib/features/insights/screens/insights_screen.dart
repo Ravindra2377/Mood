@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import 'package:soul_fresh/features/insights/models/insights_data.dart';
-import 'package:soul_fresh/features/insights/providers/insights_provider.dart';
+import '../models/insights_data.dart';
+import '../providers/insights_provider.dart';
 
 class InsightsScreen extends ConsumerStatefulWidget {
   const InsightsScreen({super.key});
@@ -122,8 +122,8 @@ class _InsightsBody extends StatelessWidget {
                       borderData: FlBorderData(show: false),
                       gridData: const FlGridData(show: false),
                       titlesData: FlTitlesData(
-                        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        topTitles: const AxisTitles(),
+                        rightTitles: const AxisTitles(),
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
@@ -302,7 +302,6 @@ class _InsightsBody extends StatelessWidget {
       minY: 0,
       maxY: 2,
       gridData: FlGridData(
-        show: true,
         drawVerticalLine: false,
         horizontalInterval: 0.5,
         getDrawingHorizontalLine: (value) => FlLine(
@@ -311,8 +310,8 @@ class _InsightsBody extends StatelessWidget {
         ),
       ),
       titlesData: FlTitlesData(
-        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles: const AxisTitles(),
+        rightTitles: const AxisTitles(),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
@@ -353,7 +352,6 @@ class _InsightsBody extends StatelessWidget {
           barWidth: 3,
           spots: spots,
           isStrokeCapRound: true,
-          dotData: FlDotData(show: true),
           belowBarData: BarAreaData(
             show: true,
             gradient: LinearGradient(

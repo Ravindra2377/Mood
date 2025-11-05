@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:soul_fresh/features/insights/models/insights_data.dart';
-import 'package:soul_fresh/state/app_state.dart';
-import 'package:soul_fresh/services/api_client.dart';
+import '../../../services/api_client.dart';
+import '../../../state/app_state.dart';
+import '../models/insights_data.dart';
 
 final insightsApiProvider = Provider<InsightsApi>((ref) {
   final apiClient = ref.watch(apiClientProvider);

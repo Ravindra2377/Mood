@@ -14,9 +14,10 @@ import '../widgets/exercise_stats_card.dart';
 import '../widgets/mood_trend_chart.dart';
 import '../widgets/streak_calendar_widget.dart';
 import '../widgets/weekly_insights_card.dart';
+import '../widgets/wellness_score_card.dart';
 
 class AnalyticsDashboardScreen extends ConsumerStatefulWidget {
-  const AnalyticsDashboardScreen({Key? key}) : super(key: key);
+  const AnalyticsDashboardScreen({super.key});
 
   @override
   ConsumerState<AnalyticsDashboardScreen> createState() =>
@@ -210,7 +211,7 @@ class _AnalyticsDashboardScreenState
       padding: const EdgeInsets.all(16),
       children: [
         _buildAnalyticsPandaCard(
-            compact: true, headline: 'Here are the trends I spotted'),
+            compact: true, headline: 'Here are the trends I spotted',),
         const SizedBox(height: 16),
         // Weekly Insights
         const WeeklyInsightsCard(),
@@ -374,7 +375,7 @@ class _AnalyticsDashboardScreenState
             _buildSessionStat('Avg Session', '15 min', Icons.trending_up),
             const SizedBox(height: 8),
             _buildSessionStat(
-                'Longest Streak', '5 days', Icons.local_fire_department),
+                'Longest Streak', '5 days', Icons.local_fire_department,),
           ],
         ),
       ),
@@ -460,7 +461,7 @@ class _AnalyticsDashboardScreenState
   }
 
   Widget _buildPatternItem(
-      String title, String description, String suggestion) {
+      String title, String description, String suggestion,) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -471,7 +472,7 @@ class _AnalyticsDashboardScreenState
         const SizedBox(height: 4),
         Text(
           description,
-          style: TextStyle(color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
         ),
         const SizedBox(height: 8),
         Container(
@@ -555,7 +556,7 @@ class _AnalyticsDashboardScreenState
                 ),
                 Text(
                   reason,
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),
@@ -611,7 +612,7 @@ class _AnalyticsDashboardScreenState
   }
 
   Widget _buildMilestoneItem(
-      String emoji, String title, String progress, bool isComplete) {
+      String emoji, String title, String progress, bool isComplete,) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -637,7 +638,7 @@ class _AnalyticsDashboardScreenState
                 ),
                 Text(
                   progress,
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),
@@ -677,7 +678,7 @@ class _AnalyticsDashboardScreenState
                         _updateAnalyticsMood(PandaMood.focus);
                         Navigator.pop(context);
                       },
-                    )),
+                    ),),
           ],
         ),
       ),

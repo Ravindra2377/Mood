@@ -74,7 +74,7 @@ class ProfileController extends AsyncNotifier<ProfileViewData> {
 
   Future<void> setPushNotifications(bool enabled) async {
     final previous = state.valueOrNull;
-    state = AsyncValue.loading(previous: state);
+    state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final updated = await _service.updateUserProfile(
         ProfileUpdate(notifyPush: enabled),

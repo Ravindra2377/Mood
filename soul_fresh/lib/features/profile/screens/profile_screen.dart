@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:soul_fresh/core/routes.dart';
-import 'package:soul_fresh/features/profile/providers/profile_provider.dart';
-import 'package:soul_fresh/features/theme/providers/theme_provider.dart';
-import 'package:soul_fresh/state/app_state.dart';
-import 'package:soul_fresh/utils/constants.dart';
+import '../../../core/routes.dart';
+import '../../../state/app_state.dart';
+import '../../../utils/constants.dart';
+import '../../theme/providers/theme_provider.dart';
+import '../providers/profile_provider.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
