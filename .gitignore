@@ -142,6 +142,8 @@ android-app/**/outputs/
 # Keystores (DO NOT COMMIT SECRETS)
 *.keystore
 *.jks
+key.properties
+**/key.properties
 
 # Keep Gradle wrapper JAR (should be committed)
 !gradle/wrapper/gradle-wrapper.jar
