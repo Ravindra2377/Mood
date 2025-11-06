@@ -30,9 +30,6 @@ class SelfHelpScreen extends ConsumerStatefulWidget {
 }
 
 class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
-  String? _selectedEmotion;
-  double _intensity = 5;
-  final Set<String> _selectedTriggers = <String>{};
   int _activePromptIndex = 0;
 
   static const List<_SupportPrompt> _supportPrompts = <_SupportPrompt>[

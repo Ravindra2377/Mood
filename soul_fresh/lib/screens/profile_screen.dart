@@ -24,7 +24,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTickerProviderStateMixin {
   bool _isLoading = false;
   String? _userEmail;
-  String? _userId;
   String _displayName = 'SOUL User';
   final String _bio = 'On a journey to better mental health 🌸';
   final int _currentStreak = 14;
@@ -73,11 +72,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
     try {
       final storage = ref.read(secureStorageServiceProvider);
       final email = await storage.getUserEmail();
-      final id = await storage.getUserId();
       
       setState(() {
         _userEmail = email;
-        _userId = id;
         _displayName = email?.split('@').first.toUpperCase() ?? 'SOUL User';
         _isLoading = false;
       });
