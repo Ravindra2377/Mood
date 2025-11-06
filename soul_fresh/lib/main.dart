@@ -364,21 +364,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   // Signup flow
                                   final email = _emailCtrl.text.trim();
                                   final password = _passwordCtrl.text;
+                                  final navigator = Navigator.of(context);
                                   if (skipOtp) {
                                     // For local dev, just set token and navigate
                                     await ref
                                         .read(authControllerProvider.notifier)
                                         .setToken('local-debug-token');
                                     if (!mounted) return;
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context, HomeScreen.route, (_) => false,);
+                                    navigator.pushNamedAndRemoveUntil(
+                                        HomeScreen.route, (_) => false,);
                                   } else {
                                     await ref
                                         .read(authControllerProvider.notifier)
                                         .signup(email: email, password: password);
                                   }
                                 } catch (e) {
-                                  setState(() => _error = e.toString());
+                                  if (mounted) {
+                                    setState(() => _error = e.toString());
+                                  }
                                 } finally {
                                   if (mounted) setState(() => _sending = false);
                                 }
@@ -399,20 +402,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 try {
                                   final email = _emailCtrl.text.trim();
                                   final password = _passwordCtrl.text;
+                                  final navigator = Navigator.of(context);
                                   if (skipOtp) {
                                     await ref
                                         .read(authControllerProvider.notifier)
                                         .setToken('local-debug-token');
                                     if (!mounted) return;
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context, HomeScreen.route, (_) => false,);
+                                    navigator.pushNamedAndRemoveUntil(
+                                        HomeScreen.route, (_) => false,);
                                   } else {
                                     await ref
                                         .read(authControllerProvider.notifier)
                                         .login(email: email, password: password);
                                   }
                                 } catch (e) {
-                                  setState(() => _error = e.toString());
+                                  if (mounted) {
+                                    setState(() => _error = e.toString());
+                                  }
                                 } finally {
                                   if (mounted) setState(() => _sending = false);
                                 }
@@ -481,6 +487,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                           });
 
                           try {
+                            final navigator = Navigator.of(context);
                             if (skipOtp) {
                               // Accept any code in local debug mode.
                               await ref
@@ -489,8 +496,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
                               if (!mounted) return;
 
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
+                              navigator.pushNamedAndRemoveUntil(
                                 HomeScreen.route,
                                 (_) => false,
                               );
@@ -502,14 +508,15 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
                               if (!mounted) return;
 
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
+                              navigator.pushNamedAndRemoveUntil(
                                 HomeScreen.route,
                                 (_) => false,
                               );
                             }
                           } catch (e) {
-                            setState(() => _error = e.toString());
+                            if (mounted) {
+                              setState(() => _error = e.toString());
+                            }
                           } finally {
                             if (mounted) setState(() => _verifying = false);
                           }

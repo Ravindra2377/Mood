@@ -993,6 +993,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
   }
 
   Future<void> _showThemeModeDialog(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
     final selectedMode = await showDialog<ThemeMode>(
       context: context,
       builder: (context) => AlertDialog(
@@ -1032,9 +1033,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
       ),
     );
 
-    if (selectedMode != null && mounted) {
+    if (selectedMode != null) {
+      if (!mounted) {
+        return;
+      }
       setState(() => _themeMode = selectedMode);
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(
           content: Text('Theme updated - Coming soon!'),
           duration: Duration(seconds: 2),

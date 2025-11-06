@@ -23,6 +23,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   bool get wantKeepAlive => true;
 
   Future<void> _logout(BuildContext context, WidgetRef ref) async {
+    final navigator = Navigator.of(context);
     final messenger = ScaffoldMessenger.of(context);
     try {
       await ref.read(authControllerProvider.notifier).logout();
@@ -30,9 +31,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       if (!mounted) {
         return;
       }
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(Routes.login, (route) => false);
+      navigator.pushNamedAndRemoveUntil(Routes.login, (route) => false);
     } catch (e) {
+      if (!mounted) {
+        return;
+      }
       messenger.showSnackBar(
         SnackBar(content: Text('Logout failed: $e')),
       );
@@ -41,6 +44,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
 
   Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
     final theme = Theme.of(context);
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
     final shouldLogout = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -62,8 +67,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       ),
     );
 
-    if (shouldLogout == true && mounted) {
-      await _logout(context, ref);
+    if (shouldLogout == true) {
+      try {
+        await ref.read(authControllerProvider.notifier).logout();
+        ref.invalidate(profileControllerProvider);
+        if (!mounted) {
+          return;
+        }
+        navigator.pushNamedAndRemoveUntil(Routes.login, (route) => false);
+      } catch (e) {
+        if (!mounted) {
+          return;
+        }
+        messenger.showSnackBar(
+          SnackBar(content: Text('Logout failed: $e')),
+        );
+      }
     }
   }
 
@@ -82,6 +101,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       await ref
           .read(profileControllerProvider.notifier)
           .setPushNotifications(value);
+      if (!mounted) {
+        return;
+      }
       messenger.showSnackBar(
         SnackBar(
           content: Text(
@@ -90,6 +112,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         ),
       );
     } catch (e) {
+      if (!mounted) {
+        return;
+      }
       messenger.showSnackBar(
         SnackBar(content: Text('Unable to update notifications: $e')),
       );
