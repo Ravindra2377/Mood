@@ -8,12 +8,10 @@ import 'config/app_colors.dart';
 import 'core/router.dart';
 import 'core/routes.dart';
 import 'core/theme/app_theme.dart' as soul_theme;
-import 'data/app_mock_data.dart';
 import 'features/analytics/screens/unified_analytics_screen.dart';
 import 'features/analytics/services/analytics_service.dart';
 import 'features/exercises/screens/exercises_main_screen.dart';
 import 'features/home/screens/improved_home_screen.dart';
-import 'models/app_models.dart';
 import 'models/journal_entry_adapter.dart';
 import 'screens/activities_screen.dart';
 import 'screens/enhanced_meditation_screen.dart';
@@ -28,13 +26,8 @@ import 'screens/mental_health/stress_management_screen.dart';
 import 'screens/mental_health/wellness_screen.dart';
 import 'screens/mental_health_dashboard.dart';
 import 'screens/onboarding_screen.dart';
-import 'screens/profile_screen.dart';
 import 'screens/self_help_screen.dart';
 import 'state/app_state.dart';
-import 'state/runtime_config.dart';
-import 'state/ui_state.dart';
-import 'widgets/activity_card.dart';
-import 'widgets/mood_selector.dart';
 
 /// SOUL Flutter application entry point
 ///
@@ -91,14 +84,13 @@ class SoulApp extends ConsumerWidget {
   Routes.login: (_) => const new_login.LoginScreen(),
         OnboardingScreen.route: (_) => const OnboardingScreen(),
   // Route alias for legacy '/home' now points to the improved home screen
-  HomeScreen.route: (_) => const ImprovedHomeScreen(),
+  Routes.home: (_) => const ImprovedHomeScreen(),
         '/mental-health': (_) => const MentalHealthDashboard(),
         MoodScreen.route: (_) => const MoodScreen(),
         ExpressionScreen.route: (_) => const ExpressionScreen(),
         EnhancedMeditationScreen.route: (_) => const EnhancedMeditationScreen(),
         ActivitiesScreen.route: (_) => const ActivitiesScreen(),
   SelfHelpScreen.route: (_) => const SelfHelpScreen(),
-        ProfileScreen.route: (_) => const ProfileScreen(),
         JournalListScreen.route: (_) => const JournalListScreen(),
         AnalyticsScreen.route: (_) => const UnifiedAnalyticsScreen(),
         ExercisesMainScreen.route: (_) => const ExercisesMainScreen(),
@@ -372,7 +364,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         .setToken('local-debug-token');
                                     if (!mounted) return;
                                     navigator.pushNamedAndRemoveUntil(
-                                        HomeScreen.route, (_) => false,);
+                                        Routes.home, (_) => false,);
                                   } else {
                                     await ref
                                         .read(authControllerProvider.notifier)
@@ -409,7 +401,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         .setToken('local-debug-token');
                                     if (!mounted) return;
                                     navigator.pushNamedAndRemoveUntil(
-                                        HomeScreen.route, (_) => false,);
+                                        Routes.home, (_) => false,);
                                   } else {
                                     await ref
                                         .read(authControllerProvider.notifier)
@@ -497,7 +489,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               if (!mounted) return;
 
                               navigator.pushNamedAndRemoveUntil(
-                                HomeScreen.route,
+                                Routes.home,
                                 (_) => false,
                               );
                             } else {
@@ -509,7 +501,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               if (!mounted) return;
 
                               navigator.pushNamedAndRemoveUntil(
-                                HomeScreen.route,
+                                Routes.home,
                                 (_) => false,
                               );
                             }
@@ -531,264 +523,6 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class HomeScreen extends ConsumerStatefulWidget {
-  static const route = '/home';
-  const HomeScreen({super.key});
-
-  @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  int _selectedIndex = 0;
-
-  void _onNavTap(int index) {
-    setState(() => _selectedIndex = index);
-    switch (index) {
-      case 1:
-        Navigator.pushNamed(context, JournalListScreen.route);
-        break;
-      case 2:
-        Navigator.pushNamed(context, AnalyticsScreen.route);
-        break;
-      case 3:
-        Navigator.pushNamed(context, ProfileScreen.route);
-        break;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final gradient = Theme.of(context).extension<SoulGradients>()?.pastel ??
-        const LinearGradient(colors: [Colors.blue, Colors.teal]);
-    final selectedMood = ref.watch(selectedMoodProvider);
-
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(gradient: gradient),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, ProfileScreen.route);
-                      },
-                      child: const CircleAvatar(
-                        radius: 24,
-                        backgroundImage: NetworkImage(AppMockData.userAvatarUrl),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hi, ${AppMockData.userName}',
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const Text(
-                            'How are you doing today?',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.notifications_outlined),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // Search bar
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      border: InputBorder.none,
-                      icon: Icon(Icons.search, size: 20),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Daily mood section
-                const Text(
-                  'Daily mood',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                MoodSelector(
-                  selectedMood: selectedMood,
-                  onMoodSelected: (mood) {
-                    ref.read(selectedMoodProvider.notifier).state = mood;
-                  },
-                ),
-                const SizedBox(height: 24),
-                // Activities section
-                const Text(
-                  'Activities',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: 110,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: AppMockData.activities.length,
-                    itemBuilder: (context, index) {
-                      final activity = AppMockData.activities[index];
-                      return ActivityCard(
-                        activity: activity,
-                        onTap: () {
-                          if (activity.type == ActivityType.yoga) {
-                            Navigator.pushNamed(
-                              context,
-                              EnhancedMeditationScreen.route,
-                            );
-                          } else if (activity.type == ActivityType.journal) {
-                            Navigator.pushNamed(
-                              context,
-                              ExpressionScreen.route,
-                            );
-                          } else if (activity.type == ActivityType.exercises) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) => const ExercisesMainScreen(),
-                              ),
-                            );
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Quick actions
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, ActivitiesScreen.route);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.all(16),
-                        ),
-                        child: const Text('View Activities'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, SelfHelpScreen.route);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.all(16),
-                        ),
-                        child: const Text('Self Help'),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Container(
-          height: 64,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(32),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                onPressed: () => _onNavTap(0),
-                icon: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: _selectedIndex == 0 ? Colors.black : Colors.white,
-                  child: Icon(
-                    Icons.home,
-                    color: _selectedIndex == 0 ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
-              IconButton(
-                onPressed: () => _onNavTap(1),
-                icon: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: _selectedIndex == 1 ? Colors.black : Colors.white,
-                  child: Icon(
-                    Icons.menu_book_outlined,
-                    color: _selectedIndex == 1 ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () => _onNavTap(2),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _selectedIndex == 2 ? Colors.black : Colors.white,
-                  ),
-                  child: Icon(
-                    Icons.bar_chart,
-                    color: _selectedIndex == 2 ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
-              IconButton(
-                onPressed: () => _onNavTap(3),
-                icon: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: _selectedIndex == 3 ? Colors.black : Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    color: _selectedIndex == 3 ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ),
@@ -869,139 +603,6 @@ class AnalyticsScreen extends ConsumerWidget {
             icon: Icon(Icons.favorite_border),
             label: 'Wellness',
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class SettingsScreen extends StatefulWidget {
-  static const route = '/settings';
-  const SettingsScreen({super.key});
-
-  @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  ThemeMode _mode = ThemeMode.system;
-  final _controller = TextEditingController();
-  bool _saving = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: ListView(
-        children: [
-          const SizedBox(height: 8),
-          const ListTile(
-            title: Text('Appearance'),
-            subtitle: Text('Light / Dark will follow system for now'),
-          ),
-          Column(
-            children: [
-              RadioListTile<ThemeMode>(
-                value: ThemeMode.system,
-                groupValue: _mode,
-                onChanged: (v) => setState(() => _mode = v ?? ThemeMode.system),
-                title: const Text('System'),
-              ),
-              RadioListTile<ThemeMode>(
-                value: ThemeMode.light,
-                groupValue: _mode,
-                onChanged: (v) => setState(() => _mode = v ?? ThemeMode.system),
-                title: const Text('Light'),
-              ),
-              RadioListTile<ThemeMode>(
-                value: ThemeMode.dark,
-                groupValue: _mode,
-                onChanged: (v) => setState(() => _mode = v ?? ThemeMode.system),
-                title: const Text('Dark'),
-              ),
-            ],
-          ),
-          const Divider(),
-          const ListTile(
-            title: Text('Notifications'),
-            subtitle: Text('Preferences coming soon'),
-          ),
-          const Divider(),
-          const SizedBox(height: 24),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              'More settings will be added as features land (consent, data export, etc.)',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Consumer(
-              builder: (context, ref, child) {
-                final cfg = ref.watch(runtimeConfigProvider);
-                return cfg.when(
-                  data: (v) {
-                    _controller.text = v;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('API Base URL',
-                            style: TextStyle(fontWeight: FontWeight.w600),),
-                        const SizedBox(height: 8),
-                        TextField(
-                          controller: _controller,
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            ElevatedButton(
-                              onPressed: _saving
-                                  ? null
-                                  : () async {
-                                      setState(() => _saving = true);
-                                      await ref
-                                          .read(runtimeConfigProvider.notifier)
-                                          .setBaseUrl(_controller.text.trim());
-                                      setState(() => _saving = false);
-                                    },
-                              child: _saving
-                                  ? const SizedBox(
-                                      height: 16,
-                                      width: 16,
-                                      child: CircularProgressIndicator(
-                                          strokeWidth: 2,),)
-                                  : const Text('Save'),
-                            ),
-                            const SizedBox(width: 8),
-                            OutlinedButton(
-                              onPressed: _saving
-                                  ? null
-                                  : () async {
-                                      setState(() => _saving = true);
-                                      await ref
-                                          .read(runtimeConfigProvider.notifier)
-                                          .clear();
-                                      setState(() => _saving = false);
-                                    },
-                              child: const Text('Reset to default'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  },
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (e, st) => Text('Error loading config: $e'),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
         ],
       ),
     );

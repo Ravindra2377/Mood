@@ -3,10 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_typography.dart';
-import '../data/app_mock_data.dart';
 import '../features/exercises/screens/exercises_main_screen.dart';
-import '../features/self_help/data/self_help_data.dart';
-import '../features/self_help/models/self_help_models.dart';
 import '../features/self_help/widgets/assessments_card.dart';
 import '../features/self_help/widgets/community_support_card.dart';
 import '../features/self_help/widgets/crisis_support_card.dart';
@@ -18,7 +15,6 @@ import '../features/self_help/widgets/resources_library_card.dart';
 import '../features/self_help/widgets/therapy_toolbox_card.dart';
 import '../models/app_models.dart';
 import '../state/ui_state.dart';
-import '../widgets/enhanced_quote_card.dart';
 
 class SelfHelpScreen extends ConsumerStatefulWidget {
   static const String route = '/self-help';

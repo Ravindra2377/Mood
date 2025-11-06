@@ -4,11 +4,11 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/custom_card.dart';
 import '../../../screens/journal_list.dart';
-import '../../../screens/profile_screen.dart';
 import '../../../screens/self_help_screen.dart';
 import '../../analytics/screens/unified_analytics_screen.dart';
 import '../../exercises/screens/exercises_main_screen.dart';
 import '../../insights/screens/insights_screen.dart';
+import '../../profile/screens/profile_screen.dart';
 
 class ImprovedHomeScreen extends StatefulWidget {
   const ImprovedHomeScreen({super.key});

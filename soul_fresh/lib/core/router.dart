@@ -8,10 +8,10 @@ import '../features/exercises/screens/exercises_main_screen.dart';
 import '../features/home/screens/improved_home_screen.dart';
 // New redesigned screens
 import '../features/mood/screens/mood_screen.dart';
+import '../features/profile/screens/profile_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/otp_verification_screen.dart';
 import '../screens/privacy_settings_screen.dart';
-import '../screens/profile_screen.dart';
 import '../screens/signup_screen.dart';
 
 /// App router configuration
