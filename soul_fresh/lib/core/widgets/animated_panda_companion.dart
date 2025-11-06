@@ -155,7 +155,7 @@ class _AnimatedPandaCompanionState extends State<AnimatedPandaCompanion>
         size: 14 + _random.nextDouble() * 8,
         phaseShift: _random.nextDouble() * 2 * pi,
         color: widget.persona.accentColor
-            .withOpacity(0.65 - _random.nextDouble() * 0.2),
+            .withValues(alpha: 0.65 - _random.nextDouble() * 0.2),
       );
     });
   }

@@ -435,8 +435,6 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
     );
   }
 
-  }
-
   void _advancePrompt() {
     setState(() {
       _activePromptIndex = (_activePromptIndex + 1) % _supportPrompts.length;
