@@ -231,17 +231,18 @@ class _MoodScreenState extends State<MoodScreen> {
       itemCount: _moods.length,
       itemBuilder: (context, index) {
         final mood = _moods[index];
+        final moodColor = mood['color'] as Color;
         final isSelected = _selectedMood == mood['label'];
 
         return GestureDetector(
           onTap: () {
             setState(() {
-              _selectedMood = mood['label'];
+              _selectedMood = mood['label'] as String?;
             });
           },
           child: Container(
             decoration: BoxDecoration(
-              color: isSelected ? mood['color'] : AppColors.lightGrey,
+              color: isSelected ? moodColor : AppColors.lightGrey,
               borderRadius: BorderRadius.circular(16),
               border: isSelected
                   ? Border.all(color: AppColors.primaryPastel, width: 2)
@@ -249,7 +250,7 @@ class _MoodScreenState extends State<MoodScreen> {
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: mood['color'].withValues(alpha: 0.3),
+                        color: moodColor.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),

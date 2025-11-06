@@ -72,12 +72,12 @@ class AuthService {
         contentType: Headers.formUrlEncodedContentType,
       ),);
 
-      final data = response.data;
+      final data = response.data as Map<String, dynamic>;
       
       // Save tokens and user info
-      await _storage.saveAccessToken(data['access_token']);
+      await _storage.saveAccessToken(data['access_token'] as String);
       if (data.containsKey('refresh_token')) {
-        await _storage.saveRefreshToken(data['refresh_token']);
+        await _storage.saveRefreshToken(data['refresh_token'] as String);
       }
       await _storage.saveUserEmail(email);
 
@@ -116,14 +116,14 @@ class AuthService {
         'code': code,
       },);
 
-      final data = response.data;
+      final data = response.data as Map<String, dynamic>;
       
       // Save tokens and user info
       if (data.containsKey('access_token')) {
-        await _storage.saveAccessToken(data['access_token']);
+        await _storage.saveAccessToken(data['access_token'] as String);
       }
       if (data.containsKey('refresh_token')) {
-        await _storage.saveRefreshToken(data['refresh_token']);
+        await _storage.saveRefreshToken(data['refresh_token'] as String);
       }
       await _storage.saveUserEmail(email);
 
@@ -176,7 +176,7 @@ class AuthService {
         'old_refresh_token': refreshToken,
       },);
 
-      final data = response.data;
+      final data = response.data as Map<String, dynamic>;
       final newAccess = data['access_token'] as String?;
       final newRefresh = data['refresh_token'] as String?;
 
