@@ -579,33 +579,3 @@ class _SupportAction {
   final String emoji;
   final String description;
 }
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  final String emoji;
-  const _SectionHeader({required this.title, required this.emoji});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text('$emoji $title', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-        const Spacer(),
-        TextButton(onPressed: () {}, child: const Text('See all')),
-      ],
-    );
-  }
-}
-
-extension _ColorShade on Color {
-  Color darken([double amount = 0.2]) {
-    final HSLColor hsl = HSLColor.fromColor(this);
-    final double adjustedLightness = (hsl.lightness - amount).clamp(0.0, 1.0).toDouble();
-    return hsl.withLightness(adjustedLightness).toColor();
-  }
-
-  Color withAlphaFraction(double opacity) {
-    final double clamped = opacity.clamp(0.0, 1.0).toDouble();
-    return withAlpha((clamped * 255).round());
-  }
-}

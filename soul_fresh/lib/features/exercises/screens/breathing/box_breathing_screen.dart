@@ -12,7 +12,7 @@ class BoxBreathingScreen extends StatefulWidget {
   const BoxBreathingScreen({super.key});
 
   @override
-  _BoxBreathingScreenState createState() => _BoxBreathingScreenState();
+  State<BoxBreathingScreen> createState() => _BoxBreathingScreenState();
 }
 
 class _BoxBreathingScreenState extends State<BoxBreathingScreen> {

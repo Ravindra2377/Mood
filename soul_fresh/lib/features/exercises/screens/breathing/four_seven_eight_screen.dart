@@ -12,7 +12,7 @@ class FourSevenEightScreen extends StatefulWidget {
   const FourSevenEightScreen({super.key});
 
   @override
-  _FourSevenEightScreenState createState() => _FourSevenEightScreenState();
+  State<FourSevenEightScreen> createState() => _FourSevenEightScreenState();
 }
 
 class _FourSevenEightScreenState extends State<FourSevenEightScreen> {

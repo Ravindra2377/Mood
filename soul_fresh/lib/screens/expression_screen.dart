@@ -50,7 +50,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
   bool _isSaved = false;
   bool _isSaving = false;
   DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay.now();
+  final TimeOfDay _selectedTime = TimeOfDay.now();
   final Set<MoodTrigger> _selectedTriggers = {};
   final List<String> _tags = [];
   PrivacyLevel _privacyLevel = PrivacyLevel.private;

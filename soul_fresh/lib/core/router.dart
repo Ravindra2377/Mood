@@ -48,7 +48,7 @@ class AppRouter {
       // Home route (protected)
       case Routes.home:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
+          builder: (context) => Scaffold(
             appBar: AppBar(title: const Text('Home')),
             body: Center(
               child: Column(
@@ -58,15 +58,15 @@ class AppRouter {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(_).pushNamed(Routes.profile);
+                      Navigator.of(context).pushNamed(Routes.profile);
                     },
                     child: const Text('Go to Profile'),
                   ),
                   const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(_).push(MaterialPageRoute(
-                        builder: (_) => const ImprovedHomeScreen(),
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ImprovedHomeScreen(),
                       ),);
                     },
                     child: const Text('Open Improved Home'),
@@ -124,7 +124,7 @@ class AppRouter {
   /// Handle unknown routes
   Route<dynamic>? onUnknownRoute(RouteSettings settings) {
     return MaterialPageRoute(
-      builder: (_) => Scaffold(
+      builder: (context) => Scaffold(
         appBar: AppBar(title: const Text('Not Found')),
         body: Center(
           child: Column(
@@ -138,7 +138,7 @@ class AppRouter {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () => Navigator.of(_).pushReplacementNamed(Routes.home),
+                onPressed: () => Navigator.of(context).pushReplacementNamed(Routes.home),
                 child: const Text('Go Home'),
               ),
             ],

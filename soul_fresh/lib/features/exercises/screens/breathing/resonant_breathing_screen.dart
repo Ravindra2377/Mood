@@ -12,7 +12,7 @@ class ResonantBreathingScreen extends StatefulWidget {
   const ResonantBreathingScreen({super.key});
 
   @override
-  _ResonantBreathingScreenState createState() =>
+  State<ResonantBreathingScreen> createState() =>
       _ResonantBreathingScreenState();
 }
 

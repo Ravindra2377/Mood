@@ -22,26 +22,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   @override
   bool get wantKeepAlive => true;
 
-  Future<void> _logout(BuildContext context, WidgetRef ref) async {
-    final navigator = Navigator.of(context);
-    final messenger = ScaffoldMessenger.of(context);
-    try {
-      await ref.read(authControllerProvider.notifier).logout();
-      ref.invalidate(profileControllerProvider);
-      if (!mounted) {
-        return;
-      }
-      navigator.pushNamedAndRemoveUntil(Routes.login, (route) => false);
-    } catch (e) {
-      if (!mounted) {
-        return;
-      }
-      messenger.showSnackBar(
-        SnackBar(content: Text('Logout failed: $e')),
-      );
-    }
-  }
-
   Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
     final theme = Theme.of(context);
     final navigator = Navigator.of(context);
