@@ -730,10 +730,10 @@ class _AnalyticsDashboardScreenState
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.coolPastel.withOpacity(0.55)),
+        border: Border.all(color: AppColors.coolPastel.withValues(alpha: 0.55)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.coolPastel.withOpacity(0.25),
+            color: AppColors.coolPastel.withValues(alpha: 0.25),
             blurRadius: 20,
             offset: const Offset(0, 14),
           ),

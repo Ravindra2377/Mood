@@ -79,7 +79,7 @@ class CrisisSupportCard extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: (contact['color'] as Color).withOpacity(0.3),
+                  color: (contact['color'] as Color).withValues(alpha: 0.3),
                 ),
               ),
               child: Column(

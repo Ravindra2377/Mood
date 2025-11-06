@@ -288,7 +288,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4,),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF00D2D3).withOpacity(0.2),
+                            color: const Color(0xFF00D2D3).withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
@@ -322,7 +322,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
+              color: Colors.red.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.red, width: 2),
             ),
@@ -407,7 +407,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
+                  color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.green),
                 ),
@@ -648,7 +648,7 @@ class _AnxietyIntensityCardState extends State<_AnxietyIntensityCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF00D2D3).withOpacity(0.1),
+        color: const Color(0xFF00D2D3).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFF00D2D3),
@@ -763,8 +763,8 @@ class _AnxietyLogCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: intensity > 6
-                      ? Colors.red.withOpacity(0.2)
-                      : Colors.orange.withOpacity(0.2),
+                      ? Colors.red.withValues(alpha: 0.2)
+                      : Colors.orange.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(

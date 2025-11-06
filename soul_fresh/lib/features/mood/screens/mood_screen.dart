@@ -90,7 +90,7 @@ class _MoodScreenState extends State<MoodScreen> {
                     Text(
                       'Track your mood to understand your patterns',
                       style: AppTypography.body1.copyWith(
-                        color: AppColors.white.withOpacity(0.9),
+                        color: AppColors.white.withValues(alpha: 0.9),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -185,10 +185,10 @@ class _MoodScreenState extends State<MoodScreen> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.calmPastel.withOpacity(0.6)),
+        border: Border.all(color: AppColors.calmPastel.withValues(alpha: 0.6)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.calmPastel.withOpacity(0.25),
+            color: AppColors.calmPastel.withValues(alpha: 0.25),
             blurRadius: 20,
             offset: const Offset(0, 12),
           ),
@@ -249,7 +249,7 @@ class _MoodScreenState extends State<MoodScreen> {
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: mood['color'].withOpacity(0.3),
+                        color: mood['color'].withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -298,7 +298,7 @@ class _MoodScreenState extends State<MoodScreen> {
             });
           },
           backgroundColor: AppColors.lightGrey,
-          selectedColor: AppColors.primaryPastel.withOpacity(0.2),
+          selectedColor: AppColors.primaryPastel.withValues(alpha: 0.2),
           checkmarkColor: AppColors.primaryPastel,
           labelStyle: AppTypography.label.copyWith(
             color: isSelected ? AppColors.primaryPastel : AppColors.darkGrey,

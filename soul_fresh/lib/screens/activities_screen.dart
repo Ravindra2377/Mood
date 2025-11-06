@@ -153,7 +153,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
           borderRadius: BorderRadius.circular(24),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Colors.black.withOpacity(0.12),
+              color: Colors.black.withValues(alpha: 0.12),
               blurRadius: 18,
               offset: const Offset(0, 12),
             ),
@@ -185,7 +185,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
               child: LinearProgressIndicator(
                 value: weeklyProgress,
                 minHeight: 8,
-                backgroundColor: Colors.white.withOpacity(0.25),
+                backgroundColor: Colors.white.withValues(alpha: 0.25),
                 valueColor:
                     const AlwaysStoppedAnimation<Color>(Color(0xFFFFF59D)),
               ),

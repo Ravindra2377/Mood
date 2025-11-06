@@ -131,7 +131,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.green.withOpacity(0.4),
+                                    color: Colors.green.withValues(alpha: 0.4),
                                     blurRadius: 20,
                                     spreadRadius: 2,
                                   ),
@@ -162,7 +162,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.red.withOpacity(0.3),
+                                      color: Colors.red.withValues(alpha: 0.3),
                                       blurRadius: 8,
                                     ),
                                   ],
@@ -226,7 +226,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.white.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -339,7 +339,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                   child: LinearProgressIndicator(
                     value: _wellnessScore / 100,
                     minHeight: 8,
-                    backgroundColor: Colors.white.withOpacity(0.3),
+                    backgroundColor: Colors.white.withValues(alpha: 0.3),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       Colors.green.shade400,
                     ),
@@ -718,10 +718,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.primaryPastel.withOpacity(0.5)),
+        border: Border.all(color: AppColors.primaryPastel.withValues(alpha: 0.5)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryPastel.withOpacity(0.25),
+            color: AppColors.primaryPastel.withValues(alpha: 0.25),
             blurRadius: 22,
             offset: const Offset(0, 16),
           ),
@@ -874,7 +874,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
               boxShadow: unlocked
                   ? [
                       BoxShadow(
-                        color: Colors.amber.withOpacity(0.3),
+                        color: Colors.amber.withValues(alpha: 0.3),
                         blurRadius: 8,
                       ),
                     ]

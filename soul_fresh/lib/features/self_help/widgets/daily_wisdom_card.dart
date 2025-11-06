@@ -28,9 +28,9 @@ class DailyWisdomCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: (wisdom['color'] as Color).withOpacity(0.1),
+        color: (wisdom['color'] as Color).withValues(alpha: 0.1),
         border: Border.all(
-          color: (wisdom['color'] as Color).withOpacity(0.3),
+          color: (wisdom['color'] as Color).withValues(alpha: 0.3),
         ),
         borderRadius: BorderRadius.circular(16),
       ),

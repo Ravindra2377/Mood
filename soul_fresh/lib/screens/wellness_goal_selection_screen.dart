@@ -241,7 +241,7 @@ class _WellnessGoalSelectionScreenState
                       : null,
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                    disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
+                    disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
                     padding: const EdgeInsets.symmetric(
                       vertical: 16,
                       horizontal: 32,
@@ -332,7 +332,7 @@ class _GoalCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
-                ? goal.accentColor.withOpacity(0.15)
+                ? goal.accentColor.withValues(alpha: 0.15)
                 : AppColors.cardColor,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
@@ -342,7 +342,7 @@ class _GoalCard extends StatelessWidget {
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: goal.accentColor.withOpacity(0.2),
+                      color: goal.accentColor.withValues(alpha: 0.2),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -407,7 +407,7 @@ class _GoalCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
-                      color: goal.accentColor.withOpacity(0.2),
+                      color: goal.accentColor.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(

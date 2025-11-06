@@ -316,7 +316,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF00B894).withOpacity(0.1),
+              color: const Color(0xFF00B894).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFF00B894),
@@ -442,7 +442,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
               return Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: unlocked ? AppColors.cardColor : Colors.grey.withOpacity(0.1),
+                  color: unlocked ? AppColors.cardColor : Colors.grey.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: unlocked ? const Color(0xFF00B894) : Colors.grey,

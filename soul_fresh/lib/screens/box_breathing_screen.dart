@@ -207,7 +207,7 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [_getPhaseColor().withOpacity(0.3), Colors.teal.withOpacity(0.3)],
+            colors: [_getPhaseColor().withValues(alpha: 0.3), Colors.teal.withValues(alpha: 0.3)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -280,7 +280,7 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
                             height: 200,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: _getPhaseColor().withOpacity(0.2),
+                              color: _getPhaseColor().withValues(alpha: 0.2),
                               border: Border.all(
                                 color: _getPhaseColor(),
                                 width: 3,
@@ -305,7 +305,7 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(

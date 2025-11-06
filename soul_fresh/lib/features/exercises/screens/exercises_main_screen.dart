@@ -202,10 +202,10 @@ class _ExercisesMainScreenState extends State<ExercisesMainScreen> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.secondaryPastel.withOpacity(0.6)),
+        border: Border.all(color: AppColors.secondaryPastel.withValues(alpha: 0.6)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondaryPastel.withOpacity(0.2),
+            color: AppColors.secondaryPastel.withValues(alpha: 0.2),
             blurRadius: 18,
             offset: const Offset(0, 12),
           ),
@@ -227,7 +227,7 @@ class _ExercisesMainScreenState extends State<ExercisesMainScreen> {
           Text(
             activeFocus.description,
             style: AppTypography.body1.copyWith(
-              color: AppColors.charcoal.withOpacity(0.8),
+              color: AppColors.charcoal.withValues(alpha: 0.8),
             ),
             textAlign: TextAlign.center,
           ),

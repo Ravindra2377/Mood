@@ -205,7 +205,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFB347).withOpacity(0.2),
+                  color: const Color(0xFFFFB347).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: const Color(0xFFFFB347)),
                 ),
@@ -270,7 +270,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                 Container(
                   height: 8,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: FractionallySizedBox(
@@ -298,7 +298,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                     Text(
                       'vs last week',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         fontSize: 12,
                       ),
                     ),
@@ -410,7 +410,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                           width: 12,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFB347).withOpacity(0.3),
+                            color: const Color(0xFFFFB347).withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Align(
@@ -651,7 +651,7 @@ class _DailyCheckinCardState extends State<_DailyCheckinCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFB347).withOpacity(0.1),
+        color: const Color(0xFFFFB347).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFFFFB347),
