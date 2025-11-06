@@ -102,15 +102,6 @@ class _StreamConsciousnessScreenState extends State<StreamConsciousnessScreen> {
     });
   }
 
-  void _stopTimer() {
-    _timer?.cancel();
-    setState(() {
-      _isRunning = false;
-      _isPaused = false;
-      _remainingSeconds = _totalSeconds;
-    });
-  }
-
   void _handleTimerComplete() {
     _timer?.cancel();
     setState(() {

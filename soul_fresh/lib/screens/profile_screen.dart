@@ -24,6 +24,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTickerProviderStateMixin {
   bool _isLoading = false;
   String? _userEmail;
+  String? _userId;
   String _displayName = 'SOUL User';
   final String _bio = 'On a journey to better mental health 🌸';
   final int _currentStreak = 14;

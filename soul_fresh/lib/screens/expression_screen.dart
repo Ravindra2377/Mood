@@ -264,16 +264,6 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
     }
   }
 
-  Future<void> _selectTime() async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-    );
-    if (picked != null) {
-      setState(() => _selectedTime = picked);
-    }
-  }
-
   void _addTag(String tag) {
     if (tag.isNotEmpty && !_tags.contains(tag)) {
       setState(() {

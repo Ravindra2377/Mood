@@ -8,7 +8,7 @@ import 'config/app_colors.dart';
 import 'core/router.dart';
 import 'core/routes.dart';
 import 'core/theme/app_theme.dart' as soul_theme;
-import 'data/appMockData.dart';
+import 'data/app_mock_data.dart';
 import 'features/analytics/screens/unified_analytics_screen.dart';
 import 'features/analytics/services/analytics_service.dart';
 import 'features/exercises/screens/exercises_main_screen.dart';
