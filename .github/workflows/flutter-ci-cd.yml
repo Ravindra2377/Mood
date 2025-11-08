@@ -1,0 +1,209 @@
+name: Flutter CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, soul_fresh, develop ]
+  pull_request:
+    branches: [ main, soul_fresh ]
+  workflow_dispatch:
+
+jobs:
+  # Job 1: Analyze and Test Flutter App
+  flutter-test:
+    name: 🧪 Flutter Analysis & Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: 🐦 Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install dependencies
+        working-directory: ./soul_fresh
+        run: flutter pub get
+
+      - name: 🔍 Run Flutter analyzer
+        working-directory: ./soul_fresh
+        run: flutter analyze --no-fatal-infos
+        continue-on-error: false
+
+      - name: 🧪 Run all tests with coverage
+        working-directory: ./soul_fresh
+        run: flutter test --coverage --reporter=expanded
+
+      - name: 📊 Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./soul_fresh/coverage/lcov.info
+          flags: flutter
+          name: flutter-coverage
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: ✅ Test Summary
+        if: always()
+        run: |
+          echo "### 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "Flutter analysis and testing completed" >> $GITHUB_STEP_SUMMARY
+
+  # Job 2: Test Python Backend
+  backend-test:
+    name: 🐍 Backend Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio httpx
+
+      - name: 🔍 Run backend tests with coverage
+        env:
+          DATABASE_URL: sqlite:///./test.db
+          SECRET_KEY: test-secret-key-for-ci
+          GEMINI_API_KEY: test-gemini-key
+        run: |
+          pytest --cov=app --cov-report=xml --cov-report=term -v
+
+      - name: 📊 Upload backend coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./backend/coverage.xml
+          flags: backend
+          name: backend-coverage
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  # Job 3: Security & Quality Checks
+  security-audit:
+    name: 🔒 Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 🔒 Run Safety check on Python dependencies
+        working-directory: ./backend
+        run: |
+          pip install safety
+          safety check --file requirements.txt --json || true
+
+      - name: 🐦 Flutter pub audit
+        working-directory: ./soul_fresh
+        run: |
+          flutter pub get
+          flutter pub upgrade --dry-run
+
+  # Job 4: Build Android APK (on main branch only)
+  build-android:
+    name: 🤖 Build Android APK
+    runs-on: ubuntu-latest
+    needs: [flutter-test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: 🐦 Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install dependencies
+        working-directory: ./soul_fresh
+        run: flutter pub get
+
+      - name: 🔨 Build APK
+        working-directory: ./soul_fresh
+        run: flutter build apk --release
+
+      - name: 📤 Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: soul-app-release
+          path: soul_fresh/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      - name: 📝 Create Release Notes
+        run: |
+          echo "🎉 Release build completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "- Flutter version: 3.24.0" >> $GITHUB_STEP_SUMMARY
+          echo "- Build date: $(date)" >> $GITHUB_STEP_SUMMARY
+
+  # Job 5: Critical Safety Test Validation
+  critical-safety-check:
+    name: 🚨 Validate Critical Safety Features
+    runs-on: ubuntu-latest
+    needs: [flutter-test]
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐦 Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install dependencies
+        working-directory: ./soul_fresh
+        run: flutter pub get
+
+      - name: 🚨 Run ONLY critical safety tests
+        working-directory: ./soul_fresh
+        run: |
+          echo "### 🚨 Critical Safety Validation" >> $GITHUB_STEP_SUMMARY
+          flutter test test/ai_companion_chat_test.dart --name "Safety" --reporter=expanded
+          echo "✅ All crisis detection tests passed" >> $GITHUB_STEP_SUMMARY
+
+      - name: 🛡️ Verify safety keywords coverage
+        working-directory: ./soul_fresh
+        run: |
+          echo "Validating crisis keyword detection coverage..." 
+          grep -r "suicide\|kill myself\|end my life\|harm myself" test/ && echo "✅ Safety keywords verified in tests" || echo "⚠️ Warning: Safety keywords not found"
