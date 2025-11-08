@@ -50,15 +50,16 @@ class AppTheme {
         // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         color: AppColors.white,
         surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
+        elevation: 0,
+      ).copyWith(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
           side: const BorderSide(color: AppColors.mediumGrey),
         ),
-        elevation: 0,
       ),
       chipTheme: base.chipTheme.copyWith(
         backgroundColor: AppColors.lightGrey,
@@ -142,14 +143,15 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-      dialogTheme: DialogThemeData(
+      dialogTheme: const DialogThemeData(
         backgroundColor: AppColors.white,
         surfaceTintColor: Colors.transparent,
+        titleTextStyle: AppTypography.h3,
+        contentTextStyle: AppTypography.body1,
+      ).copyWith(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(28),
         ),
-        titleTextStyle: AppTypography.h3,
-        contentTextStyle: AppTypography.body1,
       ),
     scrollbarTheme: ScrollbarThemeData(
   thumbColor: MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.6)),
@@ -205,15 +207,16 @@ class AppTheme {
         // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
-      cardTheme: CardThemeData(
-        color: const Color(0xFF191C1F),
+      cardTheme: const CardThemeData(
+        color: Color(0xFF191C1F),
         surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
+        elevation: 0,
+      ).copyWith(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
           side: const BorderSide(color: Color(0xFF2A2D32)),
         ),
-        elevation: 0,
       ),
       chipTheme: base.chipTheme.copyWith(
         backgroundColor: const Color(0xFF2A2D32),
@@ -290,13 +293,14 @@ class AppTheme {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      dialogTheme: DialogThemeData(
-        backgroundColor: const Color(0xFF191C1F),
+      dialogTheme: const DialogThemeData(
+        backgroundColor: Color(0xFF191C1F),
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         // Let Flutter use the theme's default text colors
         titleTextStyle: AppTypography.h3,
         contentTextStyle: AppTypography.body1,
+      ).copyWith(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
     scrollbarTheme: ScrollbarThemeData(
   thumbColor: MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.5)),
