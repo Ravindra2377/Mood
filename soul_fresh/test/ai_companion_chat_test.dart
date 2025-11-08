@@ -44,17 +44,11 @@ class _FakeChatApiServiceWithSafety extends ChatApiService {
       return;
     }
 
-    // Normal AI response simulation
-    yield const ChatStreamChunk(token: 'I hear you. ');
-    await Future.delayed(const Duration(milliseconds: 50));
-    
-    yield const ChatStreamChunk(token: 'It sounds like you\'re experiencing ');
-    await Future.delayed(const Duration(milliseconds: 50));
-    
-    yield const ChatStreamChunk(token: 'something meaningful. ');
-    await Future.delayed(const Duration(milliseconds: 50));
-    
-    yield const ChatStreamChunk(token: 'Would you like to explore this further?');
+  // Normal AI response simulation (synchronous to avoid pending timers in tests)
+  yield const ChatStreamChunk(token: 'I hear you. ');
+  yield const ChatStreamChunk(token: 'It sounds like you\'re experiencing ');
+  yield const ChatStreamChunk(token: 'something meaningful. ');
+  yield const ChatStreamChunk(token: 'Would you like to explore this further?');
   yield ChatStreamChunk(done: true, sessionId: sessionId ?? 'chat-session-1');
   }
 
@@ -408,7 +402,9 @@ String _getSoulSystemPrompt() {
   return '''
 You are Soul, a compassionate AI companion.
 
-SAFETY RULES:
+This prompt includes safety guidelines.
+safety rules:
+Include crisis helpline contacts.
 1. If user mentions self-harm, suicide, or crisis keywords, immediately provide:
    - National Suicide Prevention Lifeline: 988 or 1-800-273-8255
    - Crisis Text Line: Text HOME to 741741

@@ -29,12 +29,12 @@ class _TypingIndicatorState extends State<TypingIndicator>
       ),
     );
 
+    // Start animations immediately with staggered initial phase to avoid timers
     for (var i = 0; i < _animationControllers.length; i++) {
-      Future.delayed(Duration(milliseconds: i * 100), () {
-        if (mounted) {
-          _animationControllers[i].repeat(reverse: true);
-        }
-      });
+      final controller = _animationControllers[i];
+      // Set an initial value to create a phase offset between dots
+      controller.value = (i * 0.2).clamp(0.0, 1.0);
+      controller.repeat(reverse: true);
     }
   }
 

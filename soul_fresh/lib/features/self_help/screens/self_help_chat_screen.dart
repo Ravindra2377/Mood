@@ -80,8 +80,8 @@ class _SelfHelpChatScreenState extends ConsumerState<SelfHelpChatScreen> {
     _focusNode.unfocus();
 
     ref.read(chatControllerProvider.notifier).sendMessage(message);
-
-    Future.delayed(const Duration(milliseconds: 100), _scrollToBottom);
+    // Schedule scroll after the next frame to avoid pending timers in tests
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
   }
 
   @override
