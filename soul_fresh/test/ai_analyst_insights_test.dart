@@ -321,8 +321,9 @@ void main() {
       expect(bars.length, equals(5));
       
       // Highest bar should correspond to most frequent keyword
-      final maxBar = bars.reduce((a, b) => a.y > b.y ? a : b);
-      expect(maxBar.y, equals(45)); // 'work' with 45 occurrences
+      final maxBar = bars.reduce((a, b) =>
+        a.barRods.first.toY > b.barRods.first.toY ? a : b);
+      expect(maxBar.barRods.first.toY, equals(45)); // 'work' with 45 occurrences
     });
 
     test('Bar chart shows top 10 keywords maximum', () {

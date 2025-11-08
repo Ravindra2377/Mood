@@ -50,7 +50,7 @@ class AppTheme {
         // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.white,
         surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
@@ -142,7 +142,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: AppColors.white,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -205,7 +205,7 @@ class AppTheme {
         // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: const Color(0xFF191C1F),
         surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
@@ -290,7 +290,7 @@ class AppTheme {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: const Color(0xFF191C1F),
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
