@@ -94,6 +94,7 @@ jobs:
           TWILIO_ACCOUNT_SID: test-twilio-sid
           TWILIO_AUTH_TOKEN: test-twilio-token
           TWILIO_VERIFY_SERVICE_SID: test-verify-sid
+          PYTHONPATH: ./backend
         run: |
           pytest --cov=app --cov-report=xml --cov-report=term -v
         continue-on-error: false

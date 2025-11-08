@@ -1,0 +1,1 @@
+This placeholder file exists to ensure the assets/audio directory is non-empty so Flutter can build the asset manifest during CI. Replace with real audio assets in production.
