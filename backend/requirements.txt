@@ -4,6 +4,7 @@ fastapi==0.116.1
 uvicorn[standard]==0.22.0
 SQLAlchemy==1.4.49
 pydantic==2.11.7
+email-validator==2.1.0.post1
 python-jose==3.3.0
 passlib==1.7.4
 alembic==1.12.0
@@ -11,6 +12,7 @@ psycopg2-binary==2.9.6
 requests==2.31.0
 pytest==7.4.2
 pydantic-settings
+APScheduler==3.10.4
 
 # Additions for PR #1 and PR #2
 # - Twilio Verify (SMS OTP)
