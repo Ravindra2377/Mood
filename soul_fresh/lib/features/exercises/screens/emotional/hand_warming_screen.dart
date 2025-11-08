@@ -108,8 +108,8 @@ class _HandWarmingScreenState extends State<HandWarmingScreen> {
   @override
   Widget build(BuildContext context) {
     final warmColor = Color.lerp(
-      Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-      Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.7),
+      Theme.of(context).colorScheme.primary.withOpacity(0.2),
+      Theme.of(context).colorScheme.tertiary.withOpacity(0.7),
       _warmthLevel,
     );
 
@@ -170,8 +170,8 @@ class _HandWarmingScreenState extends State<HandWarmingScreen> {
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        warmColor ?? Colors.orangeAccent.withValues(alpha: 0.2),
-                        Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                        warmColor ?? Colors.orangeAccent.withOpacity(0.2),
+                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
                       ],
                       stops: const [0.3, 1],
                     ),

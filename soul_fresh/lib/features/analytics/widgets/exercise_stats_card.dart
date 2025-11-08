@@ -66,7 +66,7 @@ class ExerciseStatsCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.1),
+                color: Colors.green.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -95,7 +95,7 @@ class ExerciseStatsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -117,7 +117,7 @@ class ExerciseStatsCard extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 10,
-                  color: color.withValues(alpha: 0.8),
+                  color: color.withOpacity(0.8),
                 ),
               ),
             ],

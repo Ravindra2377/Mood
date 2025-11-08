@@ -14,7 +14,7 @@ class WellnessScoreCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withValues(alpha: 0.7),
+            Theme.of(context).primaryColor.withOpacity(0.7),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -38,7 +38,7 @@ class WellnessScoreCard extends StatelessWidget {
                 child: CircularProgressIndicator(
                   value: score / 100,
                   strokeWidth: 12,
-                  backgroundColor: Colors.white.withValues(alpha: 0.3),
+                  backgroundColor: Colors.white.withOpacity(0.3),
                   valueColor: const AlwaysStoppedAnimation(Colors.white),
                 ),
               ),

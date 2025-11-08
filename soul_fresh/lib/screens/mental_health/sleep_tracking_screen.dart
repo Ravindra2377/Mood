@@ -153,7 +153,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
+              color: const Color(0xFF6C5CE7).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFF6C5CE7),
@@ -212,7 +212,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
                       padding:
                           const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.2),
+                        color: Colors.green.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Text(
@@ -252,7 +252,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.orange.withValues(alpha: 0.1),
+              color: Colors.orange.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: Colors.orange,
@@ -300,8 +300,8 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: isPositive
-                      ? Colors.green.withValues(alpha: 0.1)
-                      : Colors.red.withValues(alpha: 0.1),
+                      ? Colors.green.withOpacity(0.1)
+                      : Colors.red.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: isPositive ? Colors.green : Colors.red,
@@ -447,7 +447,7 @@ class _SleepLogCardState extends State<_SleepLogCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
+  color: const Color(0xFF6C5CE7).withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFF6C5CE7),

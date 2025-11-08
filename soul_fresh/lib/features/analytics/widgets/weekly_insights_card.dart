@@ -29,8 +29,8 @@ class WeeklyInsightsCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.purple.withValues(alpha: 0.1),
-                    Colors.blue.withValues(alpha: 0.1),
+                    Colors.purple.withOpacity(0.1),
+                    Colors.blue.withOpacity(0.1),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(12),
@@ -83,7 +83,7 @@ class WeeklyInsightsCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.1),
+                color: Colors.green.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

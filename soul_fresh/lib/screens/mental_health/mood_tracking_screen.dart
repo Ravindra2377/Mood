@@ -248,7 +248,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                       decoration: BoxDecoration(
                         color: isCurrentMonth
                             ? (day % 3 == 0
-                                ? const Color(0xFFFFD93D).withValues(alpha: 0.3)
+                                ? const Color(0xFFFFD93D).withOpacity(0.3)
                                 : AppColors.backgroundColor)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(4),
@@ -309,7 +309,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFD93D).withValues(alpha: 0.1),
+              color: const Color(0xFFFFD93D).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFFFFD93D),
@@ -337,7 +337,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                       padding:
                           const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.2),
+                        color: Colors.green.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Row(
@@ -498,7 +498,7 @@ class _MoodSelectorState extends State<_MoodSelector> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFD93D).withValues(alpha: 0.1),
+        color: const Color(0xFFFFD93D).withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFFFFD93D),
@@ -582,7 +582,7 @@ class _ActivityGrid extends StatelessWidget {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: (activity['color'] as Color).withValues(alpha: 0.1),
+              color: (activity['color'] as Color).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: activity['color'] as Color,
