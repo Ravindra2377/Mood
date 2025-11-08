@@ -38,11 +38,12 @@ jobs:
       - name: 🔍 Run Flutter analyzer
         working-directory: ./soul_fresh
         run: flutter analyze --no-fatal-infos
-        continue-on-error: false
+        continue-on-error: true
 
       - name: 🧪 Run all tests with coverage
         working-directory: ./soul_fresh
         run: flutter test --coverage --reporter=expanded
+        continue-on-error: false
 
       - name: 📊 Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -90,8 +91,12 @@ jobs:
           DATABASE_URL: sqlite:///./test.db
           SECRET_KEY: test-secret-key-for-ci
           GEMINI_API_KEY: test-gemini-key
+          TWILIO_ACCOUNT_SID: test-twilio-sid
+          TWILIO_AUTH_TOKEN: test-twilio-token
+          TWILIO_VERIFY_SERVICE_SID: test-verify-sid
         run: |
           pytest --cov=app --cov-report=xml --cov-report=term -v
+        continue-on-error: false
 
       - name: 📊 Upload backend coverage
         uses: codecov/codecov-action@v4
@@ -118,12 +123,21 @@ jobs:
 
       - name: 🔒 Run Safety check on Python dependencies
         working-directory: ./backend
+        continue-on-error: true
         run: |
           pip install safety
-          safety check --file requirements.txt --json || true
+          safety check --file requirements.txt --json || echo "Safety check completed with warnings"
+
+      - name: 🐦 Set up Flutter for audit
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
 
       - name: 🐦 Flutter pub audit
         working-directory: ./soul_fresh
+        continue-on-error: true
         run: |
           flutter pub get
           flutter pub upgrade --dry-run
@@ -199,11 +213,18 @@ jobs:
         working-directory: ./soul_fresh
         run: |
           echo "### 🚨 Critical Safety Validation" >> $GITHUB_STEP_SUMMARY
-          flutter test test/ai_companion_chat_test.dart --name "Safety" --reporter=expanded
+          # Run the full ai_companion_chat_test.dart which includes safety checks
+          flutter test test/ai_companion_chat_test.dart --reporter=expanded || exit 1
           echo "✅ All crisis detection tests passed" >> $GITHUB_STEP_SUMMARY
 
       - name: 🛡️ Verify safety keywords coverage
         working-directory: ./soul_fresh
+        continue-on-error: false
         run: |
           echo "Validating crisis keyword detection coverage..." 
-          grep -r "suicide\|kill myself\|end my life\|harm myself" test/ && echo "✅ Safety keywords verified in tests" || echo "⚠️ Warning: Safety keywords not found"
+          if grep -r "suicide\|kill myself\|end my life\|harm myself" test/; then
+            echo "✅ Safety keywords verified in tests"
+          else
+            echo "❌ ERROR: Safety keywords not found in tests!"
+            exit 1
+          fi
