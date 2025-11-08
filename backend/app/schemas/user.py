@@ -31,6 +31,16 @@ class PasswordResetConfirm(BaseModel):
 	new_password: str
 
 
+class PasswordOtpRequest(BaseModel):
+	email: EmailStr
+
+
+class PasswordOtpConfirm(BaseModel):
+	email: EmailStr
+	code: str
+	new_password: str
+
+
 class UserUpdate(BaseModel):
 	is_active: Optional[bool] = None
 	role: Optional[str] = None

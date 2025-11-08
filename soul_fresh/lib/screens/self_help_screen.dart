@@ -365,7 +365,7 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
   border: Border.all(color: AppColors.secondaryPastel.withOpacity(0.6)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondaryPastel.withOpacity(0.22)),
+            color: AppColors.secondaryPastel.withOpacity(0.22),
             blurRadius: 20,
             offset: const Offset(0, 14),
           ),

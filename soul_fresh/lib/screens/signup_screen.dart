@@ -399,7 +399,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                   // Gender/Pronouns dropdown
                   DropdownButtonFormField<String>(
-                    initialValue: _selectedGender,
+                    value: _selectedGender,
                     decoration: const InputDecoration(
                       labelText: 'Gender/Pronouns',
                       prefixIcon: Icon(Icons.wc_outlined),
@@ -421,7 +421,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                   // Primary Goal dropdown
                   DropdownButtonFormField<String>(
-                    initialValue: _selectedGoal,
+                    value: _selectedGoal,
                     decoration: const InputDecoration(
                       labelText: 'Primary Mental Wellness Goal',
                       prefixIcon: Icon(Icons.psychology_outlined),

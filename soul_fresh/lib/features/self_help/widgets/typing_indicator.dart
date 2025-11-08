@@ -93,9 +93,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: (widget.color ?? Colors.grey).withOpacity(
-                              alpha: 0.5 +
-                                  (_animationControllers[index].value *
-                                      0.5),
+                              0.5 + (_animationControllers[index].value * 0.5),
                             ),
                           ),
                         ),

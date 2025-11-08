@@ -7,6 +7,8 @@ from app.schemas.user import (
     Token,
     PasswordResetRequest,
     PasswordResetConfirm,
+    PasswordOtpRequest,
+    PasswordOtpConfirm,
 )
 from app.models.user import User
 from app.models.refresh_token import RefreshToken
@@ -188,6 +190,75 @@ def password_reset_confirm(
         )
         if settings.DEV_EMAIL_PREVIEW:
             return {"preview": result}
+        return {"status": "ok"}
+    finally:
+        db.close()
+
+
+@limiter.limit("5/minute")
+@router.post("/password-otp/request")
+def password_otp_request(request: Request, payload: PasswordOtpRequest, locale: str = Depends(get_locale)):
+    """Issue a 6-digit OTP to reset password via email.
+
+    In DEV_EMAIL_PREVIEW/DEV_MODE, surface the preview code in the response.
+    Stores a hash of the code in `password_reset_token` and an expiry.
+    """
+    from app.main import SessionLocal
+
+    db: Session = SessionLocal()
+    try:
+        user = db.query(User).filter(User.email == payload.email).first()
+        # Do not reveal user existence
+        if not user:
+            return {"status": "ok"}
+        # Generate 6-digit numeric code
+        code = f"{secrets.randbelow(1000000):06d}"
+        code_hash = hashlib.sha256(code.encode("utf-8")).hexdigest()
+        user.password_reset_token = code_hash
+        user.password_reset_expires = datetime.now(timezone.utc) + timedelta(minutes=15)
+        db.add(user)
+        db.commit()
+
+        # Email content (stub)
+        subject = t_format("password_reset_subject", locale)
+        html = f"<p>Your password reset code is <b>{code}</b>. It expires in 15 minutes.</p>"
+        text = f"Your password reset code is {code}. It expires in 15 minutes."
+        result = send_email(to=user.email, subject=subject, html_body=html, text_body=text)
+
+        if settings.DEV_EMAIL_PREVIEW or getattr(settings, "DEV_MODE", True):
+            return {"status": "ok", "preview": {"code": code}, "email": user.email}
+        return {"status": "ok"}
+    finally:
+        db.close()
+
+
+@limiter.limit("5/minute")
+@router.post("/password-otp/confirm")
+def password_otp_confirm(request: Request, payload: PasswordOtpConfirm):
+    """Confirm the 6-digit code and set a new password."""
+    from app.main import SessionLocal
+
+    db: Session = SessionLocal()
+    try:
+        user = db.query(User).filter(User.email == payload.email).first()
+        if not user or not user.password_reset_token or not user.password_reset_expires:
+            raise HTTPException(status_code=400, detail="Invalid or expired code")
+        # Normalize timezone of expiry
+        expires = user.password_reset_expires
+        if expires.tzinfo is None:
+            expires = expires.replace(tzinfo=timezone.utc)
+        if expires < datetime.now(timezone.utc):
+            raise HTTPException(status_code=400, detail="Invalid or expired code")
+        # Verify code
+        code_hash = hashlib.sha256(payload.code.encode("utf-8")).hexdigest()
+        if code_hash != user.password_reset_token:
+            raise HTTPException(status_code=400, detail="Invalid or expired code")
+        # Update password and clear token
+        user.hashed_password = security.hash_password(payload.new_password)
+        user.password_reset_token = None
+        user.password_reset_expires = None
+        db.add(user)
+        db.commit()
         return {"status": "ok"}
     finally:
         db.close()

@@ -50,7 +50,7 @@ class AppTheme {
         // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
-      cardTheme: CardThemeData(
+      cardTheme: CardTheme(
         color: AppColors.white,
         surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
@@ -142,7 +142,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-      dialogTheme: DialogThemeData(
+      dialogTheme: DialogTheme(
         backgroundColor: AppColors.white,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -151,8 +151,8 @@ class AppTheme {
         titleTextStyle: AppTypography.h3,
         contentTextStyle: AppTypography.body1,
       ),
-      scrollbarTheme: ScrollbarThemeData(
-  thumbColor: WidgetStateProperty.all(AppColors.primaryPastel.withOpacity(0.6)),
+    scrollbarTheme: ScrollbarThemeData(
+  thumbColor: MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.6)),
         radius: const Radius.circular(12),
       ),
     );
@@ -205,7 +205,7 @@ class AppTheme {
         // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
-      cardTheme: CardThemeData(
+      cardTheme: CardTheme(
         color: const Color(0xFF191C1F),
         surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
@@ -290,7 +290,7 @@ class AppTheme {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      dialogTheme: DialogThemeData(
+      dialogTheme: DialogTheme(
         backgroundColor: const Color(0xFF191C1F),
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
@@ -298,8 +298,8 @@ class AppTheme {
         titleTextStyle: AppTypography.h3,
         contentTextStyle: AppTypography.body1,
       ),
-      scrollbarTheme: ScrollbarThemeData(
-  thumbColor: WidgetStateProperty.all(AppColors.primaryPastel.withOpacity(0.5)),
+    scrollbarTheme: ScrollbarThemeData(
+  thumbColor: MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.5)),
         radius: const Radius.circular(12),
       ),
     );

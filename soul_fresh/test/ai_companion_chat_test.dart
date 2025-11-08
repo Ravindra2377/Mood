@@ -40,7 +40,7 @@ class _FakeChatApiServiceWithSafety extends ChatApiService {
       yield const ChatStreamChunk(
         token: 'You are not alone, and help is available 24/7.',
       );
-      yield const ChatStreamChunk(done: true, sessionId: sessionId ?? 'safety-session');
+  yield ChatStreamChunk(done: true, sessionId: sessionId ?? 'safety-session');
       return;
     }
 
@@ -55,7 +55,7 @@ class _FakeChatApiServiceWithSafety extends ChatApiService {
     await Future.delayed(const Duration(milliseconds: 50));
     
     yield const ChatStreamChunk(token: 'Would you like to explore this further?');
-    yield const ChatStreamChunk(done: true, sessionId: sessionId ?? 'chat-session-1');
+  yield ChatStreamChunk(done: true, sessionId: sessionId ?? 'chat-session-1');
   }
 
   bool _containsCrisisKeyword(String message) {

@@ -28,6 +28,8 @@ from typing import Optional
 
 from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse
+from datetime import datetime, timezone
+import hashlib
 
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -185,16 +187,25 @@ def _extract_bearer_user_id(request: Request) -> Optional[int]:
 
 
 def user_or_ip_rate_key(request: Request) -> str:
-    """Rate-limit key preferring authenticated user id, falling back to client IP."""
+    """Rate-limit key preferring authenticated user id, else hashed IP.
+
+    To reduce user enumeration risk when email-based endpoints are hit prior
+    to authentication, we avoid embedding raw IP or email directly beyond the
+    prefix. (Authenticated user id is already an internal integer.)
+    """
     user_id = _extract_bearer_user_id(request)
     if user_id is not None:
-        # Cache the resolved user id on the request so downstream code can reuse it
         try:
             request.state.rate_limit_user_id = user_id
         except Exception:
             pass
         return f"user:{user_id}"
-    return f"ip:{get_client_ip(request)}"
+    ip = get_client_ip(request)
+    try:
+        h = hashlib.sha256(ip.encode('utf-8')).hexdigest()[:16]
+        return f"ip:{h}"
+    except Exception:
+        return f"ip:{ip}"
 
 
 # Create a single shared Limiter instance
@@ -205,11 +216,32 @@ limiter: Limiter = Limiter(
 
 
 def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    """Default exception handler for rate limiting.
+
+    Adds Retry-After (seconds) and X-RateLimit-Reset (unix epoch seconds) headers when
+    the window reset can be inferred from SlowAPI's exception state. Keeps body generic
+    to avoid leaking detailed strategy information.
     """
-    Default exception handler for rate limiting. Attach this in app to return a generic 429.
-    """
-    # Keep response minimal and generic; avoid leaking internals
-    return PlainTextResponse("Too Many Requests", status_code=429)
+    headers = {}
+    try:
+        # SlowAPI's RateLimitExceeded exposes .reset or .remaining window attributes depending on version
+        reset_ts = None
+        if hasattr(exc, 'reset') and exc.reset:  # reset is epoch seconds
+            reset_ts = int(exc.reset)
+        elif hasattr(exc, 'limit') and hasattr(exc, 'window_stats'):
+            # Fallback: attempt to compute remaining window
+            ws = getattr(exc, 'window_stats', None)
+            if ws and isinstance(ws, dict) and 'reset' in ws:
+                reset_ts = int(ws['reset'])
+        if reset_ts:
+            now = int(datetime.now(timezone.utc).timestamp())
+            retry_after = max(0, reset_ts - now)
+            headers['Retry-After'] = str(retry_after)
+            headers['X-RateLimit-Reset'] = str(reset_ts)
+    except Exception:
+        pass
+
+    return PlainTextResponse("Too Many Requests", status_code=429, headers=headers)
 
 
 def init_rate_limiter(app: FastAPI) -> None:
