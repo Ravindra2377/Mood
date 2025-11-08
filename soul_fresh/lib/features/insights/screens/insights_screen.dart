@@ -89,11 +89,15 @@ class _InsightsBody extends StatelessWidget {
         _SectionCard(
           title: 'Overall Sentiment',
           description: 'Distribution of your journal moods.',
-          child: insights.overallSentiment.isEmpty
-              ? const _EmptyState(message: 'No sentiment data yet.')
+      child: insights.overallSentiment.isEmpty
+        ? const KeyedSubtree(
+          key: ValueKey('overall-empty'),
+          child: _EmptyState(message: 'No sentiment data yet.'),
+        )
               : SizedBox(
                   height: 240,
                   child: PieChart(
+                    key: const ValueKey('pie-chart'),
                     PieChartData(
                       sectionsSpace: 4,
                       centerSpaceRadius: 48,
@@ -109,11 +113,15 @@ class _InsightsBody extends StatelessWidget {
         _SectionCard(
           title: 'Top Keywords',
           description: 'Words you mention most in your reflections.',
-          child: insights.topKeywords.isEmpty
-              ? const _EmptyState(message: 'Keywords will appear as you write.')
+      child: insights.topKeywords.isEmpty
+        ? const KeyedSubtree(
+          key: ValueKey('keywords-empty'),
+          child: _EmptyState(message: 'Keywords will appear as you write.'),
+        )
               : SizedBox(
                   height: 260,
                   child: BarChart(
+                    key: const ValueKey('bar-chart'),
                     BarChartData(
                       barGroups: _buildBarChartGroups(
                         insights.topKeywords,
@@ -159,12 +167,16 @@ class _InsightsBody extends StatelessWidget {
           title: 'Sentiment Trend',
           description: 'How your reflections felt over the last month.',
           child: insights.sentimentOverTime.isEmpty
-              ? const _EmptyState(
-                  message: 'Once you log entries, we will chart the trend.',
+              ? const KeyedSubtree(
+                  key: ValueKey('trend-empty'),
+                  child: _EmptyState(
+                    message: 'Once you log entries, we will chart the trend.',
+                  ),
                 )
               : SizedBox(
                   height: 260,
                   child: LineChart(
+                    key: const ValueKey('line-chart'),
                     _buildSentimentTrend(
                       insights.sentimentOverTime,
                       colorScheme,
@@ -356,8 +368,8 @@ class _InsightsBody extends StatelessWidget {
             show: true,
             gradient: LinearGradient(
               colors: [
-                colors.primary.withValues(alpha: 0.2),
-                colors.primary.withValues(alpha: 0.05),
+                colors.primary.withOpacity(0.2),
+                colors.primary.withOpacity(0.05),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -427,7 +439,7 @@ class _SectionCard extends StatelessWidget {
             Text(
               description,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
               ),
             ),
             const SizedBox(height: 24),
@@ -453,7 +465,7 @@ class _EmptyState extends StatelessWidget {
         child: Text(
           message,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+            color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
           ),
           textAlign: TextAlign.center,
         ),

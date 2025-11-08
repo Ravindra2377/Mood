@@ -362,10 +362,10 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.secondaryPastel.withValues(alpha: 0.6)),
+  border: Border.all(color: AppColors.secondaryPastel.withOpacity(0.6)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondaryPastel.withValues(alpha: 0.22),
+            color: AppColors.secondaryPastel.withOpacity(0.22)),
             blurRadius: 20,
             offset: const Offset(0, 14),
           ),
@@ -404,7 +404,7 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
               prompt.message,
               key: ValueKey<String>(prompt.id),
               style: AppTypography.body1.copyWith(
-                color: AppColors.charcoal.withValues(alpha: 0.85),
+                color: AppColors.charcoal.withOpacity(0.85),
               ),
               textAlign: TextAlign.center,
             ),

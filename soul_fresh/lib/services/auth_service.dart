@@ -30,7 +30,9 @@ class AuthService {
     );
   }
 
-  /// Sign up with email and password
+  /// Sign up with email and password. Does NOT trigger OTP by itself; callers
+  /// should follow with [requestOtp] so the UI can surface any preview code in
+  /// dev mode.
   Future<Map<String, dynamic>> signup(String email, String password) async {
     if (skipOtp) {
       // Mock signup for testing without backend
@@ -44,10 +46,8 @@ class AuthService {
         'email': email,
         'password': password,
       },);
-      
-      // After signup, request OTP
-      await requestOtp(email);
-      
+      // Do not request OTP here; let the caller handle it so any
+      // preview code can be shown to the user in dev environments.
       return response.data;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -88,19 +88,59 @@ class AuthService {
   }
 
   /// Request OTP
-  Future<void> requestOtp(String email) async {
+  /// Request OTP and return preview code in dev mode if available.
+  Future<String?> requestOtp(String email) async {
     if (skipOtp) {
       // Mock OTP request for testing
-      return;
+      return '123456';
     }
 
     try {
-      await _dio.post('/auth/otp/request', data: {'email': email});
+      final res = await _dio.post('/auth/otp/request', data: {'email': email});
+      final data = res.data;
+      if (data is Map && data['preview'] is Map &&
+          (data['preview'] as Map).containsKey('code')) {
+        return (data['preview'] as Map)['code']?.toString();
+      }
+      return null;
     } on DioException catch (e) {
       throw _handleError(e);
     }
   }
 
+  /// Forgot password: request a 6-digit code to be emailed.
+  Future<String?> requestPasswordResetOtp(String email) async {
+    if (skipOtp) {
+      return '123456';
+    }
+    try {
+  final res = await _dio.post('/auth/password-otp/request', data: {'email': email});
+      final data = res.data;
+      if (data is Map && data['preview'] is Map && (data['preview'] as Map).containsKey('code')) {
+        return (data['preview'] as Map)['code']?.toString();
+      }
+      return null;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  /// Forgot password: confirm the 6-digit code and set new password.
+  Future<void> confirmPasswordResetOtp({required String email, required String code, required String newPassword}) async {
+    if (skipOtp) {
+      // No-op. In dev mode just pretend success.
+      return;
+    }
+    try {
+      await _dio.post('/auth/password-otp/confirm', data: {
+        'email': email,
+        'code': code,
+        'new_password': newPassword,
+      });
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
   /// Verify OTP
   Future<Map<String, dynamic>> verifyOtp(String email, String code) async {
     if (skipOtp) {
@@ -199,16 +239,53 @@ class AuthService {
   /// Handle errors from API calls
   String _handleError(DioException error) {
     final response = error.response;
+    String? detail;
+    int? status;
     if (response != null) {
+      status = response.statusCode;
       final data = response.data;
       if (data is Map && data.containsKey('detail')) {
-        return data['detail'].toString();
+        detail = data['detail']?.toString();
+      } else if (data is String) {
+        detail = data;
       }
-      if (data is String) {
-        return data;
+    }
+
+    // Friendly mappings for common backend errors
+    final msg = (detail ?? '').toLowerCase();
+    if (status == 400 && (msg.contains('invalid or expired code') || msg.contains('invalid code'))) {
+      return 'That code is invalid or has expired. Please request a new one.';
+    }
+    if (status == 400 && msg.contains('invalid or expired token')) {
+      return 'Your reset link has expired or is invalid. Request a new reset email.';
+    }
+    if (status == 401 && msg.contains('invalid credentials')) {
+      return 'Email or password is incorrect.';
+    }
+    if (status == 429) {
+      String base = 'Too many attempts. Please wait a minute and try again.';
+      try {
+        final remaining = response?.headers.value('X-RateLimit-Remaining') ??
+            response?.headers.value('x-ratelimit-remaining');
+        final retryAfter = response?.headers.value('Retry-After') ??
+            response?.headers.value('retry-after');
+        if (retryAfter != null && retryAfter.isNotEmpty) {
+          base = 'Too many attempts. Try again in ${retryAfter}s.';
+        }
+        if (remaining != null && remaining.isNotEmpty) {
+          base = '$base Attempts left: $remaining';
+        }
+      } catch (_) {}
+      return base;
+    }
+
+    if (response != null) {
+      if (detail != null && detail.isNotEmpty) {
+        return detail; // fallback to backend detail
       }
       return 'Request failed with status ${response.statusCode}';
     }
+
     return 'Network error. Please check your connection.';
   }
 }

@@ -478,7 +478,7 @@ class _AnalyticsDashboardScreenState
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.blue.withValues(alpha: 0.1),
+            color: Colors.blue.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -621,8 +621,8 @@ class _AnalyticsDashboardScreenState
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: isComplete
-                  ? Colors.green.withValues(alpha: 0.1)
-                  : Colors.grey.withValues(alpha: 0.1),
+                  ? Colors.green.withOpacity(0.1)
+                  : Colors.grey.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(emoji, style: const TextStyle(fontSize: 24)),
@@ -730,10 +730,10 @@ class _AnalyticsDashboardScreenState
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.coolPastel.withValues(alpha: 0.55)),
+  border: Border.all(color: AppColors.coolPastel.withOpacity(0.55)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.coolPastel.withValues(alpha: 0.25),
+            color: AppColors.coolPastel.withOpacity(0.25),
             blurRadius: 20,
             offset: const Offset(0, 14),
           ),

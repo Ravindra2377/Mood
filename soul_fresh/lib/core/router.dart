@@ -10,6 +10,8 @@ import '../features/home/screens/improved_home_screen.dart';
 import '../features/mood/screens/mood_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
 import '../screens/login_screen.dart';
+import '../screens/forgot_password_screen.dart';
+import '../screens/reset_password_screen.dart';
 import '../screens/otp_verification_screen.dart';
 import '../screens/privacy_settings_screen.dart';
 import '../screens/signup_screen.dart';
@@ -34,6 +36,18 @@ class AppRouter {
       case Routes.signup:
         return MaterialPageRoute(
           builder: (_) => const SignupScreen(),
+          settings: settings,
+        );
+
+      case Routes.forgotPassword:
+        return MaterialPageRoute(
+          builder: (_) => const ForgotPasswordScreen(),
+          settings: settings,
+        );
+
+      case Routes.resetPassword:
+        return MaterialPageRoute(
+          builder: (_) => const ResetPasswordScreen(),
           settings: settings,
         );
 

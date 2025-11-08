@@ -4,7 +4,7 @@ import '../services/journals_service.dart';
 
 class JournalEditScreen extends StatefulWidget {
   final JournalEntry entry;
-  final Future<JournalsService> serviceFuture;
+  final Future<JournalStore> serviceFuture;
   const JournalEditScreen(
       {super.key, required this.entry, required this.serviceFuture,});
 

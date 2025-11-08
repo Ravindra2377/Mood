@@ -184,35 +184,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: Text('Log In'),
                     ),
                   ),
-                  const SizedBox(height: 16),
-
-                  // Divider
-                  Row(
-                    children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'OR',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // OTP login button
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/otp-login');
-                    },
-                    icon: const Icon(Icons.phone_android),
-                    label: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.0),
-                      child: Text('Log In with OTP'),
-                    ),
-                  ),
                   const SizedBox(height: 32),
 
                   // Sign up link

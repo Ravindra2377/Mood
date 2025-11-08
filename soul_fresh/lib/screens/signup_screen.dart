@@ -154,7 +154,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         message: 'Creating your account...',
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
+            // Add extra bottom padding so legal checkboxes & buttons remain
+            // visible above the keyboard on smaller devices.
+            padding: EdgeInsets.fromLTRB(
+              24,
+              24,
+              24,
+              24 + MediaQuery.of(context).viewInsets.bottom + 32,
+            ),
             child: Form(
               key: _formKey,
               child: Column(
@@ -555,7 +562,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             padding: const EdgeInsets.only(top: 12.0),
             child: RichText(
               text: TextSpan(
-                style: Theme.of(context).textTheme.bodySmall,
+                // Improve contrast & readability for legal text which was
+                // reported as barely visible. Use bodyMedium with slightly
+                // darker color on light background.
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      // Use withValues instead of deprecated withOpacity.
+                      color: Colors.black.withOpacity(0.75),
+                      height: 1.3,
+                    ),
                 children: [
                   TextSpan(text: label),
                   if (linkText.isNotEmpty)

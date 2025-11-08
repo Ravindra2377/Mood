@@ -53,7 +53,13 @@ Future<void> main() async {
 // Toggle this during local testing to bypass the OTP network flow.
 // When true the app will directly set a dummy access token and navigate
 // to the Home screen so you can test signup/login UI without a backend.
-const bool skipOtp = true;
+// In production or when you want to exercise the real backend auth & OTP
+// flows, set this to false. Leaving it true bypasses credential verification
+// and will cause the app to appear to "accept" any email/password. Because
+// you reported credentials are not being verified, we now set this to false
+// so the real /auth/signup, /auth/token, /auth/otp/request, and /auth/verify-otp
+// endpoints are used.
+const bool skipOtp = false;
 
 // Provider to track current tab in mental health dashboard
 final mentalHealthTabProvider = StateProvider<int>((ref) => 0);
@@ -125,7 +131,7 @@ class AppTheme {
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
         border: const OutlineInputBorder(),
         filled: true,
-        fillColor: base.colorScheme.surface.withValues(alpha: 0.9),
+  fillColor: base.colorScheme.surface.withOpacity(0.9),
       ),
       cardTheme: base.cardTheme.copyWith(
         elevation: 0,

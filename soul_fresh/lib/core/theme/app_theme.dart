@@ -62,7 +62,7 @@ class AppTheme {
       ),
       chipTheme: base.chipTheme.copyWith(
         backgroundColor: AppColors.lightGrey,
-        selectedColor: AppColors.primaryPastel.withValues(alpha: 0.2),
+  selectedColor: AppColors.primaryPastel.withOpacity(0.2),
         pressElevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -89,10 +89,10 @@ class AppTheme {
         ),
         // Use a lighter variant of the onSurface color for hints/labels
         hintStyle: AppTypography.body2.copyWith(
-          color: base.colorScheme.onSurface.withValues(alpha: 0.6),
+          color: base.colorScheme.onSurface.withOpacity(0.6),
         ),
         labelStyle: AppTypography.label.copyWith(
-          color: base.colorScheme.onSurface.withValues(alpha: 0.7),
+          color: base.colorScheme.onSurface.withOpacity(0.7),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -152,7 +152,7 @@ class AppTheme {
         contentTextStyle: AppTypography.body1,
       ),
       scrollbarTheme: ScrollbarThemeData(
-        thumbColor: WidgetStateProperty.all(AppColors.primaryPastel.withValues(alpha: 0.6)),
+  thumbColor: WidgetStateProperty.all(AppColors.primaryPastel.withOpacity(0.6)),
         radius: const Radius.circular(12),
       ),
     );
@@ -217,7 +217,7 @@ class AppTheme {
       ),
       chipTheme: base.chipTheme.copyWith(
         backgroundColor: const Color(0xFF2A2D32),
-        selectedColor: AppColors.primaryPastel.withValues(alpha: 0.25),
+  selectedColor: AppColors.primaryPastel.withOpacity(0.25),
         // Let Flutter use the theme's default text color
         labelStyle: AppTypography.label,
         shape: RoundedRectangleBorder(
@@ -243,10 +243,10 @@ class AppTheme {
         ),
         // Use a lighter variant of the onSurface color for hints/labels
         hintStyle: AppTypography.body2.copyWith(
-          color: base.colorScheme.onSurface.withValues(alpha: 0.6),
+          color: base.colorScheme.onSurface.withOpacity(0.6),
         ),
         labelStyle: AppTypography.label.copyWith(
-          color: base.colorScheme.onSurface.withValues(alpha: 0.7),
+          color: base.colorScheme.onSurface.withOpacity(0.7),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -299,7 +299,7 @@ class AppTheme {
         contentTextStyle: AppTypography.body1,
       ),
       scrollbarTheme: ScrollbarThemeData(
-        thumbColor: WidgetStateProperty.all(AppColors.primaryPastel.withValues(alpha: 0.5)),
+  thumbColor: WidgetStateProperty.all(AppColors.primaryPastel.withOpacity(0.5)),
         radius: const Radius.circular(12),
       ),
     );

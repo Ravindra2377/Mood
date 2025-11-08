@@ -326,10 +326,10 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.7),
+                      color: Colors.white.withOpacity(0.7),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: _getMoodColor(_selectedMood).withValues(alpha: 0.3),
+                        color: _getMoodColor(_selectedMood).withOpacity(0.3),
                       ),
                     ),
                     child: Row(
@@ -358,7 +358,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.85),
+                    color: Colors.white.withOpacity(0.85),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Column(
@@ -388,7 +388,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: isSelected
-                                        ? _getMoodColor(mood).withValues(alpha: 0.2)
+                                        ? _getMoodColor(mood).withOpacity(0.2)
                                         : Colors.transparent,
                                     border: Border.all(
                                       color: isSelected
@@ -478,7 +478,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: _getMoodColor(_selectedMood).withValues(alpha: 0.1),
+                        color: _getMoodColor(_selectedMood).withOpacity(0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -540,7 +540,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: Colors.white.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
@@ -596,7 +596,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                                     onDeleted: () => _removeTag(tag),
                                     backgroundColor:
                                         _getMoodColor(_selectedMood)
-                                            .withValues(alpha: 0.2),
+                                            .withOpacity(0.2),
                                   ),)
                               .toList(),
                         ),
@@ -612,7 +612,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.6),
+                      color: Colors.white.withOpacity(0.6),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
@@ -776,7 +776,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                         ),
                         disabledBackgroundColor: _isSaved
                             ? Colors.green
-                            : Colors.black.withValues(alpha: 0.6),
+                            : Colors.black.withOpacity(0.6),
                       ),
                       child: _isSaving
                           ? const Row(

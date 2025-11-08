@@ -79,7 +79,7 @@ class _MoodButton extends StatelessWidget {
         width: 56,
         height: 56,
         decoration: BoxDecoration(
-          color: color.withValues(alpha: isSelected ? 1.0 : 0.3),
+          color: color.withOpacity(isSelected ? 1.0 : 0.3),
           shape: BoxShape.circle,
           border: isSelected
               ? Border.all(color: color, width: 3)

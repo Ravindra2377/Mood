@@ -3,7 +3,15 @@ import 'package:hive/hive.dart';
 import '../models/journal_entry.dart';
 import 'api_client.dart' as api_client;
 
-class JournalsService {
+/// Abstraction for journal persistence used by UI widgets so tests can
+/// inject an in-memory implementation without Hive.
+abstract class JournalStore {
+  List<JournalEntry> list();
+  Future<void> save(JournalEntry entry);
+  Future<void> delete(String id);
+}
+
+class JournalsService implements JournalStore {
   static const boxName = 'journals';
 
   final Box<JournalEntry> box;
@@ -18,6 +26,7 @@ class JournalsService {
     return JournalsService._(box, apiClient: apiClient);
   }
 
+  @override
   List<JournalEntry> list() {
     return box.values.toList();
   }
@@ -26,6 +35,7 @@ class JournalsService {
   ///
   /// On success the entry will be marked `synced = true` and updated with any
   /// server-provided fields. On failure it remains unsynced for retry.
+  @override
   Future<void> save(JournalEntry entry) async {
     entry.updatedAt = DateTime.now();
 
@@ -77,6 +87,7 @@ class JournalsService {
     }
   }
 
+  @override
   Future<void> delete(String id) async {
     // Attempt server delete if we have a client, but do not fail local delete on network error.
     if (apiClient != null) {
@@ -87,5 +98,27 @@ class JournalsService {
       }
     }
     await box.delete(id);
+  }
+}
+
+/// Simple in-memory store for tests (no Hive / IO).
+class InMemoryJournalStore implements JournalStore {
+  final Map<String, JournalEntry> _entries = {};
+
+  @override
+  List<JournalEntry> list() => _entries.values.toList();
+
+  @override
+  Future<void> save(JournalEntry entry) async {
+    if (entry.id.isEmpty) {
+      entry.id = DateTime.now().microsecondsSinceEpoch.toString();
+    }
+    entry.updatedAt = DateTime.now();
+    _entries[entry.id] = entry;
+  }
+
+  @override
+  Future<void> delete(String id) async {
+    _entries.remove(id);
   }
 }

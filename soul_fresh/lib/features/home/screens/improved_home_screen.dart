@@ -4,11 +4,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/custom_card.dart';
 import '../../../screens/journal_list.dart';
-import '../../../screens/self_help_screen.dart';
-import '../../analytics/screens/unified_analytics_screen.dart';
-import '../../exercises/screens/exercises_main_screen.dart';
 import '../../insights/screens/insights_screen.dart';
 import '../../profile/screens/profile_screen.dart';
+import '../../self_help/screens/self_help_chat_screen.dart';
 
 class ImprovedHomeScreen extends StatefulWidget {
   const ImprovedHomeScreen({super.key});
@@ -29,9 +27,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
         children: [
           _buildHomeContent(),
           const JournalListScreen(),
-          const ExercisesMainScreen(),
-          const SelfHelpScreen(),
-          const UnifiedAnalyticsScreen(),
+          const SelfHelpChatScreen(),
           const InsightsScreen(),
           const ProfileScreen(),
         ],
@@ -70,7 +66,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: AppColors.coolPastel.withValues(alpha: 0.25),
+              color: AppColors.coolPastel.withOpacity(0.25),
             blurRadius: 28,
             offset: const Offset(0, 18),
           ),
@@ -149,8 +145,8 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
     VoidCallback? onTap,
   }) {
     return CustomCard(
-      backgroundColor: color.withValues(alpha: 0.28),
-      borderColor: color.withValues(alpha: 0.75),
+      backgroundColor: color.withOpacity(0.28),
+      borderColor: color.withOpacity(0.75),
       onTap: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,7 +187,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
         ),
         const SizedBox(height: 16),
         CustomCard(
-          backgroundColor: AppColors.primaryPastel.withValues(alpha: 0.15),
+          backgroundColor: AppColors.primaryPastel.withOpacity(0.15),
           borderColor: AppColors.primaryPastel,
           onTap: () => Navigator.of(context).pushNamed('/mood-entry'),
           child: Row(
@@ -235,7 +231,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
         ),
         const SizedBox(height: 12),
         CustomCard(
-          backgroundColor: AppColors.secondaryPastel.withValues(alpha: 0.18),
+          backgroundColor: AppColors.secondaryPastel.withOpacity(0.18),
           borderColor: AppColors.secondaryPastel,
           onTap: () => _switchTab(1),
           child: Row(
@@ -283,7 +279,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
         ),
         const SizedBox(height: 12),
         CustomCard(
-          backgroundColor: AppColors.secondaryPastel.withValues(alpha: 0.15),
+          backgroundColor: AppColors.secondaryPastel.withOpacity(0.15),
           borderColor: AppColors.secondaryPastel,
           onTap: () => _switchTab(2),
           child: Row(
@@ -347,7 +343,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
         const SizedBox(height: 12),
         CustomCard(
           padding: const EdgeInsets.all(12),
-          borderColor: AppColors.mediumGrey.withValues(alpha: 0.6),
+          borderColor: AppColors.mediumGrey.withOpacity(0.6),
           child: Column(
             children: [
               _buildActivityItem('Box Breathing', '5 min', '😊', '8:00 AM'),
@@ -424,11 +420,9 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
           items: [
             _buildNavItem(Icons.home_outlined, 'Home', 0),
             _buildNavItem(Icons.book_outlined, 'Journal', 1),
-            _buildNavItem(Icons.self_improvement_outlined, 'Exercises', 2),
-            _buildNavItem(Icons.psychology_outlined, 'Self-Help', 3),
-            _buildNavItem(Icons.analytics_outlined, 'Analytics', 4),
-            _buildNavItem(Icons.bar_chart_outlined, 'Insights', 5),
-            _buildNavItem(Icons.person_outline, 'Profile', 6),
+            _buildNavItem(Icons.chat_bubble_outline, 'Companion', 2),
+            _buildNavItem(Icons.bar_chart_outlined, 'Insights', 3),
+            _buildNavItem(Icons.person_outline, 'Profile', 4),
           ],
         ),
       ),
@@ -452,7 +446,7 @@ class _ImprovedHomeScreenState extends State<ImprovedHomeScreen> {
         padding: const EdgeInsets.all(8),
         decoration: isSelected
             ? BoxDecoration(
-                color: AppColors.primaryPastel.withValues(alpha: 0.2),
+                color: AppColors.primaryPastel.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
               )
             : null,
