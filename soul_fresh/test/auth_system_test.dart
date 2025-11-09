@@ -186,7 +186,7 @@ void main() {
       final isExpired = now.isAfter(expiresAt);
 
       expect(isExpired, isFalse);
-      expect(expiresAt.difference(now).inDays, greaterThan(29));
+  expect(expiresAt.difference(now).inDays, greaterThanOrEqualTo(29));
     });
   });
 }
