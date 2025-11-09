@@ -31,3 +31,4 @@ google-generativeai==0.7.2
 
 # Supabase integration
 supabase==2.24.0
+python-multipart
