@@ -87,7 +87,7 @@ class GuidedPathwaysCard extends StatelessWidget {
                 LinearProgressIndicator(
                   value: pathway['progress'] as double,
                   backgroundColor:
-                      (pathway['color'] as Color).withValues(alpha: 0.2),
+                      (pathway['color'] as Color).withOpacity(0.2),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     pathway['color'] as Color,
                   ),
@@ -106,7 +106,7 @@ class GuidedPathwaysCard extends StatelessWidget {
                     onPressed: () {},
                     style: FilledButton.styleFrom(
                       backgroundColor:
-                          (pathway['color'] as Color).withValues(alpha: 0.1),
+                          (pathway['color'] as Color).withOpacity(0.1),
                       foregroundColor: pathway['color'] as Color,
                     ),
                     child: const Text('Continue'),
@@ -120,3 +120,4 @@ class GuidedPathwaysCard extends StatelessWidget {
     );
   }
 }
+

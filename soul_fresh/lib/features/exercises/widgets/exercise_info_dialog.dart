@@ -96,7 +96,7 @@ class _DialogHeader extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.25),
+              color: Colors.white.withOpacity(0.25),
               shape: BoxShape.circle,
             ),
             child: Icon(info.icon, size: 32, color: Colors.white),
@@ -225,7 +225,7 @@ class _DialogSection extends StatelessWidget {
                         width: 28,
                         height: 28,
                         decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.2),
+                          color: color.withOpacity(0.2),
                           shape: BoxShape.circle,
                         ),
                         child: Center(
@@ -266,13 +266,13 @@ class _WarningCallout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color borderColor = color.withValues(alpha: 0.3);
+    final Color borderColor = color.withOpacity(0.3);
     final Color textColor =
         color is MaterialColor ? (color as MaterialColor).shade900 : color;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
+        color: color.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: borderColor),
       ),
@@ -364,3 +364,4 @@ void showExerciseInfoDialog(
     ),
   );
 }
+

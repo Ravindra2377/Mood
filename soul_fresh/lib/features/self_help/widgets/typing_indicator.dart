@@ -92,8 +92,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
                           height: 8,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: (widget.color ?? Colors.grey).withValues(
-                              alpha: 0.5 +
+                            color: (widget.color ?? Colors.grey).withOpacity(0.5 +
                                   (_animationControllers[index].value * 0.5),
                             ),
                           ),
@@ -110,3 +109,4 @@ class _TypingIndicatorState extends State<TypingIndicator>
     );
   }
 }
+

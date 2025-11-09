@@ -131,7 +131,7 @@ class AppTheme {
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
         border: const OutlineInputBorder(),
         filled: true,
-        fillColor: base.colorScheme.surface.withValues(alpha: 0.9),
+        fillColor: base.colorScheme.surface.withOpacity(0.9),
       ),
       cardTheme: base.cardTheme.copyWith(
         elevation: 0,
@@ -626,3 +626,4 @@ class AnalyticsScreen extends ConsumerWidget {
     );
   }
 }
+

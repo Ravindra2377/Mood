@@ -197,7 +197,7 @@ class _StressManagementScreenState extends ConsumerState<StressManagementScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFFF6B6B).withValues(alpha: 0.1),
+              color: const Color(0xFFFF6B6B).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFFFF6B6B),
@@ -228,7 +228,7 @@ class _StressManagementScreenState extends ConsumerState<StressManagementScreen>
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.2),
+                        color: Colors.green.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Row(
@@ -438,7 +438,7 @@ class _StressLevelCardState extends State<_StressLevelCard> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? const Color(0xFFFF6B6B)
-                        : const Color(0xFFFF6B6B).withValues(alpha: 0.2),
+                        : const Color(0xFFFF6B6B).withOpacity(0.2),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Center(
@@ -495,7 +495,7 @@ class _StressLogCard extends StatelessWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: const Color(0xFFFF6B6B).withValues(alpha: 0.2),
+              color: const Color(0xFFFF6B6B).withOpacity(0.2),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
@@ -569,7 +569,7 @@ class _ExerciseCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: color),
         ),
@@ -617,3 +617,4 @@ class _ExerciseCard extends StatelessWidget {
     );
   }
 }
+

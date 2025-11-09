@@ -69,7 +69,7 @@ class ExercisesScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: Colors.white.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                           color: Colors.amber.shade200,
@@ -218,7 +218,7 @@ class ExercisesScreen extends ConsumerWidget {
                           margin: const EdgeInsets.only(bottom: 10),
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.85),
+                            color: Colors.white.withOpacity(0.85),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -284,7 +284,7 @@ class ExercisesScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.85),
+                        color: Colors.white.withOpacity(0.85),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
@@ -416,7 +416,7 @@ class ExercisesScreen extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color:
-                isSelected ? Colors.white : Colors.white.withValues(alpha: 0.2),
+                isSelected ? Colors.white : Colors.white.withOpacity(0.2),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: isSelected ? Colors.white : Colors.white24,
@@ -466,3 +466,4 @@ class ExercisesScreen extends ConsumerWidget {
     }
   }
 }
+

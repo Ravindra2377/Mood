@@ -374,8 +374,8 @@ class _InsightsBody extends StatelessWidget {
             show: true,
             gradient: LinearGradient(
               colors: [
-                colors.primary.withValues(alpha: 0.2),
-                colors.primary.withValues(alpha: 0.05),
+                colors.primary.withOpacity(0.2),
+                colors.primary.withOpacity(0.05),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -445,7 +445,7 @@ class _SectionCard extends StatelessWidget {
               description,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color:
-                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                    theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
               ),
             ),
             const SizedBox(height: 24),
@@ -471,7 +471,7 @@ class _EmptyState extends StatelessWidget {
         child: Text(
           message,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+            color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
           ),
           textAlign: TextAlign.center,
         ),
@@ -502,3 +502,4 @@ class _ErrorState extends StatelessWidget {
     );
   }
 }
+

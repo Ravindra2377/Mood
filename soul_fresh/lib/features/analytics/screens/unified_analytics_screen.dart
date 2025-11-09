@@ -46,7 +46,7 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                     Text(
                       'Track your progress and insights',
                       style: AppTypography.body1.copyWith(
-                        color: AppColors.white.withValues(alpha: 0.9),
+                        color: AppColors.white.withOpacity(0.9),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -163,7 +163,7 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.success.withValues(alpha: 0.2),
+                    color: AppColors.success.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -304,7 +304,7 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.success.withValues(alpha: 0.2),
+                        color: AppColors.success.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -469,7 +469,7 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: (stat['color'] as Color).withValues(alpha: 0.2),
+                    color: (stat['color'] as Color).withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -626,3 +626,4 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
     );
   }
 }
+

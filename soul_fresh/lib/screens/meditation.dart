@@ -315,10 +315,10 @@ class _MeditationScreenState extends State<MeditationScreen>
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF00B894).withValues(alpha: 0.1),
+                color: const Color(0xFF00B894).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFF00B894).withValues(alpha: 0.3),
+                  color: const Color(0xFF00B894).withOpacity(0.3),
                 ),
               ),
               child: const Column(
@@ -364,3 +364,4 @@ class _MeditationScreenState extends State<MeditationScreen>
     );
   }
 }
+

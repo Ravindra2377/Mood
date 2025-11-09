@@ -594,8 +594,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 // reported as barely visible. Use bodyMedium with slightly
                 // darker color on light background.
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      // Use withValues instead of deprecated withOpacity.
-                      color: Colors.black.withValues(alpha: 0.75),
+                      // Use withOpacity to stay compatible with Flutter 3.24 CI.
+                      color: Colors.black.withOpacity(0.75),
                       height: 1.3,
                     ),
                 children: [
@@ -628,3 +628,4 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     );
   }
 }
+

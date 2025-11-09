@@ -37,7 +37,7 @@ class ActivityListCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: accent.withValues(alpha: 0.15),
+                      color: accent.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Text(
@@ -72,7 +72,7 @@ class ActivityListCard extends StatelessWidget {
                           children: <Widget>[
                             _buildInfoPill(
                               label: '${activity.durationMinutes} min',
-                              color: accent.withValues(alpha: 0.15),
+                              color: accent.withOpacity(0.15),
                               textColor: accent,
                             ),
                             _buildInfoPill(
@@ -82,7 +82,7 @@ class ActivityListCard extends StatelessWidget {
                             ),
                             _buildInfoPill(
                               label: activity.category,
-                              color: accent.withValues(alpha: 0.08),
+                              color: accent.withOpacity(0.08),
                               textColor: accent,
                             ),
                           ],
@@ -187,3 +187,4 @@ class ActivityListCard extends StatelessWidget {
     }
   }
 }
+

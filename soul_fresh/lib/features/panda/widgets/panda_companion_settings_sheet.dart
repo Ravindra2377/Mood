@@ -87,7 +87,7 @@ class _PandaCompanionSettingsSheetState
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide(
-                    color: AppColors.mediumGrey.withValues(alpha: 0.4),
+                    color: AppColors.mediumGrey.withOpacity(0.4),
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -141,8 +141,8 @@ class _PandaCompanionSettingsSheetState
                         persona.description,
                         style: AppTypography.labelSmall.copyWith(
                           color: isSelected
-                              ? AppColors.charcoal.withValues(alpha: 0.75)
-                              : AppColors.darkGrey.withValues(alpha: 0.7),
+                              ? AppColors.charcoal.withOpacity(0.75)
+                              : AppColors.darkGrey.withOpacity(0.7),
                           height: 1.2,
                         ),
                       ),
@@ -150,7 +150,7 @@ class _PandaCompanionSettingsSheetState
                   ),
                   avatar: CircleAvatar(
                     backgroundColor:
-                        persona.accentColor.withValues(alpha: 0.25),
+                        persona.accentColor.withOpacity(0.25),
                     radius: 16,
                     child: Icon(
                       Icons.auto_awesome,
@@ -159,13 +159,13 @@ class _PandaCompanionSettingsSheetState
                     ),
                   ),
                   backgroundColor: AppColors.white,
-                  selectedColor: persona.accentColor.withValues(alpha: 0.25),
+                  selectedColor: persona.accentColor.withOpacity(0.25),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                     side: BorderSide(
                       color: isSelected
                           ? persona.accentColor
-                          : AppColors.mediumGrey.withValues(alpha: 0.4),
+                          : AppColors.mediumGrey.withOpacity(0.4),
                     ),
                   ),
                 );
@@ -212,3 +212,4 @@ class _PandaCompanionSettingsSheetState
     Navigator.of(context).pop(true);
   }
 }
+
