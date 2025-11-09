@@ -59,6 +59,10 @@ class Settings(BaseSettings):
 
     # Escalation email for crisis alerts
 
+    # Supabase integration
+    SUPABASE_URL: str | None = None
+    SUPABASE_KEY: str | None = None
+
     ESCALATION_EMAIL: str | None = "alerts@example.com"
 
     # Optional ML-based detector

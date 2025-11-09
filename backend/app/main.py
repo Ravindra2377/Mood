@@ -5,7 +5,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 
+
 from app.config import settings
+
+# Supabase integration
+from supabase import create_client, Client
+
+supabase: Client | None = None
+if settings.SUPABASE_URL and settings.SUPABASE_KEY:
+    supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
 from app.services.i18n import parse_accept_language
 
