@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'package:soul/features/theme/providers/theme_provider.dart';
 
@@ -32,18 +32,28 @@ void main() {
     );
 
     // Set to Dark and verify brightness is dark for a descendant
-  final container = ProviderScope.containerOf(tester.element(find.byType(Scaffold)));
+    final container =
+        ProviderScope.containerOf(tester.element(find.byType(Scaffold)));
     container.read(themeProvider.notifier).setThemeMode(ThemeMode.dark);
     await tester.pump();
-  // Check MaterialApp's effective theme via Theme widget in tree
-  expect(Theme.of(tester.element(find.text('X'))).brightness, anyOf(Brightness.dark, Brightness.light));
-  // Force a rebuild by pumping frames
-  await tester.pumpAndSettle();
-  expect(Theme.of(tester.element(find.text('X'))).brightness, Brightness.dark);
+    // Check MaterialApp's effective theme via Theme widget in tree
+    expect(
+      Theme.of(tester.element(find.text('X'))).brightness,
+      anyOf(Brightness.dark, Brightness.light),
+    );
+    // Force a rebuild by pumping frames
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.text('X'))).brightness,
+      Brightness.dark,
+    );
 
     // Switch back to Light
     container.read(themeProvider.notifier).setThemeMode(ThemeMode.light);
-  await tester.pumpAndSettle();
-    expect(Theme.of(tester.element(find.text('X'))).brightness, Brightness.light);
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.text('X'))).brightness,
+      Brightness.light,
+    );
   });
 }

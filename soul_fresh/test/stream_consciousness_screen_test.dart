@@ -63,7 +63,9 @@ void main() {
         .toList();
     // After resuming, at least one 09:XX value should still exist.
     expect(
-        textsAfterResume.any((s) => RegExp(r'09:\d{2}').hasMatch(s)), isTrue);
+      textsAfterResume.any((s) => RegExp(r'09:\d{2}').hasMatch(s)),
+      isTrue,
+    );
   });
 
   testWidgets('Stream of Consciousness completes exercise after writing',
@@ -85,8 +87,10 @@ void main() {
 
     // Enter text in the writing field (first TextField)
     final writingField = find.byType(TextField).first;
-    await tester.enterText(writingField,
-        'This is my stream of consciousness writing for testing purposes.');
+    await tester.enterText(
+      writingField,
+      'This is my stream of consciousness writing for testing purposes.',
+    );
     await tester.pump();
 
     // Verify word count updates (should be 11 words)

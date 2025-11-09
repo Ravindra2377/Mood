@@ -50,7 +50,7 @@ class AppTheme {
         // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.white,
         surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
@@ -62,7 +62,7 @@ class AppTheme {
       ),
       chipTheme: base.chipTheme.copyWith(
         backgroundColor: AppColors.lightGrey,
-  selectedColor: AppColors.primaryPastel.withOpacity(0.2),
+        selectedColor: AppColors.primaryPastel.withOpacity(0.2),
         pressElevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -74,7 +74,8 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.lightGrey,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: AppColors.mediumGrey),
@@ -85,7 +86,8 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: AppColors.primaryPastel, width: 2),
+          borderSide:
+              const BorderSide(color: AppColors.primaryPastel, width: 2),
         ),
         // Use a lighter variant of the onSurface color for hints/labels
         hintStyle: AppTypography.body2.copyWith(
@@ -142,7 +144,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: AppColors.white,
         surfaceTintColor: Colors.transparent,
         titleTextStyle: AppTypography.h3,
@@ -151,8 +153,9 @@ class AppTheme {
           borderRadius: BorderRadius.all(Radius.circular(28)),
         ),
       ),
-    scrollbarTheme: ScrollbarThemeData(
-  thumbColor: MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.6)),
+      scrollbarTheme: ScrollbarThemeData(
+        thumbColor:
+            MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.6)),
         radius: const Radius.circular(12),
       ),
     );
@@ -205,7 +208,7 @@ class AppTheme {
         // Let Flutter apply the text color automatically
         titleTextStyle: AppTypography.h4,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: const Color(0xFF191C1F),
         surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
@@ -217,7 +220,7 @@ class AppTheme {
       ),
       chipTheme: base.chipTheme.copyWith(
         backgroundColor: const Color(0xFF2A2D32),
-  selectedColor: AppColors.primaryPastel.withOpacity(0.25),
+        selectedColor: AppColors.primaryPastel.withOpacity(0.25),
         // Let Flutter use the theme's default text color
         labelStyle: AppTypography.label,
         shape: RoundedRectangleBorder(
@@ -228,7 +231,8 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: const Color(0xFF1F2327),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: Color(0xFF373B40)),
@@ -239,7 +243,8 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: AppColors.primaryPastel, width: 2),
+          borderSide:
+              const BorderSide(color: AppColors.primaryPastel, width: 2),
         ),
         // Use a lighter variant of the onSurface color for hints/labels
         hintStyle: AppTypography.body2.copyWith(
@@ -255,7 +260,8 @@ class AppTheme {
           foregroundColor: AppColors.black,
           textStyle: AppTypography.button,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           elevation: 0,
         ),
       ),
@@ -265,7 +271,8 @@ class AppTheme {
           side: const BorderSide(color: AppColors.primaryPastel, width: 1.2),
           textStyle: AppTypography.button,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -290,7 +297,7 @@ class AppTheme {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: const Color(0xFF191C1F),
         surfaceTintColor: Colors.transparent,
         // Let Flutter use the theme's default text colors
@@ -300,11 +307,11 @@ class AppTheme {
           borderRadius: BorderRadius.all(Radius.circular(28)),
         ),
       ),
-    scrollbarTheme: ScrollbarThemeData(
-  thumbColor: MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.5)),
+      scrollbarTheme: ScrollbarThemeData(
+        thumbColor:
+            MaterialStateProperty.all(AppColors.primaryPastel.withOpacity(0.5)),
         radius: const Radius.circular(12),
       ),
     );
   }
 }
-
