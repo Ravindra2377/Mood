@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:soul_fresh/features/chat/data/chat_api.dart';
-import 'package:soul_fresh/features/chat/models/chat_message.dart';
+import 'package:mood_app/features/chat/data/chat_api.dart';
+import 'package:mood_app/features/chat/models/chat_message.dart';
 
 final chatConversationProvider =
     StateNotifierProvider<ChatConversationNotifier, List<ChatMessage>>((ref) {

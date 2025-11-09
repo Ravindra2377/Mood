@@ -30,7 +30,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     super.initState();
     final initialIndex = ref.read(mainScreenIndexProvider);
     _pageController = PageController(initialPage: initialIndex);
-    _tabSubscription = ref.listen<int>(
+    _tabSubscription = ref.listenManual<int>(
       mainScreenIndexProvider,
       (previous, next) {
         if (!_pageController.hasClients) {

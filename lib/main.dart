@@ -13,9 +13,16 @@ void main() async {
   await SelfHelpStorageService.initialize();
   await AnalyticsService.initialize();
   
-  runApp(
-    const ProviderScope(
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const ProviderScope(
       child: App(),
-    ),
-  );
+    );
+  }
 }
