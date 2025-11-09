@@ -10,7 +10,7 @@ void main() {
 
     test('gives points for length >= 8', () {
       final score = PasswordStrength.calculate('12345678');
-      expect(score, greaterThanOrEqualTo(0.25));
+      expect(score, greaterThanOrEqualTo(0.2));
     });
 
     test('gives additional points for length >= 12', () {
@@ -20,18 +20,18 @@ void main() {
     });
 
     test('gives points for lowercase letters', () {
-      final withLower = PasswordStrength.calculate('abc');  // lower = 0.15
+      final withLower = PasswordStrength.calculate('abc');  // lower = 0.2
       final without = PasswordStrength.calculate('123');    // numbers = 0.15
-      // Both have 0.15, but different features - test that lower is recognized
-      expect(withLower, equals(0.15));
+      // Both have points, but different features - test that lower is recognized
+      expect(withLower, equals(0.2));
       expect(without, equals(0.15));
     });
 
     test('gives points for uppercase letters', () {
-      final withUpper = PasswordStrength.calculate('ABC');  // upper = 0.15
+      final withUpper = PasswordStrength.calculate('ABC');  // upper = 0.2
       final without = PasswordStrength.calculate('123');    // numbers = 0.15
-      // Both have 0.15, but different features - test that upper is recognized
-      expect(withUpper, equals(0.15));
+      // Both have points, but different features - test that upper is recognized
+      expect(withUpper, equals(0.2));
       expect(without, equals(0.15));
     });
 
@@ -164,15 +164,16 @@ void main() {
   group('PasswordStrength.getMissingRequirements', () {
     test('returns all requirements for empty password', () {
       final missing = PasswordStrength.getMissingRequirements('');
-      expect(missing, hasLength(4));
+      expect(missing, hasLength(5));
       expect(missing, contains('At least 8 characters'));
       expect(missing, contains('One lowercase letter'));
       expect(missing, contains('One uppercase letter'));
       expect(missing, contains('One number'));
+      expect(missing, contains('One special character'));
     });
 
     test('returns empty list for password meeting all requirements', () {
-      final missing = PasswordStrength.getMissingRequirements('Password1');
+      final missing = PasswordStrength.getMissingRequirements('Password1!');
       expect(missing, isEmpty);
     });
 
@@ -198,15 +199,16 @@ void main() {
 
     test('identifies multiple missing requirements', () {
       final missing = PasswordStrength.getMissingRequirements('pass');
-      expect(missing.length, greaterThanOrEqualTo(3));
+      expect(missing.length, greaterThanOrEqualTo(4));
       expect(missing, contains('At least 8 characters'));
       expect(missing, contains('One uppercase letter'));
       expect(missing, contains('One number'));
+      expect(missing, contains('One special character'));
     });
 
-    test('does not include special characters in required list', () {
+    test('includes special character requirement when missing', () {
       final missing = PasswordStrength.getMissingRequirements('Password1');
-      expect(missing, isNot(contains(contains('special'))));
+      expect(missing, contains('One special character'));
     });
   });
 

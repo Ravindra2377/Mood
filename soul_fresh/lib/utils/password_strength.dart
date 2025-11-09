@@ -4,15 +4,30 @@ import 'package:flutter/material.dart';
 class PasswordStrength {
   PasswordStrength._();
 
+  static final RegExp _lowerRegex = RegExp(r'[a-z]');
+  static final RegExp _upperRegex = RegExp(r'[A-Z]');
+  static final RegExp _digitRegex = RegExp(r'[0-9]');
+  static final RegExp _specialCharRegex =
+      RegExp(r'[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\;/`~]');
+
   /// Calculate password strength score (0.0 to 1.0)
   static double calculate(String password) {
+    if (password.isEmpty) {
+      return 0;
+    }
+
     double strength = 0;
-    if (password.length >= 8) strength += 0.25;
-    if (password.length >= 12) strength += 0.1;
-    if (password.contains(RegExp(r'[a-z]'))) strength += 0.15;
-    if (password.contains(RegExp(r'[A-Z]'))) strength += 0.15;
-    if (password.contains(RegExp(r'[0-9]'))) strength += 0.15;
-    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) strength += 0.2;
+    if (password.length >= 8) {
+      strength += 0.2;
+      if (password.length >= 12) {
+        strength += 0.1;
+      }
+    }
+    if (_lowerRegex.hasMatch(password)) strength += 0.2;
+    if (_upperRegex.hasMatch(password)) strength += 0.2;
+    if (_digitRegex.hasMatch(password)) strength += 0.15;
+    if (_specialCharRegex.hasMatch(password)) strength += 0.15;
+
     return strength.clamp(0.0, 1.0);
   }
 
@@ -54,21 +69,24 @@ class PasswordStrength {
 
   /// Get list of missing requirements for a password
   static List<String> getMissingRequirements(String password) {
-    final missing = <String>[];
-    
+  final missing = <String>[];
+
     if (password.length < 8) {
       missing.add('At least 8 characters');
     }
-    if (!password.contains(RegExp(r'[a-z]'))) {
+    if (!_lowerRegex.hasMatch(password)) {
       missing.add('One lowercase letter');
     }
-    if (!password.contains(RegExp(r'[A-Z]'))) {
+    if (!_upperRegex.hasMatch(password)) {
       missing.add('One uppercase letter');
     }
-    if (!password.contains(RegExp(r'[0-9]'))) {
+    if (!_digitRegex.hasMatch(password)) {
       missing.add('One number');
     }
-    
+    if (!_specialCharRegex.hasMatch(password)) {
+      missing.add('One special character');
+    }
+
     return missing;
   }
 }
