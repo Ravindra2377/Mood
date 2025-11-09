@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/self_help/self_help_models.dart';
 import '../services/self_help_storage_service.dart';
+import 'self_help_controller.dart';
 
 // ============================================
 // STATE

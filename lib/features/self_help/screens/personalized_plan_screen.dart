@@ -250,17 +250,6 @@ class PersonalizedPlanScreen extends ConsumerWidget {
     );
   }
 
-  String _getProgramName(String programId) {
-    final programNames = {
-      'anxiety_management': 'Anxiety Management',
-      'sleep_hygiene': 'Sleep Hygiene',
-      'depression_management': 'Depression Management',
-      'stress_reduction': 'Stress Reduction',
-      'mindfulness_practice': 'Mindfulness Practice',
-      'cognitive_restructuring': 'Cognitive Restructuring',
-    };
-    return programNames[programId] ?? programId;
-  }
 }
 
 class _ActionCard extends StatelessWidget {

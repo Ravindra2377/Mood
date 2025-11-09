@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../models/self_help/self_help_models.dart';
 import '../controllers/self_help_controller.dart';
 
 class ProgressSummaryCard extends ConsumerWidget {

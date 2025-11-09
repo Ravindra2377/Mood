@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/analytics_provider.dart';
@@ -23,10 +25,12 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          ref.refresh(analyticsSnapshotProvider);
-          ref.refresh(exerciseStatsProvider);
-          ref.refresh(selfHelpStatsProvider);
-          ref.refresh(moodStatsProvider);
+          await Future.wait([
+            ref.refresh(analyticsSnapshotProvider.future),
+            ref.refresh(exerciseStatsProvider.future),
+            ref.refresh(selfHelpStatsProvider.future),
+            ref.refresh(moodStatsProvider.future),
+          ]);
         },
         child: analyticsSnapshot.when(
           loading: () => const Center(child: CircularProgressIndicator()),
