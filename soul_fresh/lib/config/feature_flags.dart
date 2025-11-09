@@ -19,4 +19,3 @@ class FeatureFlags {
   /// Maximum retry attempts for failed requests
   static const int maxRetryAttempts = 3;
 }
-

@@ -32,24 +32,26 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
     _SupportPrompt(
       id: 'ground',
       title: 'Steady your breathing',
-      message: 'Take a calm pause and settle your mind with a grounding exercise.',
+      message:
+          'Take a calm pause and settle your mind with a grounding exercise.',
       actions: <_SupportAction>[
         _SupportAction(
           id: 'just_listen',
           label: 'Just listen',
-          emoji: '👂',
-          description: 'Open a soothing audio exercise to anchor your breathing.',
+          emoji: 'ðŸ‘‚',
+          description:
+              'Open a soothing audio exercise to anchor your breathing.',
         ),
         _SupportAction(
           id: 'boost_courage',
           label: 'Boost my courage',
-          emoji: '💪',
+          emoji: 'ðŸ’ª',
           description: 'Write down one thing you handled well today.',
         ),
         _SupportAction(
           id: 'celebrate',
           label: 'Celebrate progress',
-          emoji: '🎉',
+          emoji: 'ðŸŽ‰',
           description: 'Take a moment to acknowledge a small win in your day.',
         ),
       ],
@@ -62,19 +64,19 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
         _SupportAction(
           id: 'breathing',
           label: 'Try breathing',
-          emoji: '🌬️',
+          emoji: 'ðŸŒ¬ï¸',
           description: 'Start a calming breathwork session to reset your body.',
         ),
         _SupportAction(
           id: 'movement',
           label: 'Gentle movement',
-          emoji: '🧘',
+          emoji: 'ðŸ§˜',
           description: 'Explore a short stretch to release stored tension.',
         ),
         _SupportAction(
           id: 'gratitude',
           label: 'Gratitude note',
-          emoji: '📝',
+          emoji: 'ðŸ“',
           description: 'Jot down three things you appreciate in this moment.',
         ),
       ],
@@ -87,20 +89,23 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
         _SupportAction(
           id: 'reflect',
           label: 'Reflect now',
-          emoji: '🪞',
-          description: 'Capture what helped you feel this way so you can repeat it.',
+          emoji: 'ðŸªž',
+          description:
+              'Capture what helped you feel this way so you can repeat it.',
         ),
         _SupportAction(
           id: 'share',
           label: 'Share with someone',
-          emoji: '💬',
-          description: 'Tell a friend or journal entry about the progress you notice.',
+          emoji: 'ðŸ’¬',
+          description:
+              'Tell a friend or journal entry about the progress you notice.',
         ),
         _SupportAction(
           id: 'plan',
           label: 'Plan next step',
-          emoji: '🗓️',
-          description: 'Pick one small action to keep the positive momentum going.',
+          emoji: 'ðŸ—“ï¸',
+          description:
+              'Pick one small action to keep the positive momentum going.',
         ),
       ],
     ),
@@ -181,7 +186,7 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '🧰 Therapy Toolbox',
+                          'ðŸ§° Therapy Toolbox',
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge
@@ -213,7 +218,7 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '🗺️ Guided Pathways',
+                          'ðŸ—ºï¸ Guided Pathways',
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge
@@ -245,7 +250,7 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '📊 Assessments',
+                          'ðŸ“Š Assessments',
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge
@@ -277,7 +282,7 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '👥 Community Support',
+                          'ðŸ‘¥ Community Support',
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge
@@ -309,7 +314,7 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '📚 Resource Library',
+                          'ðŸ“š Resource Library',
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge
@@ -362,10 +367,11 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-  border: Border.all(color: AppColors.secondaryPastel.withOpacity(0.6)),
+        border:
+            Border.all(color: AppColors.secondaryPastel.withValues(alpha: 0.6)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondaryPastel.withOpacity(0.22),
+            color: AppColors.secondaryPastel.withValues(alpha: 0.22),
             blurRadius: 20,
             offset: const Offset(0, 14),
           ),
@@ -404,7 +410,7 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
               prompt.message,
               key: ValueKey<String>(prompt.id),
               style: AppTypography.body1.copyWith(
-                color: AppColors.charcoal.withOpacity(0.85),
+                color: AppColors.charcoal.withValues(alpha: 0.85),
               ),
               textAlign: TextAlign.center,
             ),
@@ -521,7 +527,9 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                for (int index = 0; index < _supportPrompts.length; index++) ...[
+                for (int index = 0;
+                    index < _supportPrompts.length;
+                    index++) ...[
                   Builder(
                     builder: (BuildContext context) {
                       final _SupportPrompt prompt = _supportPrompts[index];
@@ -531,13 +539,17 @@ class _SelfHelpScreenState extends ConsumerState<SelfHelpScreen> {
                         title: Text(prompt.title),
                         subtitle: Text(prompt.message),
                         trailing: isActive
-                            ? Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
+                            ? Icon(
+                                Icons.check_circle,
+                                color: Theme.of(context).colorScheme.primary,
+                              )
                             : null,
                         onTap: () => Navigator.of(context).pop(prompt.id),
                       );
                     },
                   ),
-                  if (index < _supportPrompts.length - 1) const Divider(height: 1),
+                  if (index < _supportPrompts.length - 1)
+                    const Divider(height: 1),
                 ],
               ],
             ),

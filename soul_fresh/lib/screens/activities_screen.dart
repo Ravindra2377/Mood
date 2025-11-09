@@ -137,8 +137,8 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
 
   Widget _buildStatsCard(BuildContext context) {
     const ActivityStats stats = defaultActivityStats;
-    final double weeklyProgress = (stats.minutesToday / stats.weeklyGoalMinutes)
-        .clamp(0.0, 1.0);
+    final double weeklyProgress =
+        (stats.minutesToday / stats.weeklyGoalMinutes).clamp(0.0, 1.0);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
@@ -153,7 +153,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
           borderRadius: BorderRadius.circular(24),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Colors.black.withOpacity(0.12),
+              color: Colors.black.withValues(alpha: 0.12),
               blurRadius: 18,
               offset: const Offset(0, 12),
             ),
@@ -164,11 +164,15 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                _buildStatColumn('🔥', '${stats.streakDays} days', 'Streak'),
+                _buildStatColumn('ðŸ”¥', '${stats.streakDays} days', 'Streak'),
                 const SizedBox(width: 16),
-                _buildStatColumn('⏱️', '${stats.minutesToday} min', 'Today'),
+                _buildStatColumn(
+                  'â±ï¸',
+                  '${stats.minutesToday} min',
+                  'Today',
+                ),
                 const SizedBox(width: 16),
-                _buildStatColumn('✅', '${stats.totalCompleted}', 'Completed'),
+                _buildStatColumn('âœ…', '${stats.totalCompleted}', 'Completed'),
               ],
             ),
             const SizedBox(height: 20),
@@ -185,7 +189,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
               child: LinearProgressIndicator(
                 value: weeklyProgress,
                 minHeight: 8,
-                backgroundColor: Colors.white.withOpacity(0.25),
+                backgroundColor: Colors.white.withValues(alpha: 0.25),
                 valueColor:
                     const AlwaysStoppedAnimation<Color>(Color(0xFFFFF59D)),
               ),
@@ -209,7 +213,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               SizedBox(width: 8),
-              Text('💡', style: TextStyle(fontSize: 18)),
+              Text('ðŸ’¡', style: TextStyle(fontSize: 18)),
             ],
           ),
         ),
@@ -378,8 +382,11 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Icon(Icons.sentiment_satisfied_alt,
-                  size: 56, color: Colors.grey,),
+              const Icon(
+                Icons.sentiment_satisfied_alt,
+                size: 56,
+                color: Colors.grey,
+              ),
               const SizedBox(height: 16),
               Text(
                 'No activities match your filters yet.',
@@ -426,7 +433,8 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
   }
 
   List<WellnessActivity> _sortActivities(List<WellnessActivity> activities) {
-    final List<WellnessActivity> sorted = List<WellnessActivity>.from(activities);
+    final List<WellnessActivity> sorted =
+        List<WellnessActivity>.from(activities);
     switch (_selectedSort) {
       case 'Popular':
         sorted.sort((WellnessActivity a, WellnessActivity b) {
@@ -455,8 +463,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
         break;
       case 'Alphabetical':
         sorted.sort(
-          (WellnessActivity a, WellnessActivity b) =>
-              a.name.compareTo(b.name),
+          (WellnessActivity a, WellnessActivity b) => a.name.compareTo(b.name),
         );
         break;
     }
@@ -468,8 +475,9 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
       return List<WellnessActivity>.from(source);
     }
     return source
-        .where((WellnessActivity activity) =>
-            activity.tags.contains(_selectedTag!),)
+        .where(
+          (WellnessActivity activity) => activity.tags.contains(_selectedTag!),
+        )
         .toList();
   }
 
@@ -481,46 +489,62 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
   }
 
   List<WellnessActivity> _buildRecommendations(MoodLevel? mood) {
-    final LinkedHashSet<WellnessActivity> picks = LinkedHashSet<WellnessActivity>();
-    picks.addAll(allActivities.where((WellnessActivity activity) => activity.isRecommended));
+    final LinkedHashSet<WellnessActivity> picks =
+        LinkedHashSet<WellnessActivity>();
+    picks.addAll(
+      allActivities
+          .where((WellnessActivity activity) => activity.isRecommended),
+    );
 
     final int hour = TimeOfDay.now().hour;
 
     if (mood == MoodLevel.angry || mood == MoodLevel.sad) {
-      picks.addAll(_activitiesByIds(<String>[
-        'box_breathing',
-        '5_4_3_2_1_sensory',
-        'quick_pmr',
-      ]),);
+      picks.addAll(
+        _activitiesByIds(<String>[
+          'box_breathing',
+          '5_4_3_2_1_sensory',
+          'quick_pmr',
+        ]),
+      );
     }
     if (mood == MoodLevel.neutral || mood == MoodLevel.happy) {
-      picks.addAll(_activitiesByIds(<String>[
-        'gratitude_journal',
-        'success_visualization',
-      ]),);
+      picks.addAll(
+        _activitiesByIds(<String>[
+          'gratitude_journal',
+          'success_visualization',
+        ]),
+      );
     }
     if (mood == MoodLevel.veryHappy) {
-      picks.addAll(_activitiesByIds(<String>[
-        'opposite_action',
-        'yoga_flow',
-      ]),);
+      picks.addAll(
+        _activitiesByIds(<String>[
+          'opposite_action',
+          'yoga_flow',
+        ]),
+      );
     }
     if (hour >= 20) {
-      picks.addAll(_activitiesByIds(<String>[
-        'sleep_meditation',
-        'body_scan_sleep',
-        '4_7_8_breathing',
-      ]),);
+      picks.addAll(
+        _activitiesByIds(<String>[
+          'sleep_meditation',
+          'body_scan_sleep',
+          '4_7_8_breathing',
+        ]),
+      );
     } else if (hour < 12) {
-      picks.addAll(_activitiesByIds(<String>[
-        'gratitude_journal',
-        'yoga_flow',
-      ]),);
+      picks.addAll(
+        _activitiesByIds(<String>[
+          'gratitude_journal',
+          'yoga_flow',
+        ]),
+      );
     }
     if (_selectedTag != null) {
-      picks.addAll(allActivities.where(
-        (WellnessActivity activity) => activity.tags.contains(_selectedTag!),
-      ),);
+      picks.addAll(
+        allActivities.where(
+          (WellnessActivity activity) => activity.tags.contains(_selectedTag!),
+        ),
+      );
     }
     if (_selectedCategory != 'All') {
       picks.addAll(_activitiesForCategory(_selectedCategory));
@@ -543,8 +567,10 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
       }
     }
     final List<MapEntry<String, int>> entries = counts.entries.toList()
-      ..sort((MapEntry<String, int> a, MapEntry<String, int> b) =>
-          b.value.compareTo(a.value),);
+      ..sort(
+        (MapEntry<String, int> a, MapEntry<String, int> b) =>
+            b.value.compareTo(a.value),
+      );
     return entries.map((MapEntry<String, int> e) => e.key).take(8).toList();
   }
 
@@ -599,4 +625,3 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
     }
   }
 }
-

@@ -161,12 +161,14 @@ class AuthController extends AsyncNotifier<AuthState> {
   Future<void> verifyOtp({required String email, required String code}) async {
     state = const AsyncLoading();
     try {
-      final res = await _api.verifyOtp(VerifyOtpRequest(email: email, code: code));
+      final res =
+          await _api.verifyOtp(VerifyOtpRequest(email: email, code: code));
       await _tokens.saveAccessToken(res.accessToken);
       if ((res.refreshToken ?? '').isNotEmpty) {
         await _tokens.saveRefreshToken(res.refreshToken!);
       }
-      state = AsyncData(AuthState(initialized: true, accessToken: res.accessToken));
+      state =
+          AsyncData(AuthState(initialized: true, accessToken: res.accessToken));
     } catch (e, st) {
       state = AsyncError(e, st);
       rethrow;
@@ -177,12 +179,14 @@ class AuthController extends AsyncNotifier<AuthState> {
   Future<void> login({required String email, required String password}) async {
     state = const AsyncLoading();
     try {
-      final res = await _api.login(LoginRequest(email: email, password: password));
+      final res =
+          await _api.login(LoginRequest(email: email, password: password));
       await _tokens.saveAccessToken(res.accessToken);
       if ((res.refreshToken ?? '').isNotEmpty) {
         await _tokens.saveRefreshToken(res.refreshToken!);
       }
-      state = AsyncData(AuthState(initialized: true, accessToken: res.accessToken));
+      state =
+          AsyncData(AuthState(initialized: true, accessToken: res.accessToken));
     } catch (e, st) {
       state = AsyncError(e, st);
       rethrow;

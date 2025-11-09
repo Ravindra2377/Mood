@@ -128,4 +128,3 @@ class ContentCard extends StatelessWidget {
     }
   }
 }
-

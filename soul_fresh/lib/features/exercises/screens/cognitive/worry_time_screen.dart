@@ -98,7 +98,8 @@ class _WorryTimeScreenState extends State<WorryTimeScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Worry time finished'),
         content: const Text(
-            'You captured your concerns during the scheduled window.',),
+          'You captured your concerns during the scheduled window.',
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () {

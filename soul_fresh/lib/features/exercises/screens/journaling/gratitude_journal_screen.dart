@@ -53,10 +53,12 @@ class _GratitudeJournalScreenState extends State<GratitudeJournalScreen> {
 
     final filledEntries = _entries
         .where((entry) => entry.gratitude.trim().isNotEmpty)
-        .map((entry) => {
-              'gratitude': entry.gratitude.trim(),
-              'why': entry.reason.trim(),
-            },)
+        .map(
+          (entry) => {
+            'gratitude': entry.gratitude.trim(),
+            'why': entry.reason.trim(),
+          },
+        )
         .toList();
 
     if (filledEntries.length < _minimumItems) {

@@ -90,7 +90,7 @@ class _AnimatedPandaCompanionState extends State<AnimatedPandaCompanion>
       CurvedAnimation(parent: _tapController, curve: Curves.easeOutBack),
     );
 
-  _sparkles = widget.showAmbientSparkles ? _generateSparkles() : <_Sparkle>[];
+    _sparkles = widget.showAmbientSparkles ? _generateSparkles() : <_Sparkle>[];
     _scheduleBlink();
   }
 
@@ -100,7 +100,8 @@ class _AnimatedPandaCompanionState extends State<AnimatedPandaCompanion>
     super.didUpdateWidget(oldWidget);
     if (widget.persona != oldWidget.persona ||
         widget.showAmbientSparkles != oldWidget.showAmbientSparkles) {
-      _sparkles = widget.showAmbientSparkles ? _generateSparkles() : <_Sparkle>[];
+      _sparkles =
+          widget.showAmbientSparkles ? _generateSparkles() : <_Sparkle>[];
     }
   }
 
@@ -155,7 +156,7 @@ class _AnimatedPandaCompanionState extends State<AnimatedPandaCompanion>
         size: 14 + _random.nextDouble() * 8,
         phaseShift: _random.nextDouble() * 2 * pi,
         color: widget.persona.accentColor
-            .withOpacity(0.65 - _random.nextDouble() * 0.2),
+            .withValues(alpha: 0.65 - _random.nextDouble() * 0.2),
       );
     });
   }
@@ -164,25 +165,26 @@ class _AnimatedPandaCompanionState extends State<AnimatedPandaCompanion>
     switch (mood) {
       case PandaMood.happy:
       case PandaMood.celebrate:
-  return AppColors.happyPastel.withOpacity(0.4);
+        return AppColors.happyPastel.withValues(alpha: 0.4);
       case PandaMood.calm:
       case PandaMood.focus:
-  return AppColors.calmPastel.withOpacity(0.35);
+        return AppColors.calmPastel.withValues(alpha: 0.35);
       case PandaMood.anxious:
-  return AppColors.anxiousPastel.withOpacity(0.35);
+        return AppColors.anxiousPastel.withValues(alpha: 0.35);
       case PandaMood.sad:
-  return AppColors.sadPastel.withOpacity(0.35);
+        return AppColors.sadPastel.withValues(alpha: 0.35);
       case PandaMood.lonely:
-  return AppColors.coolPastel.withOpacity(0.35);
+        return AppColors.coolPastel.withValues(alpha: 0.35);
       case PandaMood.welcome:
-  return AppColors.primaryPastel.withOpacity(0.4);
+        return AppColors.primaryPastel.withValues(alpha: 0.4);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final bubbleColor = _bubbleColorForMood(widget.mood);
-  final accent = widget.persona.accentColor.withOpacity(0.6); // already updated
+    final accent =
+        widget.persona.accentColor.withValues(alpha: 0.6); // already updated
     final blendedBubble = Color.alphaBlend(accent, bubbleColor);
 
     Widget pandaAvatar = GestureDetector(
@@ -220,12 +222,12 @@ class _AnimatedPandaCompanionState extends State<AnimatedPandaCompanion>
                         end: Alignment.bottomRight,
                         colors: [
                           Colors.white,
-                          AppColors.whiteBg.withOpacity(0.8),
+                          AppColors.whiteBg.withValues(alpha: 0.8),
                         ],
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: accent.withOpacity(0.25),
+                          color: accent.withValues(alpha: 0.25),
                           blurRadius: 20,
                           offset: const Offset(0, 16),
                         ),
@@ -239,10 +241,12 @@ class _AnimatedPandaCompanionState extends State<AnimatedPandaCompanion>
                         child!,
                         if (widget.showAmbientSparkles)
                           ..._sparkles.map((sparkle) {
-                            final double oscillation =
-                                (sin((ambienceProgress * 2 * pi) + sparkle.phaseShift) +
-                                        1) /
-                                    2;
+                            final double oscillation = (sin(
+                                      (ambienceProgress * 2 * pi) +
+                                          sparkle.phaseShift,
+                                    ) +
+                                    1) /
+                                2;
                             final double opacity =
                                 (0.35 + (oscillation * 0.45)).clamp(0.0, 1.0);
                             final double scale = 0.8 + (oscillation * 0.35);
@@ -261,7 +265,8 @@ class _AnimatedPandaCompanionState extends State<AnimatedPandaCompanion>
                                       color: sparkle.color,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: sparkle.color.withOpacity(0.5),
+                                          color: sparkle.color
+                                              .withValues(alpha: 0.5),
                                           blurRadius: sparkle.size * 0.8,
                                         ),
                                       ],
@@ -309,10 +314,11 @@ class _AnimatedPandaCompanionState extends State<AnimatedPandaCompanion>
           decoration: BoxDecoration(
             color: blendedBubble,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: accent.withOpacity(0.9), width: 1.2),
+            border:
+                Border.all(color: accent.withValues(alpha: 0.9), width: 1.2),
             boxShadow: [
               BoxShadow(
-                color: accent.withOpacity(0.45),
+                color: accent.withValues(alpha: 0.45),
                 blurRadius: 14,
                 offset: const Offset(0, 8),
               ),

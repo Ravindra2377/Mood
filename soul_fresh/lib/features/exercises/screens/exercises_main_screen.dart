@@ -25,13 +25,15 @@ class _ExercisesMainScreenState extends State<ExercisesMainScreen> {
       id: 'energize',
       label: 'Boost energy',
       emoji: '⚡',
-      description: 'Refresh a tired mind with uplifting movement and focus resets.',
+      description:
+          'Refresh a tired mind with uplifting movement and focus resets.',
     ),
     _FocusOption(
       id: 'reset',
       label: 'Quick reset',
       emoji: '🌿',
-      description: 'Take a short pause to clear your head before the next task.',
+      description:
+          'Take a short pause to clear your head before the next task.',
     ),
   ];
 
@@ -195,17 +197,19 @@ class _ExercisesMainScreenState extends State<ExercisesMainScreen> {
   }
 
   Widget _buildFocusHeader() {
-    final _FocusOption activeFocus = _focusOptions
-        .firstWhere((option) => option.id == _selectedFocusId);
+    final _FocusOption activeFocus =
+        _focusOptions.firstWhere((option) => option.id == _selectedFocusId);
 
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-  border: Border.all(color: AppColors.secondaryPastel.withOpacity(0.6)),
+        border: Border.all(
+          color: AppColors.secondaryPastel.withValues(alpha: 0.6),
+        ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondaryPastel.withOpacity(0.2),
+            color: AppColors.secondaryPastel.withValues(alpha: 0.2),
             blurRadius: 18,
             offset: const Offset(0, 12),
           ),
@@ -227,7 +231,7 @@ class _ExercisesMainScreenState extends State<ExercisesMainScreen> {
           Text(
             activeFocus.description,
             style: AppTypography.body1.copyWith(
-              color: AppColors.charcoal.withOpacity(0.8),
+              color: AppColors.charcoal.withValues(alpha: 0.8),
             ),
             textAlign: TextAlign.center,
           ),

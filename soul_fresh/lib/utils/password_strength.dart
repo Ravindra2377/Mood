@@ -69,7 +69,7 @@ class PasswordStrength {
 
   /// Get list of missing requirements for a password
   static List<String> getMissingRequirements(String password) {
-  final missing = <String>[];
+    final missing = <String>[];
 
     if (password.length < 8) {
       missing.add('At least 8 characters');

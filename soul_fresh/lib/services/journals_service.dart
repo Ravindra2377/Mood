@@ -20,8 +20,9 @@ class JournalsService implements JournalStore {
   JournalsService._(this.box, {this.apiClient});
 
   /// Open the local box. Optionally provide an [ApiClient] for immediate sync.
-  static Future<JournalsService> create(
-      {api_client.ApiClient? apiClient,}) async {
+  static Future<JournalsService> create({
+    api_client.ApiClient? apiClient,
+  }) async {
     final box = await Hive.openBox<JournalEntry>(boxName);
     return JournalsService._(box, apiClient: apiClient);
   }

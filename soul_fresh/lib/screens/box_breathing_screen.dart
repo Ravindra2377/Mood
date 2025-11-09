@@ -136,12 +136,14 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('✓ Great Job!'),
+        title: const Text('âœ“ Great Job!'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Duration: ${_totalSeconds ~/ 60}:${(_totalSeconds % 60).toString().padLeft(2, '0')}'),
+            Text(
+              'Duration: ${_totalSeconds ~/ 60}:${(_totalSeconds % 60).toString().padLeft(2, '0')}',
+            ),
             const SizedBox(height: 12),
             const Text('How are you feeling now?'),
             const SizedBox(height: 12),
@@ -190,7 +192,7 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Session saved! Mood improved: $_moodBefore → $_moodAfter',
+          'Session saved! Mood improved: $_moodBefore â†’ $_moodAfter',
         ),
         backgroundColor: Colors.green,
       ),
@@ -207,7 +209,10 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [_getPhaseColor().withOpacity(0.3), Colors.teal.withOpacity(0.3)],
+            colors: [
+              _getPhaseColor().withValues(alpha: 0.3),
+              Colors.teal.withValues(alpha: 0.3),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -269,9 +274,14 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
                       animation: _animationController,
                       builder: (context, child) {
                         final animationValue = _animationController.value;
-                        final scaleFactor = (_currentPhase == 0 || _currentPhase == 2)
-                            ? 0.5 + (animationValue * 0.5) // Expand on inhale/exhale
-                            : 1.0 - (animationValue * 0.3); // Slightly contract on hold
+                        final scaleFactor =
+                            (_currentPhase == 0 || _currentPhase == 2)
+                                ? 0.5 +
+                                    (animationValue *
+                                        0.5) // Expand on inhale/exhale
+                                : 1.0 -
+                                    (animationValue *
+                                        0.3); // Slightly contract on hold
 
                         return Transform.scale(
                           scale: scaleFactor,
@@ -280,7 +290,7 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
                             height: 200,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: _getPhaseColor().withOpacity(0.2),
+                              color: _getPhaseColor().withValues(alpha: 0.2),
                               border: Border.all(
                                 color: _getPhaseColor(),
                                 width: 3,
@@ -305,7 +315,7 @@ class _BoxBreathingScreenState extends State<BoxBreathingScreen>
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(

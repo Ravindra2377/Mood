@@ -80,9 +80,9 @@ class _ResourcesLibraryCardState extends State<ResourcesLibraryCard> {
       final query = _searchQuery.toLowerCase();
 
       return title.contains(query) ||
-             author.contains(query) ||
-             category.contains(query) ||
-             type.contains(query);
+          author.contains(query) ||
+          category.contains(query) ||
+          type.contains(query);
     }).toList();
   }
 
@@ -133,7 +133,7 @@ class _ResourcesLibraryCardState extends State<ResourcesLibraryCard> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: (resource['color'] as Color).withOpacity(0.1),
+                    color: (resource['color'] as Color).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -149,24 +149,32 @@ class _ResourcesLibraryCardState extends State<ResourcesLibraryCard> {
                     children: [
                       Text(
                         resource['title'] as String,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 4),
                       Row(
                         children: [
                           Text(
                             resource['author'] as String,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: (resource['color'] as Color).withOpacity(0.1),
+                              color: (resource['color'] as Color)
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -186,22 +194,29 @@ class _ResourcesLibraryCardState extends State<ResourcesLibraryCard> {
                           Icon(
                             Icons.access_time,
                             size: 14,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             resource['duration'] as String,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '• ${resource['category']}',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  fontWeight: FontWeight.w500,
-                            ),
+                            'â€¢ ${resource['category']}',
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                           ),
                         ],
                       ),
@@ -255,4 +270,3 @@ class _ResourcesLibraryCardState extends State<ResourcesLibraryCard> {
     super.dispose();
   }
 }
-

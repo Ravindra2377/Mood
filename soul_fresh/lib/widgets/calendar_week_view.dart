@@ -44,7 +44,8 @@ class CalendarWeekView extends StatelessWidget {
                 style: TextStyle(
                   color: day.isSelected ? Colors.black : Colors.grey,
                   fontSize: 12,
-                  fontWeight: day.isSelected ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight:
+                      day.isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),
               const SizedBox(height: 8),
@@ -75,4 +76,3 @@ class CalendarWeekView extends StatelessWidget {
     );
   }
 }
-

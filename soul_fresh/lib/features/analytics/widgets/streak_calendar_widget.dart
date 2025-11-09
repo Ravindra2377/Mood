@@ -15,15 +15,16 @@ class StreakCalendarWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '📅 Activity Streak',
+                  'ðŸ“… Activity Streak',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Text(
@@ -61,7 +62,7 @@ class StreakCalendarWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Keep it up! You\'re building healthy habits 💪',
+              'Keep it up! You\'re building healthy habits ðŸ’ª',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.grey,
                   ),
@@ -123,4 +124,3 @@ class StreakCalendarWidget extends StatelessWidget {
     );
   }
 }
-

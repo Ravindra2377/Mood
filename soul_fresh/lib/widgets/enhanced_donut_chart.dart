@@ -92,4 +92,3 @@ class _EnhancedDonutPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-

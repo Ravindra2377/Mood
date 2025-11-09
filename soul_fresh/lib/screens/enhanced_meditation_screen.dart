@@ -268,14 +268,14 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                             );
                           },
                           style: OutlinedButton.styleFrom(
-                            backgroundColor: (tempDuration.inMinutes ==
-                                        preset &&
-                                    tempDuration.inSeconds % 60 == 0)
-                                ? Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.1)
-                                : null,
+                            backgroundColor:
+                                (tempDuration.inMinutes == preset &&
+                                        tempDuration.inSeconds % 60 == 0)
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withValues(alpha: 0.1)
+                                    : null,
                           ),
                           child: Text('$preset min'),
                         ),
@@ -441,7 +441,7 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                           vertical: 12,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(25),
                         ),
                         child: Row(
@@ -458,8 +458,10 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                               style: const TextStyle(color: Colors.white),
                             ),
                             const SizedBox(width: 8),
-                            const Icon(Icons.arrow_drop_down,
-                                color: Colors.white,),
+                            const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.white,
+                            ),
                           ],
                         ),
                       ),
@@ -473,14 +475,17 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.timer,
-                                color: Colors.white, size: 18,),
+                            const Icon(
+                              Icons.timer,
+                              color: Colors.white,
+                              size: 18,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               _formatDuration(totalSeconds),
@@ -491,8 +496,11 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                             ),
                             if (!isRunning) ...[
                               const SizedBox(width: 4),
-                              const Icon(Icons.edit,
-                                  color: Colors.white, size: 16,),
+                              const Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 16,
+                              ),
                             ],
                           ],
                         ),
@@ -527,7 +535,7 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                               height: 300,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(opacity),
+                                color: Colors.white.withValues(alpha: opacity),
                               ),
                             ),
                           );
@@ -543,8 +551,8 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                               shape: BoxShape.circle,
                               gradient: RadialGradient(
                                 colors: [
-                                  Colors.white.withOpacity(0.4),
-                                  Colors.white.withOpacity(0.15),
+                                  Colors.white.withValues(alpha: 0.4),
+                                  Colors.white.withValues(alpha: 0.15),
                                 ],
                               ),
                             ),
@@ -587,7 +595,7 @@ class _EnhancedMeditationScreenState extends State<EnhancedMeditationScreen>
                       FloatingActionButton(
                         heroTag: 'stop',
                         onPressed: _stopTimer,
-                        backgroundColor: Colors.white.withOpacity(0.3),
+                        backgroundColor: Colors.white.withValues(alpha: 0.3),
                         child: const Icon(Icons.stop, color: Colors.white),
                       ),
                     if (isRunning || isPaused) const SizedBox(width: 16),

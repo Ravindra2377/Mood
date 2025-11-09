@@ -1,5 +1,6 @@
 /// Data models used by insights feature tests.
 /// Lightweight immutable classes with simple factory helpers.
+library;
 
 class KeywordFrequency {
   final String keyword;

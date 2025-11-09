@@ -3,14 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:soul/config/app_colors.dart';
 
 // Providers
-final dailyCheckinProvider =
-    StateProvider<List<DailyCheckin>>((ref) => []);
+final dailyCheckinProvider = StateProvider<List<DailyCheckin>>((ref) => []);
 
-final wellnessScoreProvider =
-    StateProvider<WellnessScore?>((ref) => null);
+final wellnessScoreProvider = StateProvider<WellnessScore?>((ref) => null);
 
-final goalsProvider =
-    StateProvider<List<WellnessGoal>>((ref) => []);
+final goalsProvider = StateProvider<List<WellnessGoal>>((ref) => []);
 
 class DailyCheckin {
   final int id;
@@ -138,9 +135,11 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Daily Check-in Card
-          _DailyCheckinCard(onSubmit: (mood, energy, stress, sleep, activities) {
-            // Submit check-in
-          },),
+          _DailyCheckinCard(
+            onSubmit: (mood, energy, stress, sleep, activities) {
+              // Submit check-in
+            },
+          ),
           const SizedBox(height: 24),
 
           // Today's Wellness Summary
@@ -158,25 +157,25 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
             childAspectRatio: 1.1,
             children: const [
               _WellnessMetricCard(
-                icon: '😊',
+                icon: 'ðŸ˜Š',
                 label: 'Mood',
                 value: '7/10',
                 color: Colors.yellow,
               ),
               _WellnessMetricCard(
-                icon: '⚡',
+                icon: 'âš¡',
                 label: 'Energy',
                 value: '6/10',
                 color: Color(0xFFFFB347),
               ),
               _WellnessMetricCard(
-                icon: '😰',
+                icon: 'ðŸ˜°',
                 label: 'Stress',
                 value: '4/10',
                 color: Colors.blue,
               ),
               _WellnessMetricCard(
-                icon: '😴',
+                icon: 'ðŸ˜´',
                 label: 'Sleep',
                 value: '7.5h',
                 color: Color(0xFF6C5CE7),
@@ -195,17 +194,17 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
             spacing: 8,
             runSpacing: 8,
             children: [
-              '🧘 Meditation',
-              '🚴 Exercise',
-              '💧 Hydration',
-              '📚 Reading',
-              '👥 Social Time',
+              'ðŸ§˜ Meditation',
+              'ðŸš´ Exercise',
+              'ðŸ’§ Hydration',
+              'ðŸ“š Reading',
+              'ðŸ‘¥ Social Time',
             ].map((activity) {
               return Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFB347).withOpacity(0.2),
+                  color: const Color(0xFFFFB347).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: const Color(0xFFFFB347)),
                 ),
@@ -270,7 +269,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                 Container(
                   height: 8,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: FractionallySizedBox(
@@ -288,7 +287,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      '📈 Up 5 points',
+                      'ðŸ“ˆ Up 5 points',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -298,7 +297,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                     Text(
                       'vs last week',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         fontSize: 12,
                       ),
                     ),
@@ -316,11 +315,11 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
           ),
           const SizedBox(height: 12),
           ...[
-            {'label': 'Mood', 'score': 8, 'icon': '😊'},
-            {'label': 'Energy', 'score': 7, 'icon': '⚡'},
-            {'label': 'Stress', 'score': 6, 'icon': '😰'},
-            {'label': 'Sleep', 'score': 8, 'icon': '😴'},
-            {'label': 'Social', 'score': 7, 'icon': '👥'},
+            {'label': 'Mood', 'score': 8, 'icon': 'ðŸ˜Š'},
+            {'label': 'Energy', 'score': 7, 'icon': 'âš¡'},
+            {'label': 'Stress', 'score': 6, 'icon': 'ðŸ˜°'},
+            {'label': 'Sleep', 'score': 8, 'icon': 'ðŸ˜´'},
+            {'label': 'Social', 'score': 7, 'icon': 'ðŸ‘¥'},
           ].map((item) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
@@ -346,7 +345,8 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                           children: [
                             Text(
                               item['label'] as String,
-                              style: const TextStyle(fontWeight: FontWeight.w600),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600),
                             ),
                             const SizedBox(height: 2),
                             SizedBox(
@@ -410,7 +410,8 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                           width: 12,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFB347).withOpacity(0.3),
+                            color:
+                                const Color(0xFFFFB347).withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Align(
@@ -456,7 +457,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
               children: [
                 Column(
                   children: [
-                    const Text('📊', style: TextStyle(fontSize: 24)),
+                    const Text('ðŸ“Š', style: TextStyle(fontSize: 24)),
                     const SizedBox(height: 8),
                     Text(
                       '7 goals',
@@ -475,7 +476,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                 ),
                 Column(
                   children: [
-                    const Text('✅', style: TextStyle(fontSize: 24)),
+                    const Text('âœ…', style: TextStyle(fontSize: 24)),
                     const SizedBox(height: 8),
                     Text(
                       '5 completed',
@@ -508,35 +509,35 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
               'category': 'Mindfulness',
               'progress': 85,
               'frequency': '7/7 days',
-              'icon': '🧘',
+              'icon': 'ðŸ§˜',
             },
             {
               'title': 'Exercise 30 mins',
               'category': 'Fitness',
               'progress': 60,
               'frequency': '3/5 times',
-              'icon': '🏃',
+              'icon': 'ðŸƒ',
             },
             {
               'title': 'Sleep 7+ hours',
               'category': 'Sleep',
               'progress': 71,
               'frequency': '5/7 nights',
-              'icon': '😴',
+              'icon': 'ðŸ˜´',
             },
             {
               'title': 'Stress Check-in',
               'category': 'Mental Health',
               'progress': 100,
               'frequency': '7/7 days',
-              'icon': '✨',
+              'icon': 'âœ¨',
             },
             {
               'title': 'Hydration Goal',
               'category': 'Wellness',
               'progress': 65,
               'frequency': '4/7 days',
-              'icon': '💧',
+              'icon': 'ðŸ’§',
             },
           ].map((goal) {
             return Padding(
@@ -556,15 +557,19 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen>
                       children: [
                         Row(
                           children: [
-                            Text(goal['icon'] as String,
-                                style: const TextStyle(fontSize: 20),),
+                            Text(
+                              goal['icon'] as String,
+                              style: const TextStyle(fontSize: 20),
+                            ),
                             const SizedBox(width: 8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   goal['title'] as String,
-                                  style: const TextStyle(fontWeight: FontWeight.w600),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                                 Text(
                                   goal['category'] as String,
@@ -651,7 +656,7 @@ class _DailyCheckinCardState extends State<_DailyCheckinCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-  color: const Color(0xFFFFB347).withOpacity(0.1),
+        color: const Color(0xFFFFB347).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFFFFB347),
@@ -670,8 +675,14 @@ class _DailyCheckinCardState extends State<_DailyCheckinCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('How\'s your mood?', style: Theme.of(context).textTheme.bodySmall),
-              Text('$mood/10', style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                'How\'s your mood?',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              Text(
+                '$mood/10',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -688,8 +699,14 @@ class _DailyCheckinCardState extends State<_DailyCheckinCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Energy level?', style: Theme.of(context).textTheme.bodySmall),
-              Text('$energy/10', style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                'Energy level?',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              Text(
+                '$energy/10',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -706,8 +723,14 @@ class _DailyCheckinCardState extends State<_DailyCheckinCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Stress level?', style: Theme.of(context).textTheme.bodySmall),
-              Text('$stress/10', style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                'Stress level?',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              Text(
+                '$stress/10',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -773,7 +796,8 @@ class _WellnessMetricCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(fontSize: 12, color: AppColors.secondaryText),
+            style:
+                const TextStyle(fontSize: 12, color: AppColors.secondaryText),
           ),
           const SizedBox(height: 4),
           Text(

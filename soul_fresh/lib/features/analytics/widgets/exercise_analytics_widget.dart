@@ -32,8 +32,16 @@ class ExerciseAnalyticsWidget extends StatelessWidget {
             const SizedBox(height: 16),
             _buildStat('Total Sessions', '${stats.totalSessions}', '📊'),
             _buildStat('Total Time', '${stats.totalTimeMinutes} min', '⏱️'),
-            _buildStat('Avg Duration', '${stats.averageSessionDuration.toStringAsFixed(1)} min', '📈'),
-            _buildStat('Mood Improvement', '${stats.averageMoodImprovement.toStringAsFixed(1)} pts', '😊'),
+            _buildStat(
+              'Avg Duration',
+              '${stats.averageSessionDuration.toStringAsFixed(1)} min',
+              '📈',
+            ),
+            _buildStat(
+              'Mood Improvement',
+              '${stats.averageMoodImprovement.toStringAsFixed(1)} pts',
+              '😊',
+            ),
             _buildStat('Most Effective', stats.mostEffectiveExercise, '⭐'),
             const SizedBox(height: 16),
             Text(
@@ -43,8 +51,8 @@ class ExerciseAnalyticsWidget extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: 8),
-            ...stats.sessionsByCategory.entries.map((entry) =>
-              Padding(
+            ...stats.sessionsByCategory.entries.map(
+              (entry) => Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Row(
                   children: [
@@ -100,4 +108,3 @@ class ExerciseAnalyticsWidget extends StatelessWidget {
     }
   }
 }
-

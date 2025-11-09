@@ -43,7 +43,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   // Register adapters used by local storage
   if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(JournalEntryAdapter());
-  
+
   // Initialize analytics service
   await AnalyticsService.initialize();
 
@@ -70,7 +70,7 @@ class SoulApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
-    
+
     return MaterialApp(
       title: 'SOUL',
       debugShowCheckedModeBanner: false,
@@ -87,16 +87,16 @@ class SoulApp extends ConsumerWidget {
 
       // Keep legacy named routes for existing screens
       routes: {
-  Routes.login: (_) => const new_login.LoginScreen(),
+        Routes.login: (_) => const new_login.LoginScreen(),
         OnboardingScreen.route: (_) => const OnboardingScreen(),
-  // Route alias for legacy '/home' now points to the improved home screen
-  Routes.home: (_) => const ImprovedHomeScreen(),
+        // Route alias for legacy '/home' now points to the improved home screen
+        Routes.home: (_) => const ImprovedHomeScreen(),
         '/mental-health': (_) => const MentalHealthDashboard(),
         MoodScreen.route: (_) => const MoodScreen(),
         ExpressionScreen.route: (_) => const ExpressionScreen(),
         EnhancedMeditationScreen.route: (_) => const EnhancedMeditationScreen(),
         ActivitiesScreen.route: (_) => const ActivitiesScreen(),
-  SelfHelpScreen.route: (_) => const SelfHelpScreen(),
+        SelfHelpScreen.route: (_) => const SelfHelpScreen(),
         JournalListScreen.route: (_) => const JournalListScreen(),
         AnalyticsScreen.route: (_) => const UnifiedAnalyticsScreen(),
         ExercisesMainScreen.route: (_) => const ExercisesMainScreen(),
@@ -131,7 +131,7 @@ class AppTheme {
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
         border: const OutlineInputBorder(),
         filled: true,
-  fillColor: base.colorScheme.surface.withOpacity(0.9),
+        fillColor: base.colorScheme.surface.withValues(alpha: 0.9),
       ),
       cardTheme: base.cardTheme.copyWith(
         elevation: 0,
@@ -157,7 +157,8 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       textTheme: GoogleFonts.poppinsTextTheme(
-          ThemeData(brightness: Brightness.dark).textTheme,),
+        ThemeData(brightness: Brightness.dark).textTheme,
+      ),
     );
 
     return base.copyWith(
@@ -222,9 +223,9 @@ class _AuthGate extends ConsumerWidget {
         message: 'Startup error: $e',
         onRetry: () => ref.invalidate(authControllerProvider),
       ),
-    data: (state) => state.isAuthenticated
-      ? const ImprovedHomeScreen()
-      : const new_login.LoginScreen(),
+      data: (state) => state.isAuthenticated
+          ? const ImprovedHomeScreen()
+          : const new_login.LoginScreen(),
     );
   }
 }
@@ -340,7 +341,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   obscureText: true,
                   decoration: const InputDecoration(
                     labelText: 'Password',
-                    hintText: '••••••••',
+                    hintText: 'â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢',
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -370,11 +371,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         .setToken('local-debug-token');
                                     if (!mounted) return;
                                     navigator.pushNamedAndRemoveUntil(
-                                        Routes.home, (_) => false,);
+                                      Routes.home,
+                                      (_) => false,
+                                    );
                                   } else {
                                     await ref
                                         .read(authControllerProvider.notifier)
-                                        .signup(email: email, password: password);
+                                        .signup(
+                                          email: email,
+                                          password: password,
+                                        );
                                   }
                                 } catch (e) {
                                   if (mounted) {
@@ -407,11 +413,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         .setToken('local-debug-token');
                                     if (!mounted) return;
                                     navigator.pushNamedAndRemoveUntil(
-                                        Routes.home, (_) => false,);
+                                      Routes.home,
+                                      (_) => false,
+                                    );
                                   } else {
                                     await ref
                                         .read(authControllerProvider.notifier)
-                                        .login(email: email, password: password);
+                                        .login(
+                                          email: email,
+                                          password: password,
+                                        );
                                   }
                                 } catch (e) {
                                   if (mounted) {
@@ -502,7 +513,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               await ref
                                   .read(authControllerProvider.notifier)
                                   .verifyOtp(
-                                      email: email, code: _otpCtrl.text.trim(),);
+                                    email: email,
+                                    code: _otpCtrl.text.trim(),
+                                  );
 
                               if (!mounted) return;
 
@@ -535,7 +548,6 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     );
   }
 }
-
 
 class MoodScreen extends StatelessWidget {
   static const route = '/mood';

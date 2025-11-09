@@ -5,8 +5,8 @@ class AppTypography {
   // FONT FAMILIES
   // ==========================================
 
-  static const String primaryFont = 'Poppins';      // Modern, friendly
-  static const String secondaryFont = 'OpenSans';   // Clean, readable
+  static const String primaryFont = 'Poppins'; // Modern, friendly
+  static const String secondaryFont = 'OpenSans'; // Clean, readable
 
   // ==========================================
   // TEXT STYLES
@@ -90,4 +90,3 @@ class AppTypography {
     letterSpacing: 0.2,
   );
 }
-

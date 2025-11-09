@@ -8,7 +8,8 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -52,7 +53,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   Future<void> _send() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() { _sending = true; _error = null; });
+    setState(() {
+      _sending = true;
+      _error = null;
+    });
     try {
       final auth = ref.read(authServiceProvider);
       final code = await auth.requestPasswordResetOtp(_emailCtrl.text.trim());
@@ -75,9 +79,15 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           _retryUntil = DateTime.now().add(Duration(seconds: secs));
         }
       }
-      setState(() { _error = msg; });
+      setState(() {
+        _error = msg;
+      });
     } finally {
-      if (mounted) setState(() { _sending = false; });
+      if (mounted) {
+        setState(() {
+          _sending = false;
+        });
+      }
     }
   }
 
@@ -92,7 +102,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('Enter your account email. We\'ll send a 6-digit code to reset your password.'),
+              const Text(
+                'Enter your account email. We\'ll send a 6-digit code to reset your password.',
+              ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _emailCtrl,
@@ -114,7 +126,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       'Retry in $_remaining s',
-                      style: const TextStyle(fontSize: 12, color: Colors.orange),
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.orange),
                     ),
                   ),
               ],

@@ -68,9 +68,10 @@ class GuidedPathwaysCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         pathway['title'] as String,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                     ),
                   ],
@@ -85,14 +86,15 @@ class GuidedPathwaysCard extends StatelessWidget {
                 const SizedBox(height: 16),
                 LinearProgressIndicator(
                   value: pathway['progress'] as double,
-                  backgroundColor: (pathway['color'] as Color).withOpacity(0.2),
+                  backgroundColor:
+                      (pathway['color'] as Color).withValues(alpha: 0.2),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     pathway['color'] as Color,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Day ${pathway['currentDay']} of ${pathway['totalDays']} • ${((pathway['progress'] as double) * 100).round()}% complete',
+                  'Day ${pathway['currentDay']} of ${pathway['totalDays']} â€¢ ${((pathway['progress'] as double) * 100).round()}% complete',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -103,7 +105,8 @@ class GuidedPathwaysCard extends StatelessWidget {
                   child: FilledButton.tonal(
                     onPressed: () {},
                     style: FilledButton.styleFrom(
-                      backgroundColor: (pathway['color'] as Color).withOpacity(0.1),
+                      backgroundColor:
+                          (pathway['color'] as Color).withValues(alpha: 0.1),
                       foregroundColor: pathway['color'] as Color,
                     ),
                     child: const Text('Continue'),
@@ -117,4 +120,3 @@ class GuidedPathwaysCard extends StatelessWidget {
     );
   }
 }
-

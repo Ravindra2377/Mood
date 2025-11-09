@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:flutter_test/flutter_test.dart';
 import 'package:soul/features/self_help/screens/self_help_chat_screen.dart';
 import 'package:soul/models/chat_models.dart';
 import 'package:soul/services/chat_api_service.dart';
@@ -32,7 +31,8 @@ class _FakeChatApiServiceWithSafety extends ChatApiService {
     // Safety check for crisis keywords
     if (_containsCrisisKeyword(message)) {
       yield const ChatStreamChunk(
-        token: 'I notice you may be in distress. Please reach out to a crisis helpline immediately: ',
+        token:
+            'I notice you may be in distress. Please reach out to a crisis helpline immediately: ',
       );
       yield const ChatStreamChunk(
         token: 'National Suicide Prevention Lifeline: 988 or 1-800-273-8255. ',
@@ -40,16 +40,21 @@ class _FakeChatApiServiceWithSafety extends ChatApiService {
       yield const ChatStreamChunk(
         token: 'You are not alone, and help is available 24/7.',
       );
-  yield ChatStreamChunk(done: true, sessionId: sessionId ?? 'safety-session');
+      yield ChatStreamChunk(
+        done: true,
+        sessionId: sessionId ?? 'safety-session',
+      );
       return;
     }
 
-  // Normal AI response simulation (synchronous to avoid pending timers in tests)
-  yield const ChatStreamChunk(token: 'I hear you. ');
-  yield const ChatStreamChunk(token: 'It sounds like you\'re experiencing ');
-  yield const ChatStreamChunk(token: 'something meaningful. ');
-  yield const ChatStreamChunk(token: 'Would you like to explore this further?');
-  yield ChatStreamChunk(done: true, sessionId: sessionId ?? 'chat-session-1');
+    // Normal AI response simulation (synchronous to avoid pending timers in tests)
+    yield const ChatStreamChunk(token: 'I hear you. ');
+    yield const ChatStreamChunk(token: 'It sounds like you\'re experiencing ');
+    yield const ChatStreamChunk(token: 'something meaningful. ');
+    yield const ChatStreamChunk(
+      token: 'Would you like to explore this further?',
+    );
+    yield ChatStreamChunk(done: true, sessionId: sessionId ?? 'chat-session-1');
   }
 
   bool _containsCrisisKeyword(String message) {
@@ -73,7 +78,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            chatApiServiceProvider.overrideWith((ref) => _FakeChatApiServiceWithSafety()),
+            chatApiServiceProvider
+                .overrideWith((ref) => _FakeChatApiServiceWithSafety()),
           ],
           child: const MaterialApp(home: SelfHelpChatScreen()),
         ),
@@ -91,11 +97,13 @@ void main() {
       expect(find.byIcon(Icons.send), findsOneWidget);
     });
 
-    testWidgets('Sending message shows optimistic user bubble immediately', (tester) async {
+    testWidgets('Sending message shows optimistic user bubble immediately',
+        (tester) async {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            chatApiServiceProvider.overrideWith((ref) => _FakeChatApiServiceWithSafety()),
+            chatApiServiceProvider
+                .overrideWith((ref) => _FakeChatApiServiceWithSafety()),
           ],
           child: const MaterialApp(home: SelfHelpChatScreen()),
         ),
@@ -120,7 +128,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            chatApiServiceProvider.overrideWith((ref) => _FakeChatApiServiceWithSafety()),
+            chatApiServiceProvider
+                .overrideWith((ref) => _FakeChatApiServiceWithSafety()),
           ],
           child: const MaterialApp(home: SelfHelpChatScreen()),
         ),
@@ -138,13 +147,13 @@ void main() {
 
       // Wait for streaming
       await tester.pump(const Duration(milliseconds: 100));
-      
+
       // Partial response should appear
       expect(find.textContaining('I hear you'), findsWidgets);
 
       // Wait for more
       await tester.pump(const Duration(milliseconds: 200));
-      
+
       // More text should stream in
       expect(find.textContaining('experiencing'), findsWidgets);
     });
@@ -153,7 +162,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            chatApiServiceProvider.overrideWith((ref) => _FakeChatApiServiceWithSafety()),
+            chatApiServiceProvider
+                .overrideWith((ref) => _FakeChatApiServiceWithSafety()),
           ],
           child: const MaterialApp(home: SelfHelpChatScreen()),
         ),
@@ -183,9 +193,10 @@ void main() {
   group('🚨 Safety Guardrails & Crisis Detection Tests', () {
     test('Crisis keywords trigger safety response', () async {
       final service = _FakeChatApiServiceWithSafety();
-      
+
       final chunks = <String>[];
-      await for (var chunk in service.sendMessage(message: 'I want to kill myself')) {
+      await for (final chunk
+          in service.sendMessage(message: 'I want to kill myself')) {
         if (chunk.token != null) {
           chunks.add(chunk.token!);
         }
@@ -200,7 +211,7 @@ void main() {
 
     test('Multiple crisis keywords detected', () async {
       final service = _FakeChatApiServiceWithSafety();
-      
+
       final testCases = [
         'I am thinking about suicide',
         'I want to end my life',
@@ -208,24 +219,29 @@ void main() {
         'I want to die',
       ];
 
-      for (var testCase in testCases) {
+      for (final testCase in testCases) {
         final chunks = <String>[];
-        await for (var chunk in service.sendMessage(message: testCase)) {
+        await for (final chunk in service.sendMessage(message: testCase)) {
           if (chunk.token != null) {
             chunks.add(chunk.token!);
           }
         }
 
         final response = chunks.join();
-        expect(response, contains('crisis helpline'), reason: 'Failed for: $testCase');
+        expect(
+          response,
+          contains('crisis helpline'),
+          reason: 'Failed for: $testCase',
+        );
       }
     });
 
     test('Normal messages bypass safety filter', () async {
       final service = _FakeChatApiServiceWithSafety();
-      
+
       final chunks = <String>[];
-      await for (var chunk in service.sendMessage(message: 'I had a good day today')) {
+      await for (final chunk
+          in service.sendMessage(message: 'I had a good day today')) {
         if (chunk.token != null) {
           chunks.add(chunk.token!);
         }
@@ -236,11 +252,13 @@ void main() {
       expect(response, contains('I hear you'));
     });
 
-    testWidgets('Safety response displays immediately for crisis message', (tester) async {
+    testWidgets('Safety response displays immediately for crisis message',
+        (tester) async {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            chatApiServiceProvider.overrideWith((ref) => _FakeChatApiServiceWithSafety()),
+            chatApiServiceProvider
+                .overrideWith((ref) => _FakeChatApiServiceWithSafety()),
           ],
           child: const MaterialApp(home: SelfHelpChatScreen()),
         ),
@@ -264,18 +282,18 @@ void main() {
   group('🧠 Gemini AI Integration Tests', () {
     test('Backend acts as secure proxy to Gemini API', () {
       // Simulate backend proxy behavior
-      final apiKey = 'GEMINI_API_KEY_FROM_ENV';
+      const apiKey = 'GEMINI_API_KEY_FROM_ENV';
       expect(apiKey, isNotNull);
       expect(apiKey, isNotEmpty);
-      
+
       // In production, this would be loaded from environment variable
       // and never exposed to client
     });
 
     test('User messages wrapped in Soul personality prompt', () {
-      final userMessage = 'I feel sad today';
+      const userMessage = 'I feel sad today';
       final wrappedPrompt = _wrapInSoulPrompt(userMessage);
-      
+
       expect(wrappedPrompt, contains('Soul'));
       expect(wrappedPrompt, contains('compassionate'));
       expect(wrappedPrompt, contains(userMessage));
@@ -283,7 +301,7 @@ void main() {
 
     test('Safety rules included in system prompt', () {
       final systemPrompt = _getSoulSystemPrompt();
-      
+
       expect(systemPrompt, contains('safety'));
       expect(systemPrompt, contains('crisis'));
       expect(systemPrompt, contains('helpline'));
@@ -298,9 +316,9 @@ void main() {
     });
 
     test('Multiple sessions can exist independently', () {
-      final session1 = 'session-1';
-      final session2 = 'session-2';
-      
+      const session1 = 'session-1';
+      const session2 = 'session-2';
+
       expect(session1, isNot(equals(session2)));
     });
 
@@ -308,7 +326,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            chatApiServiceProvider.overrideWith((ref) => _FakeChatApiServiceWithSafety()),
+            chatApiServiceProvider
+                .overrideWith((ref) => _FakeChatApiServiceWithSafety()),
           ],
           child: const MaterialApp(home: SelfHelpChatScreen()),
         ),
@@ -333,7 +352,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            chatApiServiceProvider.overrideWith((ref) => _FakeChatApiServiceWithSafety()),
+            chatApiServiceProvider
+                .overrideWith((ref) => _FakeChatApiServiceWithSafety()),
           ],
           child: const MaterialApp(home: SelfHelpChatScreen()),
         ),
@@ -344,10 +364,10 @@ void main() {
       // Type and send
       await tester.enterText(find.byType(TextField).first, 'Quick message');
       await tester.tap(find.byIcon(Icons.send));
-      
+
       // Immediately after send (before async completes)
       await tester.pump();
-      
+
       // Message should already be visible
       expect(find.text('Quick message'), findsOneWidget);
     });
@@ -356,7 +376,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            chatApiServiceProvider.overrideWith((ref) => _FakeChatApiServiceWithSafety()),
+            chatApiServiceProvider
+                .overrideWith((ref) => _FakeChatApiServiceWithSafety()),
           ],
           child: const MaterialApp(home: SelfHelpChatScreen()),
         ),
@@ -365,18 +386,18 @@ void main() {
       await tester.pumpAndSettle();
 
       final textField = find.byType(TextField).first;
-      
+
       // Type message
       await tester.enterText(textField, 'Test message');
       await tester.pump();
-      
+
       // Verify it's there
       expect(find.text('Test message'), findsOneWidget);
-      
+
       // Send
       await tester.tap(find.byIcon(Icons.send));
       await tester.pump();
-      
+
       // Input field should be cleared
       final textFieldWidget = tester.widget<TextField>(textField);
       expect(textFieldWidget.controller?.text ?? '', isEmpty);

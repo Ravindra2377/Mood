@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:flutter_test/flutter_test.dart';
 import 'package:soul/features/self_help/screens/self_help_chat_screen.dart';
 import 'package:soul/models/chat_models.dart';
 import 'package:soul/services/chat_api_service.dart';
@@ -27,14 +26,16 @@ class _FakeChatApiService extends ChatApiService {
   Future<List<ChatSession>> getSessions({int limit = 10}) async => const [];
 
   @override
-  Future<List<ChatMessage>> getSessionMessages(String sessionId) async => const [];
+  Future<List<ChatMessage>> getSessionMessages(String sessionId) async =>
+      const [];
 
   @override
   Future<void> deleteSession(String sessionId) async {}
 }
 
 void main() {
-  testWidgets('AI chat sends message and streams assistant reply', (tester) async {
+  testWidgets('AI chat sends message and streams assistant reply',
+      (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -66,7 +67,8 @@ void main() {
     expect(find.textContaining('how are you'), findsWidgets);
   });
 
-  testWidgets('AI chat handles multiple messages and typing state', (tester) async {
+  testWidgets('AI chat handles multiple messages and typing state',
+      (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -118,28 +120,27 @@ void main() {
 
     // Try to send without typing (empty input)
     final sendButton = find.byIcon(Icons.send);
-    
+
     // If button is disabled or controller prevents sending, tapping should have no effect
     final inputField = find.byType(TextField).first;
-    final textFieldWidget = tester.widget<TextField>(inputField);
-    
+
     // Verify initial state - no user messages yet
     await tester.pump();
-    
+
     // Attempt tap on send with empty field (many chat UIs disable this)
     // For now, we'll verify that if we DO send an empty string, nothing breaks
     await tester.enterText(inputField, '');
     await tester.pump();
-    
+
     // Count messages before attempting send
     final messagesBefore = find.byType(ListTile).evaluate().length;
-    
+
     // If the implementation allows empty send, verify it doesn't crash
     // If it blocks, this tap will have no effect
     await tester.tap(sendButton);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    
+
     // Messages should remain unchanged or implementation handles gracefully
     final messagesAfter = find.byType(ListTile).evaluate().length;
     expect(messagesAfter, greaterThanOrEqualTo(messagesBefore));

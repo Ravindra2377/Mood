@@ -51,7 +51,7 @@ class CrisisSupportCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text('🆘', style: TextStyle(fontSize: 24)),
+              const Text('ðŸ†˜', style: TextStyle(fontSize: 24)),
               const SizedBox(width: 12),
               Text(
                 'Crisis Support',
@@ -79,7 +79,7 @@ class CrisisSupportCard extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: (contact['color'] as Color).withOpacity(0.3),
+                  color: (contact['color'] as Color).withValues(alpha: 0.3),
                 ),
               ),
               child: Column(
@@ -96,9 +96,10 @@ class CrisisSupportCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           contact['title'] as String,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ),
                     ],
@@ -115,11 +116,12 @@ class CrisisSupportCard extends StatelessWidget {
                     children: [
                       Text(
                         contact['number'] as String,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: contact['color'] as Color,
-                              fontFamily: 'monospace',
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: contact['color'] as Color,
+                                  fontFamily: 'monospace',
+                                ),
                       ),
                       const Spacer(),
                       FilledButton.icon(
@@ -161,7 +163,7 @@ class CrisisSupportCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Warning signs • Coping strategies • People to contact',
+                  'Warning signs â€¢ Coping strategies â€¢ People to contact',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -183,4 +185,3 @@ class CrisisSupportCard extends StatelessWidget {
     );
   }
 }
-

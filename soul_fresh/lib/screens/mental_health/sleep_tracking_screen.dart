@@ -3,11 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:soul/config/app_colors.dart';
 
 // Providers
-final sleepLogsProvider =
-    StateProvider<List<SleepLog>>((ref) => []);
+final sleepLogsProvider = StateProvider<List<SleepLog>>((ref) => []);
 
-final sleepAnalyticsProvider =
-    StateProvider<SleepAnalytics?>((ref) => null);
+final sleepAnalyticsProvider = StateProvider<SleepAnalytics?>((ref) => null);
 
 class SleepLog {
   final int id;
@@ -112,9 +110,11 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Quick Sleep Logger
-          _SleepLogCard(onLogSleep: (bedtime, wakeTime, quality) {
-            // Log sleep
-          },),
+          _SleepLogCard(
+            onLogSleep: (bedtime, wakeTime, quality) {
+              // Log sleep
+            },
+          ),
           const SizedBox(height: 24),
 
           // Recent Logs
@@ -153,7 +153,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF6C5CE7).withOpacity(0.1),
+              color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFF6C5CE7),
@@ -171,10 +171,11 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
                   children: [
                     Text(
                       '7.2',
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            color: const Color(0xFF6C5CE7),
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                color: const Color(0xFF6C5CE7),
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -209,10 +210,12 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.2),
+                        color: Colors.green.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Text(
@@ -252,7 +255,7 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.1),
+              color: Colors.orange.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: Colors.orange,
@@ -290,7 +293,11 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
               'impact': 'Negative',
               'score': -0.45,
             },
-            {'factor': 'Reading Before Bed', 'impact': 'Positive', 'score': 0.72},
+            {
+              'factor': 'Reading Before Bed',
+              'impact': 'Positive',
+              'score': 0.72,
+            },
             {'factor': 'Regular Bedtime', 'impact': 'Positive', 'score': 0.85},
           ].map((item) {
             final isPositive = item['impact'] == 'Positive';
@@ -300,8 +307,8 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: isPositive
-                      ? Colors.green.withOpacity(0.1)
-                      : Colors.red.withOpacity(0.1),
+                      ? Colors.green.withValues(alpha: 0.1)
+                      : Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: isPositive ? Colors.green : Colors.red,
@@ -343,32 +350,33 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
       {
         'title': 'Maintain Consistent Sleep Schedule',
         'description': 'Go to bed and wake up at the same time daily',
-        'icon': '⏰',
+        'icon': 'â°',
       },
       {
         'title': 'Avoid Caffeine After 2 PM',
         'description': 'Caffeine stays in your system for 6-8 hours',
-        'icon': '☕',
+        'icon': 'â˜•',
       },
       {
         'title': 'Create a Bedtime Routine',
-        'description': 'Wind down 30 minutes before bed with relaxing activities',
-        'icon': '🧘',
+        'description':
+            'Wind down 30 minutes before bed with relaxing activities',
+        'icon': 'ðŸ§˜',
       },
       {
         'title': 'Keep Room Cool & Dark',
-        'description': 'Ideal sleep temperature is 65-68°F (18-20°C)',
-        'icon': '🌙',
+        'description': 'Ideal sleep temperature is 65-68Â°F (18-20Â°C)',
+        'icon': 'ðŸŒ™',
       },
       {
         'title': 'Limit Screen Time',
         'description': 'Stop using devices 1 hour before bedtime',
-        'icon': '📱',
+        'icon': 'ðŸ“±',
       },
       {
         'title': 'Exercise Regularly',
         'description': 'Exercise improves sleep quality (avoid late evening)',
-        'icon': '🏃',
+        'icon': 'ðŸƒ',
       },
     ];
 
@@ -387,8 +395,10 @@ class _SleepTrackingScreenState extends ConsumerState<SleepTrackingScreen>
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tip['icon'] as String,
-                    style: const TextStyle(fontSize: 24),),
+                Text(
+                  tip['icon'] as String,
+                  style: const TextStyle(fontSize: 24),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -447,7 +457,7 @@ class _SleepLogCardState extends State<_SleepLogCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-  color: const Color(0xFF6C5CE7).withOpacity(0.1),
+        color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFF6C5CE7),
@@ -469,8 +479,10 @@ class _SleepLogCardState extends State<_SleepLogCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Bedtime',
-                      style: Theme.of(context).textTheme.bodySmall,),
+                  Text(
+                    'Bedtime',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   const SizedBox(height: 4),
                   Text(
                     bedtime.format(context),
@@ -501,8 +513,10 @@ class _SleepLogCardState extends State<_SleepLogCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Wake Time',
-                      style: Theme.of(context).textTheme.bodySmall,),
+                  Text(
+                    'Wake Time',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   const SizedBox(height: 4),
                   Text(
                     wakeTime.format(context),
@@ -530,8 +544,10 @@ class _SleepLogCardState extends State<_SleepLogCard> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Sleep Quality',
-                  style: Theme.of(context).textTheme.bodySmall,),
+              Text(
+                'Sleep Quality',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
               const SizedBox(height: 8),
               Row(
                 children: List.generate(5, (i) {
@@ -636,8 +652,10 @@ class _SleepHistoryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('$bedtime - $wakeTime',
-                  style: const TextStyle(fontSize: 12),),
+              Text(
+                '$bedtime - $wakeTime',
+                style: const TextStyle(fontSize: 12),
+              ),
               Text(
                 '${duration.toStringAsFixed(1)} hrs',
                 style: const TextStyle(

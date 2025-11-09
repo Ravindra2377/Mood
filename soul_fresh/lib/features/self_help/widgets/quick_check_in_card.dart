@@ -124,7 +124,9 @@ class _MoodChip extends StatelessWidget {
           color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+            color: isSelected
+                ? Theme.of(context).primaryColor
+                : Colors.transparent,
             width: 2,
           ),
         ),
@@ -146,4 +148,3 @@ class _MoodChip extends StatelessWidget {
     );
   }
 }
-

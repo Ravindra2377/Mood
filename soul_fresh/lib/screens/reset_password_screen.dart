@@ -1,15 +1,18 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/colors.dart';
 import '../services/auth_service.dart';
 import '../utils/validators.dart';
-import '../core/colors.dart';
 
 class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  ConsumerState<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() =>
+      _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
@@ -37,7 +40,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   Future<void> _reset(String email) async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() { _saving = true; _error = null; });
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
     try {
       final auth = ref.read(authServiceProvider);
       await auth.confirmPasswordResetOtp(
@@ -46,7 +52,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
         newPassword: _passCtrl.text,
       );
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password updated. Please log in.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password updated. Please log in.')),
+      );
       Navigator.of(context).popUntil((r) => r.isFirst);
     } catch (e) {
       final msg = e.toString();
@@ -65,14 +73,22 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 _retryUntil = null;
               });
             } else {
-              setState(() { _retryRemaining = s; });
+              setState(() {
+                _retryRemaining = s;
+              });
             }
           });
         }
       }
-      setState(() { _error = msg; });
+      setState(() {
+        _error = msg;
+      });
     } finally {
-      if (mounted) setState(() { _saving = false; });
+      if (mounted) {
+        setState(() {
+          _saving = false;
+        });
+      }
     }
   }
 
@@ -121,15 +137,23 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               Text('We sent a 6-digit code to\n$email'),
               if (preview != null) ...[
                 const SizedBox(height: 8),
-                Text('Preview code (dev): $preview', style: const TextStyle(color: Colors.purple)),
+                Text(
+                  'Preview code (dev): $preview',
+                  style: const TextStyle(color: Colors.purple),
+                ),
               ],
               const SizedBox(height: 16),
               TextFormField(
                 controller: _codeCtrl,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: '6-digit code', prefixIcon: Icon(Icons.verified_user_outlined)),
+                decoration: const InputDecoration(
+                  labelText: '6-digit code',
+                  prefixIcon: Icon(Icons.verified_user_outlined),
+                ),
                 validator: (v) {
-                  if (v == null || v.trim().length != 6) return 'Enter the 6-digit code';
+                  if (v == null || v.trim().length != 6) {
+                    return 'Enter the 6-digit code';
+                  }
                   return null;
                 },
               ),
@@ -138,7 +162,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 controller: _passCtrl,
                 obscureText: true,
                 onChanged: _onPasswordChanged,
-                decoration: const InputDecoration(labelText: 'New password', prefixIcon: Icon(Icons.lock_outline)),
+                decoration: const InputDecoration(
+                  labelText: 'New password',
+                  prefixIcon: Icon(Icons.lock_outline),
+                ),
                 validator: Validators.password,
               ),
               if (_passCtrl.text.isNotEmpty) ...[
@@ -152,7 +179,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           value: _strength,
                           minHeight: 6,
                           backgroundColor: Colors.grey[300],
-                          valueColor: AlwaysStoppedAnimation<Color>(_strengthColor),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(_strengthColor),
                         ),
                       ),
                     ),
@@ -172,17 +200,32 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               TextFormField(
                 controller: _confirmCtrl,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: 'Confirm password', prefixIcon: Icon(Icons.lock_outline)),
-                validator: (value) => Validators.confirmPassword(value, _passCtrl.text),
+                decoration: const InputDecoration(
+                  labelText: 'Confirm password',
+                  prefixIcon: Icon(Icons.lock_outline),
+                ),
+                validator: (value) =>
+                    Validators.confirmPassword(value, _passCtrl.text),
               ),
               const SizedBox(height: 12),
-              if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
+              if (_error != null)
+                Text(_error!, style: const TextStyle(color: Colors.red)),
               const Spacer(),
               FilledButton(
-                onPressed: (_saving || _retryRemaining > 0) ? null : () => _reset(email),
+                onPressed: (_saving || _retryRemaining > 0)
+                    ? null
+                    : () => _reset(email),
                 child: _saving
-                    ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                    : Text(_retryRemaining > 0 ? 'Retry in $_retryRemaining s' : 'Change Password'),
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        _retryRemaining > 0
+                            ? 'Retry in $_retryRemaining s'
+                            : 'Change Password',
+                      ),
               ),
             ],
           ),

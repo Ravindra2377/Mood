@@ -42,10 +42,13 @@ class AuthService {
     }
 
     try {
-      final response = await _dio.post('/auth/signup', data: {
-        'email': email,
-        'password': password,
-      },);
+      final response = await _dio.post(
+        '/auth/signup',
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
       // Do not request OTP here; let the caller handle it so any
       // preview code can be shown to the user in dev environments.
       return response.data;
@@ -64,16 +67,20 @@ class AuthService {
     }
 
     try {
-      final response = await _dio.post('/auth/token', data: {
-        'username': email,  // FastAPI OAuth2 uses 'username' field
-        'password': password,
-        'grant_type': 'password',
-      }, options: Options(
-        contentType: Headers.formUrlEncodedContentType,
-      ),);
+      final response = await _dio.post(
+        '/auth/token',
+        data: {
+          'username': email, // FastAPI OAuth2 uses 'username' field
+          'password': password,
+          'grant_type': 'password',
+        },
+        options: Options(
+          contentType: Headers.formUrlEncodedContentType,
+        ),
+      );
 
       final data = response.data as Map<String, dynamic>;
-      
+
       // Save tokens and user info
       await _storage.saveAccessToken(data['access_token'] as String);
       if (data.containsKey('refresh_token')) {
@@ -98,7 +105,8 @@ class AuthService {
     try {
       final res = await _dio.post('/auth/otp/request', data: {'email': email});
       final data = res.data;
-      if (data is Map && data['preview'] is Map &&
+      if (data is Map &&
+          data['preview'] is Map &&
           (data['preview'] as Map).containsKey('code')) {
         return (data['preview'] as Map)['code']?.toString();
       }
@@ -114,9 +122,12 @@ class AuthService {
       return '123456';
     }
     try {
-  final res = await _dio.post('/auth/password-otp/request', data: {'email': email});
+      final res =
+          await _dio.post('/auth/password-otp/request', data: {'email': email});
       final data = res.data;
-      if (data is Map && data['preview'] is Map && (data['preview'] as Map).containsKey('code')) {
+      if (data is Map &&
+          data['preview'] is Map &&
+          (data['preview'] as Map).containsKey('code')) {
         return (data['preview'] as Map)['code']?.toString();
       }
       return null;
@@ -126,21 +137,29 @@ class AuthService {
   }
 
   /// Forgot password: confirm the 6-digit code and set new password.
-  Future<void> confirmPasswordResetOtp({required String email, required String code, required String newPassword}) async {
+  Future<void> confirmPasswordResetOtp({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
     if (skipOtp) {
       // No-op. In dev mode just pretend success.
       return;
     }
     try {
-      await _dio.post('/auth/password-otp/confirm', data: {
-        'email': email,
-        'code': code,
-        'new_password': newPassword,
-      });
+      await _dio.post(
+        '/auth/password-otp/confirm',
+        data: {
+          'email': email,
+          'code': code,
+          'new_password': newPassword,
+        },
+      );
     } on DioException catch (e) {
       throw _handleError(e);
     }
   }
+
   /// Verify OTP
   Future<Map<String, dynamic>> verifyOtp(String email, String code) async {
     if (skipOtp) {
@@ -151,13 +170,16 @@ class AuthService {
     }
 
     try {
-      final response = await _dio.post('/auth/verify-otp', data: {
-        'email': email,
-        'code': code,
-      },);
+      final response = await _dio.post(
+        '/auth/verify-otp',
+        data: {
+          'email': email,
+          'code': code,
+        },
+      );
 
       final data = response.data as Map<String, dynamic>;
-      
+
       // Save tokens and user info
       if (data.containsKey('access_token')) {
         await _storage.saveAccessToken(data['access_token'] as String);
@@ -212,9 +234,12 @@ class AuthService {
         throw Exception('No refresh token available');
       }
 
-      final response = await _dio.post('/auth/refresh', data: {
-        'old_refresh_token': refreshToken,
-      },);
+      final response = await _dio.post(
+        '/auth/refresh',
+        data: {
+          'old_refresh_token': refreshToken,
+        },
+      );
 
       final data = response.data as Map<String, dynamic>;
       final newAccess = data['access_token'] as String?;
@@ -225,8 +250,8 @@ class AuthService {
         throw Exception('Session refresh failed. Please login again.');
       }
 
-  await _storage.saveAccessToken(newAccess!);
-  await _storage.saveRefreshToken(newRefresh!);
+      await _storage.saveAccessToken(newAccess!);
+      await _storage.saveRefreshToken(newRefresh!);
     } on DioException catch (_) {
       await _storage.clearAll();
       throw Exception('Session expired. Please login again.');
@@ -253,7 +278,9 @@ class AuthService {
 
     // Friendly mappings for common backend errors
     final msg = (detail ?? '').toLowerCase();
-    if (status == 400 && (msg.contains('invalid or expired code') || msg.contains('invalid code'))) {
+    if (status == 400 &&
+        (msg.contains('invalid or expired code') ||
+            msg.contains('invalid code'))) {
       return 'That code is invalid or has expired. Please request a new one.';
     }
     if (status == 400 && msg.contains('invalid or expired token')) {

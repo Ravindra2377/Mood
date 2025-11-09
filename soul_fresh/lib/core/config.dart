@@ -38,10 +38,12 @@ class AppConfig {
     final uri = Uri.parse(normalized);
     return (query == null || query.isEmpty)
         ? uri
-        : uri.replace(queryParameters: {
-            ...uri.queryParameters,
-            ...query.map((k, v) => MapEntry(k, '$v')),
-          },);
+        : uri.replace(
+            queryParameters: {
+              ...uri.queryParameters,
+              ...query.map((k, v) => MapEntry(k, '$v')),
+            },
+          );
   }
 
   /// True if the current base URL looks like a staging endpoint.

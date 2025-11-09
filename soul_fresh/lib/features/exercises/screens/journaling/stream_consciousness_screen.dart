@@ -119,7 +119,8 @@ class _StreamConsciousnessScreenState extends State<StreamConsciousnessScreen> {
     if (_writingController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Write for a few minutes before finishing.'),),
+          content: Text('Write for a few minutes before finishing.'),
+        ),
       );
       return;
     }
@@ -157,7 +158,8 @@ class _StreamConsciousnessScreenState extends State<StreamConsciousnessScreen> {
     }
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('10 minutes are up — capture your reflections.'),),
+        content: Text('10 minutes are up — capture your reflections.'),
+      ),
     );
   }
 

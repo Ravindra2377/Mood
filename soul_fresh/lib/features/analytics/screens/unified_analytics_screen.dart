@@ -46,7 +46,7 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                     Text(
                       'Track your progress and insights',
                       style: AppTypography.body1.copyWith(
-                        color: AppColors.white.withOpacity(0.9),
+                        color: AppColors.white.withValues(alpha: 0.9),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -160,9 +160,10 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.success.withOpacity(0.2),
+                    color: AppColors.success.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -186,7 +187,8 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                     value: snapshot.wellnessScore / 100,
                     strokeWidth: 14,
                     backgroundColor: AppColors.lightGrey,
-                    valueColor: const AlwaysStoppedAnimation(AppColors.primaryPastel),
+                    valueColor:
+                        const AlwaysStoppedAnimation(AppColors.primaryPastel),
                     strokeCap: StrokeCap.round,
                   ),
                 ),
@@ -211,7 +213,7 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'You\'re doing great! Keep up the good work 🎉',
+              'You\'re doing great! Keep up the good work ðŸŽ‰',
               style: AppTypography.body1.copyWith(
                 color: AppColors.charcoal,
                 fontWeight: FontWeight.w500,
@@ -297,9 +299,12 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
-                        color: AppColors.success.withOpacity(0.2),
+                        color: AppColors.success.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -322,13 +327,13 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
 
   Widget _buildMoodTrends() {
     final moodData = [
-      {'day': 'Mon', 'mood': 'Happy', 'emoji': '😊', 'score': 8},
-      {'day': 'Tue', 'mood': 'Calm', 'emoji': '😌', 'score': 7},
-      {'day': 'Wed', 'mood': 'Anxious', 'emoji': '😰', 'score': 4},
-      {'day': 'Thu', 'mood': 'Happy', 'emoji': '😊', 'score': 9},
-      {'day': 'Fri', 'mood': 'Calm', 'emoji': '😌', 'score': 8},
-      {'day': 'Sat', 'mood': 'Happy', 'emoji': '😊', 'score': 9},
-      {'day': 'Sun', 'mood': 'Happy', 'emoji': '😊', 'score': 8},
+      {'day': 'Mon', 'mood': 'Happy', 'emoji': 'ðŸ˜Š', 'score': 8},
+      {'day': 'Tue', 'mood': 'Calm', 'emoji': 'ðŸ˜Œ', 'score': 7},
+      {'day': 'Wed', 'mood': 'Anxious', 'emoji': 'ðŸ˜°', 'score': 4},
+      {'day': 'Thu', 'mood': 'Happy', 'emoji': 'ðŸ˜Š', 'score': 9},
+      {'day': 'Fri', 'mood': 'Calm', 'emoji': 'ðŸ˜Œ', 'score': 8},
+      {'day': 'Sat', 'mood': 'Happy', 'emoji': 'ðŸ˜Š', 'score': 9},
+      {'day': 'Sun', 'mood': 'Happy', 'emoji': 'ðŸ˜Š', 'score': 8},
     ];
 
     return CustomCard(
@@ -461,9 +466,10 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: (stat['color'] as Color).withOpacity(0.2),
+                    color: (stat['color'] as Color).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -604,7 +610,7 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '• Your mood has been consistently positive this week\n• Breathing exercises helped reduce anxiety levels\n• You\'ve been most active on Wednesdays and Saturdays\n• Consider trying more grounding exercises for stress management',
+                      'â€¢ Your mood has been consistently positive this week\nâ€¢ Breathing exercises helped reduce anxiety levels\nâ€¢ You\'ve been most active on Wednesdays and Saturdays\nâ€¢ Consider trying more grounding exercises for stress management',
                       style: AppTypography.body2.copyWith(
                         color: AppColors.darkGrey,
                         height: 1.6,
@@ -620,4 +626,3 @@ class UnifiedAnalyticsScreen extends ConsumerWidget {
     );
   }
 }
-

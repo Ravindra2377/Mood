@@ -49,7 +49,8 @@ class _EmotionWheelScreenState extends State<EmotionWheelScreen> {
     if (_primary == null || _secondary == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Choose at least a primary and secondary emotion.'),),
+          content: Text('Choose at least a primary and secondary emotion.'),
+        ),
       );
       return;
     }

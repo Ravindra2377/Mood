@@ -58,11 +58,11 @@ class CrisisDialog extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Crisis Support',
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red.shade900,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red.shade900,
+                                ),
                       ),
                     ),
                   ],
@@ -147,11 +147,13 @@ class CrisisDialog extends StatelessWidget {
                             color: Colors.green,
                           ),
                           child: const Center(
-                            child: Text('✓',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),),
+                            child: Text(
+                              '✓',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 12),

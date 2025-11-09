@@ -83,15 +83,20 @@ class ActivitySearchDelegate extends SearchDelegate<WellnessActivity?> {
 
   Widget _buildSearchResults() {
     final String lowerQuery = query.toLowerCase().trim();
-    final List<WellnessActivity> results = activities.where((WellnessActivity activity) {
+    final List<WellnessActivity> results =
+        activities.where((WellnessActivity activity) {
       final bool matchesName = activity.name.toLowerCase().contains(lowerQuery);
-      final bool matchesCategory = activity.category.toLowerCase().contains(lowerQuery);
+      final bool matchesCategory =
+          activity.category.toLowerCase().contains(lowerQuery);
       final bool matchesTag = activity.tags.any(
         (String tag) => tag.toLowerCase().contains(lowerQuery),
       );
       return lowerQuery.isEmpty || matchesName || matchesCategory || matchesTag;
     }).toList()
-      ..sort((WellnessActivity a, WellnessActivity b) => b.rating.compareTo(a.rating));
+          ..sort(
+            (WellnessActivity a, WellnessActivity b) =>
+                b.rating.compareTo(a.rating),
+          );
 
     if (results.isEmpty) {
       return Center(
@@ -122,9 +127,11 @@ class ActivitySearchDelegate extends SearchDelegate<WellnessActivity?> {
       itemBuilder: (BuildContext context, int index) {
         final WellnessActivity activity = results[index];
         return ListTile(
-          leading: Text(activity.iconEmoji, style: const TextStyle(fontSize: 28)),
+          leading:
+              Text(activity.iconEmoji, style: const TextStyle(fontSize: 28)),
           title: Text(activity.name),
-          subtitle: Text('${activity.durationMinutes} min • ${activity.category}'),
+          subtitle:
+              Text('${activity.durationMinutes} min • ${activity.category}'),
           trailing: const Icon(Icons.chevron_right),
           onTap: () => close(context, activity),
         );

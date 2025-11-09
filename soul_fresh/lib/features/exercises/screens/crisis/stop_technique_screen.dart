@@ -20,7 +20,9 @@ class _StopTechniqueScreenState extends State<StopTechniqueScreen> {
   void initState() {
     super.initState();
     session = ExerciseSession(
-        exerciseId: 'stop_technique', startTime: DateTime.now(),);
+      exerciseId: 'stop_technique',
+      startTime: DateTime.now(),
+    );
   }
 
   void _next() {

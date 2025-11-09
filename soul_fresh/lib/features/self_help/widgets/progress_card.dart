@@ -12,7 +12,7 @@ class ProgressCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7),
+            Theme.of(context).primaryColor.withValues(alpha: 0.7),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -42,13 +42,14 @@ class ProgressCard extends StatelessWidget {
                 ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text(
-                  '↑ 15%',
+                  'â†‘ 15%',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -61,9 +62,9 @@ class ProgressCard extends StatelessWidget {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _StatItem(icon: '🔥', label: '7', value: 'day streak'),
-              _StatItem(icon: '✅', label: '18', value: 'activities'),
-              _StatItem(icon: '⭐', label: '76%', value: 'wellness'),
+              _StatItem(icon: 'ðŸ”¥', label: '7', value: 'day streak'),
+              _StatItem(icon: 'âœ…', label: '18', value: 'activities'),
+              _StatItem(icon: 'â­', label: '76%', value: 'wellness'),
             ],
           ),
         ],
@@ -106,4 +107,3 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
-

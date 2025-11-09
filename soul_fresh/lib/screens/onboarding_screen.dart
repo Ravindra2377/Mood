@@ -124,4 +124,3 @@ class SoulGradients extends ThemeExtension<SoulGradients> {
     return t < .5 ? this : other;
   }
 }
-

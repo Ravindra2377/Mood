@@ -59,10 +59,10 @@ class ExerciseDetailScreen extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                           ),
                         ),
                         child: Column(
@@ -86,7 +86,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                             ),
                           ],
@@ -98,7 +98,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.85),
+                          color: Colors.white.withValues(alpha: 0.85),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -107,7 +107,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                             Column(
                               children: [
                                 const Text(
-                                  '⏱',
+                                  'â±',
                                   style: TextStyle(fontSize: 24),
                                 ),
                                 const SizedBox(height: 4),
@@ -123,7 +123,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                             Column(
                               children: [
                                 const Text(
-                                  '📊',
+                                  'ðŸ“Š',
                                   style: TextStyle(fontSize: 24),
                                 ),
                                 const SizedBox(height: 4),
@@ -139,7 +139,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                             Column(
                               children: [
                                 const Text(
-                                  '⭐',
+                                  'â­',
                                   style: TextStyle(fontSize: 24),
                                 ),
                                 const SizedBox(height: 4),
@@ -170,36 +170,38 @@ class ExerciseDetailScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.85),
+                          color: Colors.white.withValues(alpha: 0.85),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: exercise.benefits
-                              .map((benefit) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Row(
-                                      children: [
-                                        const Text(
-                                          '✓',
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.bold,
+                              .map(
+                                (benefit) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: Row(
+                                    children: [
+                                      const Text(
+                                        'âœ“',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          benefit,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black87,
                                           ),
                                         ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            benefit,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black87,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),)
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
                               .toList(),
                         ),
                       ),
@@ -218,7 +220,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.85),
+                          color: Colors.white.withValues(alpha: 0.85),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(

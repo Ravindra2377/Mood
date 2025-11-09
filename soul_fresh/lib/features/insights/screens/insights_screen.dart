@@ -89,11 +89,11 @@ class _InsightsBody extends StatelessWidget {
         _SectionCard(
           title: 'Overall Sentiment',
           description: 'Distribution of your journal moods.',
-      child: insights.overallSentiment.isEmpty
-        ? const KeyedSubtree(
-          key: ValueKey('overall-empty'),
-          child: _EmptyState(message: 'No sentiment data yet.'),
-        )
+          child: insights.overallSentiment.isEmpty
+              ? const KeyedSubtree(
+                  key: ValueKey('overall-empty'),
+                  child: _EmptyState(message: 'No sentiment data yet.'),
+                )
               : SizedBox(
                   height: 240,
                   child: PieChart(
@@ -113,11 +113,13 @@ class _InsightsBody extends StatelessWidget {
         _SectionCard(
           title: 'Top Keywords',
           description: 'Words you mention most in your reflections.',
-      child: insights.topKeywords.isEmpty
-        ? const KeyedSubtree(
-          key: ValueKey('keywords-empty'),
-          child: _EmptyState(message: 'Keywords will appear as you write.'),
-        )
+          child: insights.topKeywords.isEmpty
+              ? const KeyedSubtree(
+                  key: ValueKey('keywords-empty'),
+                  child: _EmptyState(
+                    message: 'Keywords will appear as you write.',
+                  ),
+                )
               : SizedBox(
                   height: 260,
                   child: BarChart(
@@ -194,7 +196,8 @@ class _InsightsBody extends StatelessWidget {
     Map<String, int> sentimentData,
     TextTheme textTheme,
   ) {
-    final total = sentimentData.values.fold<int>(0, (sum, value) => sum + value);
+    final total =
+        sentimentData.values.fold<int>(0, (sum, value) => sum + value);
     if (total == 0) {
       return [
         PieChartSectionData(
@@ -232,7 +235,8 @@ class _InsightsBody extends StatelessWidget {
   }
 
   static double _keywordInterval(List<KeywordData> keywords) {
-    final maxCount = keywords.fold<int>(0, (maxValue, item) => max(maxValue, item.count));
+    final maxCount =
+        keywords.fold<int>(0, (maxValue, item) => max(maxValue, item.count));
     if (maxCount <= 5) {
       return 1;
     }
@@ -280,7 +284,8 @@ class _InsightsBody extends StatelessWidget {
       space: 4,
       child: Text(
         keyword,
-        style: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 10),
+        style: textTheme.bodySmall
+            ?.copyWith(fontWeight: FontWeight.bold, fontSize: 10),
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -302,7 +307,8 @@ class _InsightsBody extends StatelessWidget {
     for (var i = 0; i < sorted.length; i++) {
       final point = sorted[i];
       final parsedDate = DateTime.tryParse(point.date);
-      final label = parsedDate != null ? formatter.format(parsedDate) : point.date;
+      final label =
+          parsedDate != null ? formatter.format(parsedDate) : point.date;
       labels[i] = label;
 
       final sentimentKey = point.sentiment.toUpperCase();
@@ -368,8 +374,8 @@ class _InsightsBody extends StatelessWidget {
             show: true,
             gradient: LinearGradient(
               colors: [
-                colors.primary.withOpacity(0.2),
-                colors.primary.withOpacity(0.05),
+                colors.primary.withValues(alpha: 0.2),
+                colors.primary.withValues(alpha: 0.05),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -387,7 +393,6 @@ class _InsightsBody extends StatelessWidget {
     if (value >= 0.25) return 'Negative';
     return 'Very Negative';
   }
-
 }
 
 Color _getColorForSentiment(String sentiment) {
@@ -439,7 +444,8 @@ class _SectionCard extends StatelessWidget {
             Text(
               description,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
+                color:
+                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 24),
@@ -465,7 +471,7 @@ class _EmptyState extends StatelessWidget {
         child: Text(
           message,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
+            color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
           ),
           textAlign: TextAlign.center,
         ),

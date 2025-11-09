@@ -20,7 +20,9 @@ class AuthInterceptor extends Interceptor {
 
   @override
   Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler,) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final token = await getToken();
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
@@ -118,11 +120,13 @@ class TokenRefreshInterceptor extends Interceptor {
 
     if (newAccess == null || newAccess.isEmpty) {
       throw const TokenRefreshException(
-          'Refresh response missing access_token',);
+        'Refresh response missing access_token',
+      );
     }
     if (newRefresh == null || newRefresh.isEmpty) {
       throw const TokenRefreshException(
-          'Refresh response missing refresh_token',);
+        'Refresh response missing refresh_token',
+      );
     }
 
     await Future.sync(() => saveAccessToken(newAccess));
@@ -154,7 +158,9 @@ class TokenRefreshInterceptor extends Interceptor {
 
   @override
   Future<void> onError(
-      DioException err, ErrorInterceptorHandler handler,) async {
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     if (!_isUnauthorized(err)) {
       handler.next(err);
       return;

@@ -188,7 +188,8 @@ class _YogaFlowScreenState extends State<YogaFlowScreen> {
                   DecoratedBox(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(16),

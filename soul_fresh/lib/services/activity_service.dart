@@ -15,7 +15,7 @@ class ActivityService {
   Future<List<Activity>> getActivities() async {
     try {
       final response = await (_apiClient as dynamic).getActivities();
-      
+
       final data = response as List<dynamic>;
       return data.map((item) {
         final activityData = item as Map<String, dynamic>;
@@ -23,7 +23,11 @@ class ActivityService {
           id: activityData['id'] as String,
           type: _parseActivityType(activityData['type'] as String),
           title: activityData['title'] as String,
-          color: Color(int.parse((activityData['color'] as String).replaceFirst('#', '0xFF'))),
+          color: Color(
+            int.parse(
+              (activityData['color'] as String).replaceFirst('#', '0xFF'),
+            ),
+          ),
           icon: _getIconForType(activityData['type'] as String),
         );
       }).toList();
@@ -38,7 +42,7 @@ class ActivityService {
       final response = await (_apiClient as dynamic).getActivityStats(
         date: date?.toIso8601String(),
       );
-      
+
       final data = response as List<dynamic>;
       return data.map((item) {
         final statData = item as Map<String, dynamic>;
@@ -46,7 +50,11 @@ class ActivityService {
           id: statData['id'] as String,
           title: statData['title'] as String,
           value: statData['value'] as String,
-          color: Color(int.parse((statData['color'] as String).replaceFirst('#', '0xFF'))),
+          color: Color(
+            int.parse(
+              (statData['color'] as String).replaceFirst('#', '0xFF'),
+            ),
+          ),
           icon: _getIconForStat(statData['type'] as String),
         );
       }).toList();
@@ -61,7 +69,7 @@ class ActivityService {
       final response = await (_apiClient as dynamic).getPhysicalState(
         date: date?.toIso8601String(),
       );
-      
+
       final data = response as Map<String, dynamic>;
       return PhysicalState(
         percentage: (data['percentage'] as num).toDouble(),

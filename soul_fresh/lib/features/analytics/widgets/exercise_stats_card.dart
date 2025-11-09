@@ -15,7 +15,7 @@ class ExerciseStatsCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '🏃 Exercise Statistics',
+                  'ðŸƒ Exercise Statistics',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -59,14 +59,18 @@ class ExerciseStatsCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             _buildExerciseType('Box Breathing', 6, Colors.blue),
-            _buildExerciseType('Progressive Muscle Relaxation', 4, Colors.green),
+            _buildExerciseType(
+              'Progressive Muscle Relaxation',
+              4,
+              Colors.green,
+            ),
             _buildExerciseType('Grounding Exercises', 5, Colors.purple),
             _buildExerciseType('4-7-8 Breathing', 3, Colors.orange),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
+                color: Colors.green.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -91,11 +95,16 @@ class ExerciseStatsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -117,7 +126,7 @@ class ExerciseStatsCard extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 10,
-                  color: color.withOpacity(0.8),
+                  color: color.withValues(alpha: 0.8),
                 ),
               ),
             ],
@@ -154,4 +163,3 @@ class ExerciseStatsCard extends StatelessWidget {
     );
   }
 }
-

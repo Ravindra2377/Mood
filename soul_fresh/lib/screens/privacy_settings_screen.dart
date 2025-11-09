@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PrivacySettingsScreen extends ConsumerStatefulWidget {
   static const String route = '/privacy-settings';
-  
+
   const PrivacySettingsScreen({super.key});
 
   @override
@@ -33,7 +33,7 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
                   ),
             ),
           ),
-          
+
           // Data Collection
           _buildSectionHeader('Data Collection'),
           SwitchListTile(
@@ -48,7 +48,7 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
             value: _personalizedContent,
             onChanged: (value) => setState(() => _personalizedContent = value),
           ),
-          
+
           // Data Sync
           _buildSectionHeader('Data Sync'),
           SwitchListTile(
@@ -57,7 +57,7 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
             value: _dataSyncEnabled,
             onChanged: (value) => setState(() => _dataSyncEnabled = value),
           ),
-          
+
           // Data Management
           _buildSectionHeader('Data Management'),
           ListTile(
@@ -74,9 +74,9 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
             trailing: const Icon(Icons.chevron_right),
             onTap: _deleteAllData,
           ),
-          
+
           const Divider(height: 32),
-          
+
           // Information
           Padding(
             padding: const EdgeInsets.all(16.0),

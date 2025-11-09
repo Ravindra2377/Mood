@@ -32,7 +32,7 @@ class ActivityCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -56,4 +56,3 @@ class ActivityCard extends StatelessWidget {
     );
   }
 }
-

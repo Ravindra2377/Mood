@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:flutter_test/flutter_test.dart';
 import 'package:soul/features/profile/providers/profile_provider.dart';
 import 'package:soul/features/profile/screens/profile_screen.dart';
 import 'package:soul/features/theme/providers/theme_provider.dart';
@@ -47,7 +46,8 @@ extension _CopyProfile on ProfileRead {
 }
 
 void main() {
-  testWidgets('Profile screen toggles theme and push notifications', (tester) async {
+  testWidgets('Profile screen toggles theme and push notifications',
+      (tester) async {
     // ProfileRead requires int id/userId; use simple numeric placeholders.
     final initialProfile = ProfileRead(
       id: 1,
@@ -56,12 +56,14 @@ void main() {
       notifyPush: false,
       notifyEmail: false,
     );
-    final viewData = ProfileViewData(profile: initialProfile, email: 'user@example.com');
+    final viewData =
+        ProfileViewData(profile: initialProfile, email: 'user@example.com');
 
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          profileControllerProvider.overrideWith(() => _FakeProfileController(viewData)),
+          profileControllerProvider
+              .overrideWith(() => _FakeProfileController(viewData)),
           themeProvider.overrideWith((ref) => ThemeController()),
         ],
         child: MaterialApp(

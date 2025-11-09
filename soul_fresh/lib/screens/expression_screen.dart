@@ -82,15 +82,15 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
   String _getMoodEmoji(JournalMood mood) {
     switch (mood) {
       case JournalMood.angry:
-        return '😠';
+        return 'ðŸ˜ ';
       case JournalMood.sad:
-        return '😢';
+        return 'ðŸ˜¢';
       case JournalMood.neutral:
-        return '😐';
+        return 'ðŸ˜';
       case JournalMood.happy:
-        return '😊';
+        return 'ðŸ˜Š';
       case JournalMood.excited:
-        return '🤩';
+        return 'ðŸ¤©';
     }
   }
 
@@ -122,8 +122,8 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
   }
 
   String _createEntryTitle(JournalMood mood, DateTime timestamp) {
-    final formatted = DateFormat('MMM d, yyyy • h:mm a').format(timestamp);
-    return '${_getMoodLabel(mood)} • $formatted';
+    final formatted = DateFormat('MMM d, yyyy â€¢ h:mm a').format(timestamp);
+    return '${_getMoodLabel(mood)} â€¢ $formatted';
   }
 
   void _saveEntry() async {
@@ -326,20 +326,24 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: _getMoodColor(_selectedMood).withOpacity(0.3),
+                        color:
+                            _getMoodColor(_selectedMood).withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today,
-                            size: 18, color: _getMoodColor(_selectedMood),),
+                        Icon(
+                          Icons.calendar_today,
+                          size: 18,
+                          color: _getMoodColor(_selectedMood),
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            '${DateFormat('EEEE, MMM d, yyyy').format(_selectedDate)} • ${_selectedTime.format(context)}',
+                            '${DateFormat('EEEE, MMM d, yyyy').format(_selectedDate)} â€¢ ${_selectedTime.format(context)}',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -358,7 +362,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.85),
+                    color: Colors.white.withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Column(
@@ -388,7 +392,8 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: isSelected
-                                        ? _getMoodColor(mood).withOpacity(0.2)
+                                        ? _getMoodColor(mood)
+                                            .withValues(alpha: 0.2)
                                         : Colors.transparent,
                                     border: Border.all(
                                       color: isSelected
@@ -453,7 +458,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                   ),
                   child: Row(
                     children: [
-                      const Text('💡', style: TextStyle(fontSize: 16)),
+                      const Text('ðŸ’¡', style: TextStyle(fontSize: 16)),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -478,7 +483,8 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: _getMoodColor(_selectedMood).withOpacity(0.1),
+                        color:
+                            _getMoodColor(_selectedMood).withValues(alpha: 0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -540,7 +546,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
@@ -549,7 +555,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                       Row(
                         children: [
                           Text(
-                            '🏷️ Tags',
+                            'ðŸ·ï¸ Tags',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -588,16 +594,17 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                         Wrap(
                           spacing: 6,
                           children: _tags
-                              .map((tag) => Chip(
-                                    label: Text(
-                                      tag,
-                                      style: const TextStyle(fontSize: 11),
-                                    ),
-                                    onDeleted: () => _removeTag(tag),
-                                    backgroundColor:
-                                        _getMoodColor(_selectedMood)
-                                            .withOpacity(0.2),
-                                  ),)
+                              .map(
+                                (tag) => Chip(
+                                  label: Text(
+                                    tag,
+                                    style: const TextStyle(fontSize: 11),
+                                  ),
+                                  onDeleted: () => _removeTag(tag),
+                                  backgroundColor: _getMoodColor(_selectedMood)
+                                      .withValues(alpha: 0.2),
+                                ),
+                              )
                               .toList(),
                         ),
                       ],
@@ -612,7 +619,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
@@ -761,7 +768,9 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                 ScaleTransition(
                   scale: Tween<double>(begin: 1.0, end: 1.05).animate(
                     CurvedAnimation(
-                        parent: _animationController, curve: Curves.elasticOut,),
+                      parent: _animationController,
+                      curve: Curves.elasticOut,
+                    ),
                   ),
                   child: SizedBox(
                     width: double.infinity,
@@ -776,7 +785,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                         ),
                         disabledBackgroundColor: _isSaved
                             ? Colors.green
-                            : Colors.black.withOpacity(0.6),
+                            : Colors.black.withValues(alpha: 0.6),
                       ),
                       child: _isSaving
                           ? const Row(
@@ -802,7 +811,7 @@ class _ExpressionScreenState extends ConsumerState<ExpressionScreen>
                               ],
                             )
                           : Text(
-                              _isSaved ? '✓ Saved' : 'Save & Continue',
+                              _isSaved ? 'âœ“ Saved' : 'Save & Continue',
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,

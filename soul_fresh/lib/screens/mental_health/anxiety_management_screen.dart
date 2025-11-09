@@ -3,14 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:soul/config/app_colors.dart';
 
 // Providers
-final anxietyLogsProvider =
-    StateProvider<List<AnxietyLog>>((ref) => []);
+final anxietyLogsProvider = StateProvider<List<AnxietyLog>>((ref) => []);
 
 final copingStrategiesProvider =
     StateProvider<List<CopingStrategy>>((ref) => []);
 
-final safetyPlanProvider =
-    StateProvider<SafetyPlan?>((ref) => null);
+final safetyPlanProvider = StateProvider<SafetyPlan?>((ref) => null);
 
 class AnxietyLog {
   final int id;
@@ -72,7 +70,8 @@ class AnxietyManagementScreen extends ConsumerStatefulWidget {
       _AnxietyManagementScreenState();
 }
 
-class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScreen>
+class _AnxietyManagementScreenState
+    extends ConsumerState<AnxietyManagementScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -139,9 +138,11 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Anxiety Intensity Logger
-          _AnxietyIntensityCard(onLog: (intensity, trigger, coping) {
-            // Log anxiety
-          },),
+          _AnxietyIntensityCard(
+            onLog: (intensity, trigger, coping) {
+              // Log anxiety
+            },
+          ),
           const SizedBox(height: 24),
 
           // Recent Logs
@@ -191,42 +192,42 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
       {
         'name': '4-7-8 Breathing',
         'description': 'Breathe in for 4, hold for 7, exhale for 8',
-        'icon': '💨',
+        'icon': 'ðŸ’¨',
       },
       {
         'name': 'Progressive Relaxation',
         'description': 'Tense and release each muscle group',
-        'icon': '🧘',
+        'icon': 'ðŸ§˜',
       },
       {
         'name': 'Grounding (5-4-3-2-1)',
         'description': 'Notice 5 sights, 4 sounds, 3 touches...',
-        'icon': '🌍',
+        'icon': 'ðŸŒ',
       },
       {
         'name': 'Cold Water',
         'description': 'Splash cold water on face to activate calm',
-        'icon': '💧',
+        'icon': 'ðŸ’§',
       },
       {
         'name': 'Physical Activity',
         'description': 'Walk, run, or exercise to burn adrenaline',
-        'icon': '🏃',
+        'icon': 'ðŸƒ',
       },
       {
         'name': 'Journaling',
         'description': 'Write down thoughts and feelings',
-        'icon': '📝',
+        'icon': 'ðŸ“',
       },
       {
         'name': 'Positive Affirmations',
         'description': 'Remind yourself of your strength',
-        'icon': '✨',
+        'icon': 'âœ¨',
       },
       {
         'name': 'Self-Compassion',
         'description': 'Treat yourself with kindness',
-        'icon': '💗',
+        'icon': 'ðŸ’—',
       },
     ];
 
@@ -286,9 +287,12 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
                         alignment: Alignment.bottomRight,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4,),
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF00D2D3).withOpacity(0.2),
+                            color:
+                                const Color(0xFF00D2D3).withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
@@ -322,7 +326,7 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
+              color: Colors.red.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.red, width: 2),
             ),
@@ -346,19 +350,19 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
                 const _ContactTile(
                   label: 'Crisis Text Line',
                   value: 'Text HOME to 741741',
-                  icon: '💬',
+                  icon: 'ðŸ’¬',
                 ),
                 const SizedBox(height: 12),
                 const _ContactTile(
                   label: 'National Suicide Prevention',
                   value: '988 (call or text)',
-                  icon: '📞',
+                  icon: 'ðŸ“ž',
                 ),
                 const SizedBox(height: 12),
                 const _ContactTile(
                   label: 'Emergency Services',
                   value: '911',
-                  icon: '🚑',
+                  icon: 'ðŸš‘',
                 ),
               ],
             ),
@@ -380,10 +384,10 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
             ),
             child: const Text(
               'I notice my anxiety is escalating when:\n'
-              '• I start avoiding situations\n'
-              '• My sleep becomes irregular\n'
-              '• I feel tension in my chest\n'
-              '• I catastrophize about the future',
+              'â€¢ I start avoiding situations\n'
+              'â€¢ My sleep becomes irregular\n'
+              'â€¢ I feel tension in my chest\n'
+              'â€¢ I catastrophize about the future',
               style: TextStyle(fontSize: 13, height: 1.6),
             ),
           ),
@@ -396,18 +400,18 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
           ),
           const SizedBox(height: 12),
           ...[
-            '✓ Deep breathing exercises',
-            '✓ Go for a walk in nature',
-            '✓ Call a trusted friend',
-            '✓ Practice grounding techniques',
-            '✓ Listen to calming music',
+            'âœ“ Deep breathing exercises',
+            'âœ“ Go for a walk in nature',
+            'âœ“ Call a trusted friend',
+            'âœ“ Practice grounding techniques',
+            'âœ“ Listen to calming music',
           ].map((skill) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
+                  color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.green),
                 ),
@@ -500,7 +504,10 @@ class _AnxietyManagementScreenState extends ConsumerState<AnxietyManagementScree
     );
   }
 
-  void _showStrategyDetail(BuildContext context, Map<String, dynamic> strategy) {
+  void _showStrategyDetail(
+    BuildContext context,
+    Map<String, dynamic> strategy,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.backgroundColor,
@@ -648,7 +655,7 @@ class _AnxietyIntensityCardState extends State<_AnxietyIntensityCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF00D2D3).withOpacity(0.1),
+        color: const Color(0xFF00D2D3).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFF00D2D3),
@@ -688,8 +695,7 @@ class _AnxietyIntensityCardState extends State<_AnxietyIntensityCard> {
                 value: intensity.toDouble(),
                 max: 10,
                 divisions: 10,
-                onChanged: (value) =>
-                    setState(() => intensity = value.toInt()),
+                onChanged: (value) => setState(() => intensity = value.toInt()),
                 activeColor: const Color(0xFF00D2D3),
               ),
             ],
@@ -712,7 +718,8 @@ class _AnxietyIntensityCardState extends State<_AnxietyIntensityCard> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => widget.onLog(intensity, trigger, copingTechnique),
+              onPressed: () =>
+                  widget.onLog(intensity, trigger, copingTechnique),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF00D2D3),
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -763,8 +770,8 @@ class _AnxietyLogCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: intensity > 6
-                      ? Colors.red.withOpacity(0.2)
-                      : Colors.orange.withOpacity(0.2),
+                      ? Colors.red.withValues(alpha: 0.2)
+                      : Colors.orange.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
@@ -783,7 +790,10 @@ class _AnxietyLogCard extends StatelessWidget {
             children: [
               Text(
                 '${date.hour}:${date.minute.toString().padLeft(2, '0')}',
-                style: const TextStyle(fontSize: 12, color: AppColors.secondaryText),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.secondaryText,
+                ),
               ),
               Text(
                 copingUsed,

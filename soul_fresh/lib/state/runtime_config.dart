@@ -16,7 +16,8 @@ class RuntimeConfigController extends AsyncNotifier<String> {
     if (saved != null && saved.isNotEmpty) {
       // If the persisted value still points to the old production host while running locally,
       // override it so developers don't need to clear storage manually.
-      if (saved.contains('soulapp.app') && AppConfig.baseUrl.contains('10.0.2.2')) {
+      if (saved.contains('soulapp.app') &&
+          AppConfig.baseUrl.contains('10.0.2.2')) {
         return AppConfig.apiBaseUrl;
       }
       return saved;

@@ -68,11 +68,13 @@ class Constants {
   // Crisis Resources
   static const String crisisHotline = '988';
   static const String crisisTextLine = '741741';
-  static const String crisisHotlineName = 'National Suicide Prevention Lifeline';
+  static const String crisisHotlineName =
+      'National Suicide Prevention Lifeline';
   static const String crisisTextLineName = 'Crisis Text Line';
 
   // Validation Patterns
-  static const String emailPattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+  static const String emailPattern =
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
   static const String phonePattern = r'^\+?[\d\s-()]+$';
 
   // UI Constants
@@ -96,10 +98,12 @@ class Constants {
   static const double fadeOutOpacity = 0.0;
 
   // Error Messages
-  static const String errorNetwork = 'Network error. Please check your connection.';
+  static const String errorNetwork =
+      'Network error. Please check your connection.';
   static const String errorServer = 'Server error. Please try again later.';
   static const String errorUnknown = 'An unexpected error occurred.';
-  static const String errorSessionExpired = 'Your session has expired. Please login again.';
+  static const String errorSessionExpired =
+      'Your session has expired. Please login again.';
   static const String errorInvalidCredentials = 'Invalid email or password.';
 
   // Success Messages
@@ -110,7 +114,8 @@ class Constants {
   static const String successJournalSaved = 'Journal entry saved';
 
   // Empty States
-  static const String emptyMoods = 'No mood entries yet. Start tracking your mood!';
+  static const String emptyMoods =
+      'No mood entries yet. Start tracking your mood!';
   static const String emptyJournals = 'No journal entries yet. Start writing!';
   static const String emptyActivities = 'No activities found.';
   static const String emptyNotifications = 'No notifications yet.';

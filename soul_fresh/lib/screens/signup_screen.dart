@@ -19,7 +19,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -30,8 +30,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   String? _selectedGender;
   String? _selectedGoal;
   String? _errorMessage;
-  
-  final List<String> _genderOptions = ['Male', 'Female', 'Non-binary', 'Prefer not to say', 'Custom'];
+
+  final List<String> _genderOptions = [
+    'Male',
+    'Female',
+    'Non-binary',
+    'Prefer not to say',
+    'Custom',
+  ];
   final List<String> _goalOptions = [
     'Managing stress',
     'Improving mood',
@@ -117,8 +123,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       if (!mounted) return;
 
       // Navigate to OTP verification or home
-      Navigator.of(context).pushReplacementNamed('/otp-verification',
-          arguments: {'email': _emailController.text.trim()},);
+      Navigator.of(context).pushReplacementNamed(
+        '/otp-verification',
+        arguments: {'email': _emailController.text.trim()},
+      );
     } catch (e) {
       setState(() {
         _errorMessage = e.toString();
@@ -138,8 +146,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final (passwordStrength, strengthColor) = _getPasswordStrengthInfo(_passwordController.text);
-    
+    final (passwordStrength, strengthColor) =
+        _getPasswordStrengthInfo(_passwordController.text);
+
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
       appBar: AppBar(
@@ -197,7 +206,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.error_outline, color: AppColors.error),
+                          const Icon(
+                            Icons.error_outline,
+                            color: AppColors.error,
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
@@ -301,10 +313,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: LinearProgressIndicator(
-                                value: _calculatePasswordStrength(_passwordController.text),
+                                value: _calculatePasswordStrength(
+                                  _passwordController.text,
+                                ),
                                 minHeight: 6,
                                 backgroundColor: Colors.grey[300],
-                                valueColor: AlwaysStoppedAnimation<Color>(strengthColor),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  strengthColor,
+                                ),
                               ),
                             ),
                           ),
@@ -362,9 +378,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         const SizedBox(width: 8),
                         Text(
                           '(Optional)',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppColors.grey600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: AppColors.grey600,
+                                  ),
                         ),
                       ],
                     ),
@@ -374,21 +391,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   GestureDetector(
                     onTap: _selectDateOfBirth,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey[400]!),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.calendar_today_outlined, color: Colors.grey),
+                          const Icon(
+                            Icons.calendar_today_outlined,
+                            color: Colors.grey,
+                          ),
                           const SizedBox(width: 12),
                           Text(
                             _dateOfBirth == null
                                 ? 'Date of Birth'
                                 : '${_dateOfBirth!.day}/${_dateOfBirth!.month}/${_dateOfBirth!.year}',
                             style: TextStyle(
-                              color: _dateOfBirth == null ? Colors.grey : Colors.black,
+                              color: _dateOfBirth == null
+                                  ? Colors.grey
+                                  : Colors.black,
                             ),
                           ),
                         ],
@@ -399,7 +424,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                   // Gender/Pronouns dropdown
                   DropdownButtonFormField<String>(
-                    value: _selectedGender,
+                    initialValue: _selectedGender,
                     decoration: const InputDecoration(
                       labelText: 'Gender/Pronouns',
                       prefixIcon: Icon(Icons.wc_outlined),
@@ -421,7 +446,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                   // Primary Goal dropdown
                   DropdownButtonFormField<String>(
-                    value: _selectedGoal,
+                    initialValue: _selectedGoal,
                     decoration: const InputDecoration(
                       labelText: 'Primary Mental Wellness Goal',
                       prefixIcon: Icon(Icons.psychology_outlined),
@@ -463,7 +488,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     linkOnTap: () => Navigator.of(context).pushNamed('/terms'),
                     suffix: ' and ',
                     linkText2: 'Privacy Policy',
-                    linkOnTap2: () => Navigator.of(context).pushNamed('/privacy-policy'),
+                    linkOnTap2: () =>
+                        Navigator.of(context).pushNamed('/privacy-policy'),
                   ),
                   const SizedBox(height: 12),
 
@@ -475,7 +501,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         _acceptDataConsent = value ?? false;
                       });
                     },
-                    label: 'I consent to the collection and processing of my health data',
+                    label:
+                        'I consent to the collection and processing of my health data',
                     linkText: '',
                     linkOnTap: () {},
                   ),
@@ -504,7 +531,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ),
                     child: const Text(
                       'Create Account',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -567,7 +595,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 // darker color on light background.
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       // Use withValues instead of deprecated withOpacity.
-                      color: Colors.black.withOpacity(0.75),
+                      color: Colors.black.withValues(alpha: 0.75),
                       height: 1.3,
                     ),
                 children: [

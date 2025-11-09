@@ -44,7 +44,9 @@ class _JournalListScreenState extends ConsumerState<JournalListScreen> {
       body: FutureBuilder<JournalStore>(
         future: _svcFuture,
         builder: (context, snap) {
-          if (!snap.hasData) return const Center(child: CircularProgressIndicator());
+          if (!snap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
           final svc = snap.data!;
           final items = svc.list();
           return ListView.builder(
@@ -60,7 +62,10 @@ class _JournalListScreenState extends ConsumerState<JournalListScreen> {
                     final changed = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => JournalEditScreen(entry: entry, serviceFuture: _svcFuture),
+                        builder: (_) => JournalEditScreen(
+                          entry: entry,
+                          serviceFuture: _svcFuture,
+                        ),
                       ),
                     );
                     if (changed == true && mounted) {
@@ -71,15 +76,22 @@ class _JournalListScreenState extends ConsumerState<JournalListScreen> {
               }
               final entry = items[index - 1];
               return ListTile(
-                title: Text(entry.title.isEmpty
-                    ? entry.content.split('\n').firstWhere((_) => true, orElse: () => 'Untitled')
-                    : entry.title,),
+                title: Text(
+                  entry.title.isEmpty
+                      ? entry.content
+                          .split('\n')
+                          .firstWhere((_) => true, orElse: () => 'Untitled')
+                      : entry.title,
+                ),
                 subtitle: Text(entry.createdAt.toLocal().toString()),
                 onTap: () async {
                   final changed = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => JournalEditScreen(entry: entry, serviceFuture: _svcFuture),
+                      builder: (_) => JournalEditScreen(
+                        entry: entry,
+                        serviceFuture: _svcFuture,
+                      ),
                     ),
                   );
                   if (changed == true && mounted) {

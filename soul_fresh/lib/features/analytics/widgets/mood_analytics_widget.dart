@@ -30,8 +30,16 @@ class MoodAnalyticsWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            _buildStat('Weekly Average', '${stats.weeklyAverageMood.toStringAsFixed(1)}/10', '📊'),
-            _buildStat('Mood Trend', _formatTrend(stats.moodTrend), _getTrendIcon(stats.moodTrend)),
+            _buildStat(
+              'Weekly Average',
+              '${stats.weeklyAverageMood.toStringAsFixed(1)}/10',
+              '📊',
+            ),
+            _buildStat(
+              'Mood Trend',
+              _formatTrend(stats.moodTrend),
+              _getTrendIcon(stats.moodTrend),
+            ),
             _buildStat('Common State', stats.mostCommonEmotionalState, '🎯'),
             const SizedBox(height: 16),
             Text(
@@ -41,16 +49,18 @@ class MoodAnalyticsWidget extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: 8),
-            ...stats.topTriggers.map((trigger) => Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Row(
-                children: [
-                  const Text('→'),
-                  const SizedBox(width: 8),
-                  Text(trigger),
-                ],
+            ...stats.topTriggers.map(
+              (trigger) => Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  children: [
+                    const Text('→'),
+                    const SizedBox(width: 8),
+                    Text(trigger),
+                  ],
+                ),
               ),
-            ),),
+            ),
           ],
         ),
       ),
@@ -95,4 +105,3 @@ class MoodAnalyticsWidget extends StatelessWidget {
     return '➡️';
   }
 }
-

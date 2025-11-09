@@ -27,23 +27,26 @@ class AnalyticsService {
   }) async {
     final box = Hive.box<Map>(_exerciseSessionsBox);
     final sessions = box.values
-        .map((json) => ExerciseSession(
-          id: json['id'],
-          exerciseId: json['exerciseId'],
-          exerciseName: json['exerciseName'],
-          category: json['category'],
-          durationMinutes: json['duration'],
-          completedAt: DateTime.parse(json['completedAt']),
-          moodBefore: json['moodBefore'],
-          moodAfter: json['moodAfter'],
-          notes: json['notes'],
-        ),)
+        .map(
+          (json) => ExerciseSession(
+            id: json['id'],
+            exerciseId: json['exerciseId'],
+            exerciseName: json['exerciseName'],
+            category: json['category'],
+            durationMinutes: json['duration'],
+            completedAt: DateTime.parse(json['completedAt']),
+            moodBefore: json['moodBefore'],
+            moodAfter: json['moodAfter'],
+            notes: json['notes'],
+          ),
+        )
         .toList();
 
     if (days != null) {
       final cutoffDate = DateTime.now().subtract(Duration(days: days));
       return ExerciseStats(
-        sessions: sessions.where((s) => s.completedAt.isAfter(cutoffDate)).toList(),
+        sessions:
+            sessions.where((s) => s.completedAt.isAfter(cutoffDate)).toList(),
       );
     }
 
@@ -64,21 +67,24 @@ class AnalyticsService {
   }) async {
     final box = Hive.box<Map>(_selfHelpActivitiesBox);
     final activities = box.values
-        .map((json) => SelfHelpActivity(
-          id: json['id'],
-          activityType: json['activityType'],
-          activityName: json['activityName'],
-          durationMinutes: json['duration'],
-          completedAt: DateTime.parse(json['completedAt']),
-          completionPercentage: json['completionPercentage'],
-          result: json['result'],
-        ),)
+        .map(
+          (json) => SelfHelpActivity(
+            id: json['id'],
+            activityType: json['activityType'],
+            activityName: json['activityName'],
+            durationMinutes: json['duration'],
+            completedAt: DateTime.parse(json['completedAt']),
+            completionPercentage: json['completionPercentage'],
+            result: json['result'],
+          ),
+        )
         .toList();
 
     if (days != null) {
       final cutoffDate = DateTime.now().subtract(Duration(days: days));
       return SelfHelpStats(
-        activities: activities.where((a) => a.completedAt.isAfter(cutoffDate)).toList(),
+        activities:
+            activities.where((a) => a.completedAt.isAfter(cutoffDate)).toList(),
       );
     }
 
@@ -99,19 +105,22 @@ class AnalyticsService {
   }) async {
     final box = Hive.box<Map>(_moodEntriesBox);
     final entries = box.values
-        .map((json) => MoodEntry(
-          id: json['id'],
-          moodScore: json['moodScore'],
-          emotionalState: json['emotionalState'],
-          triggers: List<String>.from(json['triggers'] ?? []),
-          recordedAt: DateTime.parse(json['recordedAt']),
-        ),)
+        .map(
+          (json) => MoodEntry(
+            id: json['id'],
+            moodScore: json['moodScore'],
+            emotionalState: json['emotionalState'],
+            triggers: List<String>.from(json['triggers'] ?? []),
+            recordedAt: DateTime.parse(json['recordedAt']),
+          ),
+        )
         .toList();
 
     if (days != null) {
       final cutoffDate = DateTime.now().subtract(Duration(days: days));
       return MoodStats(
-        entries: entries.where((e) => e.recordedAt.isAfter(cutoffDate)).toList(),
+        entries:
+            entries.where((e) => e.recordedAt.isAfter(cutoffDate)).toList(),
       );
     }
 
@@ -134,4 +143,3 @@ class AnalyticsService {
     );
   }
 }
-

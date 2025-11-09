@@ -10,7 +10,8 @@ class ExerciseSession {
   final String id;
   final String exerciseId;
   final String exerciseName;
-  final String category; // 'breathing', 'pmr', 'grounding', 'cognitive', 'journaling'
+  final String
+      category; // 'breathing', 'pmr', 'grounding', 'cognitive', 'journaling'
   final int durationMinutes;
   final DateTime completedAt;
   final int moodBefore; // 1-10
@@ -32,16 +33,16 @@ class ExerciseSession {
   int get moodImprovement => moodAfter - moodBefore;
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'exerciseId': exerciseId,
-    'exerciseName': exerciseName,
-    'category': category,
-    'duration': durationMinutes,
-    'completedAt': completedAt.toIso8601String(),
-    'moodBefore': moodBefore,
-    'moodAfter': moodAfter,
-    'notes': notes,
-  };
+        'id': id,
+        'exerciseId': exerciseId,
+        'exerciseName': exerciseName,
+        'category': category,
+        'duration': durationMinutes,
+        'completedAt': completedAt.toIso8601String(),
+        'moodBefore': moodBefore,
+        'moodAfter': moodAfter,
+        'notes': notes,
+      };
 }
 
 class ExerciseStats {
@@ -54,15 +55,14 @@ class ExerciseStats {
 
   // Total time in minutes
   int get totalTimeMinutes =>
-    sessions.fold(0, (sum, session) => sum + session.durationMinutes);
+      sessions.fold(0, (sum, session) => sum + session.durationMinutes);
 
   // Average session duration
   double get averageSessionDuration =>
-    totalSessions > 0 ? totalTimeMinutes / totalSessions : 0.0;
+      totalSessions > 0 ? totalTimeMinutes / totalSessions : 0.0;
 
   // Mood improvement average
-  double get averageMoodImprovement =>
-    totalSessions > 0
+  double get averageMoodImprovement => totalSessions > 0
       ? sessions.fold(0, (sum, s) => sum + s.moodImprovement) / totalSessions
       : 0.0;
 
@@ -106,7 +106,8 @@ class ExerciseStats {
 
 class SelfHelpActivity {
   final String id;
-  final String activityType; // 'thought_record', 'check_in', 'pathway', 'assessment'
+  final String
+      activityType; // 'thought_record', 'check_in', 'pathway', 'assessment'
   final String activityName;
   final int durationMinutes;
   final DateTime completedAt;
@@ -124,14 +125,14 @@ class SelfHelpActivity {
   }) : id = id ?? const Uuid().v4();
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'activityType': activityType,
-    'activityName': activityName,
-    'duration': durationMinutes,
-    'completedAt': completedAt.toIso8601String(),
-    'completionPercentage': completionPercentage,
-    'result': result,
-  };
+        'id': id,
+        'activityType': activityType,
+        'activityName': activityName,
+        'duration': durationMinutes,
+        'completedAt': completedAt.toIso8601String(),
+        'completionPercentage': completionPercentage,
+        'result': result,
+      };
 }
 
 class SelfHelpStats {
@@ -144,7 +145,7 @@ class SelfHelpStats {
 
   // Total time invested
   int get totalTimeMinutes =>
-    activities.fold(0, (sum, activity) => sum + activity.durationMinutes);
+      activities.fold(0, (sum, activity) => sum + activity.durationMinutes);
 
   // Count by activity type
   Map<String, int> get activitiesByType {
@@ -157,19 +158,19 @@ class SelfHelpStats {
 
   // Thought records count
   int get thoughtRecordsCount =>
-    activities.where((a) => a.activityType == 'thought_record').length;
+      activities.where((a) => a.activityType == 'thought_record').length;
 
   // Check-ins count
   int get checkInsCount =>
-    activities.where((a) => a.activityType == 'check_in').length;
+      activities.where((a) => a.activityType == 'check_in').length;
 
   // Guided programs count
   int get guidedProgramsCount =>
-    activities.where((a) => a.activityType == 'pathway').length;
+      activities.where((a) => a.activityType == 'pathway').length;
 
   // Assessments count
   int get assessmentsCount =>
-    activities.where((a) => a.activityType == 'assessment').length;
+      activities.where((a) => a.activityType == 'assessment').length;
 }
 
 // ==========================================
@@ -179,7 +180,8 @@ class SelfHelpStats {
 class MoodEntry {
   final String id;
   final int moodScore; // 1-10
-  final String? emotionalState; // 'anxious', 'sad', 'angry', 'calm', 'happy', etc.
+  final String?
+      emotionalState; // 'anxious', 'sad', 'angry', 'calm', 'happy', etc.
   final List<String> triggers; // What caused this mood
   final DateTime recordedAt;
 
@@ -192,12 +194,12 @@ class MoodEntry {
   }) : id = id ?? const Uuid().v4();
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'moodScore': moodScore,
-    'emotionalState': emotionalState,
-    'triggers': triggers,
-    'recordedAt': recordedAt.toIso8601String(),
-  };
+        'id': id,
+        'moodScore': moodScore,
+        'emotionalState': emotionalState,
+        'triggers': triggers,
+        'recordedAt': recordedAt.toIso8601String(),
+      };
 }
 
 class MoodStats {
@@ -222,8 +224,10 @@ class MoodStats {
     final lastWeek = sorted.sublist(0, 7);
     final previousWeek = sorted.sublist(7, min(14, sorted.length));
 
-    final lastAverage = lastWeek.fold(0, (sum, e) => sum + e.moodScore) / lastWeek.length;
-    final prevAverage = previousWeek.fold(0, (sum, e) => sum + e.moodScore) / previousWeek.length;
+    final lastAverage =
+        lastWeek.fold(0, (sum, e) => sum + e.moodScore) / lastWeek.length;
+    final prevAverage = previousWeek.fold(0, (sum, e) => sum + e.moodScore) /
+        previousWeek.length;
 
     return lastAverage - prevAverage;
   }
@@ -234,7 +238,8 @@ class MoodStats {
     final states = <String, int>{};
     for (final entry in entries) {
       if (entry.emotionalState != null) {
-        states[entry.emotionalState!] = (states[entry.emotionalState!] ?? 0) + 1;
+        states[entry.emotionalState!] =
+            (states[entry.emotionalState!] ?? 0) + 1;
       }
     }
 
@@ -293,11 +298,13 @@ class AnalyticsSnapshot {
     score += moodComponent.round();
 
     // Exercise component (30%)
-    final exerciseComponent = min(30, exerciseStats.totalSessions * 3).toDouble();
+    final exerciseComponent =
+        min(30, exerciseStats.totalSessions * 3).toDouble();
     score += exerciseComponent.round();
 
     // Self-help component (30%)
-    final selfHelpComponent = min(30, selfHelpStats.totalActivities * 2).toDouble();
+    final selfHelpComponent =
+        min(30, selfHelpStats.totalActivities * 2).toDouble();
     score += selfHelpComponent.round();
 
     return min(100, score);
@@ -324,9 +331,11 @@ class AnalyticsSnapshot {
 
     for (final date in allEvents) {
       final dateOnly = DateTime(date.year, date.month, date.day);
-      final compareDate = DateTime(currentDate.year, currentDate.month, currentDate.day);
+      final compareDate =
+          DateTime(currentDate.year, currentDate.month, currentDate.day);
 
-      if (dateOnly == compareDate || dateOnly == compareDate.subtract(Duration(days: streak + 1))) {
+      if (dateOnly == compareDate ||
+          dateOnly == compareDate.subtract(Duration(days: streak + 1))) {
         streak++;
         if (streak > 1 && dateOnly != compareDate) {
           currentDate = date;
@@ -339,4 +348,3 @@ class AnalyticsSnapshot {
     return streak;
   }
 }
-

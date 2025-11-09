@@ -61,7 +61,9 @@ class ExerciseInfoDialog extends StatelessWidget {
                     if (info.warningNote != null) ...<Widget>[
                       const SizedBox(height: 20),
                       _WarningCallout(
-                          message: info.warningNote!, color: info.color,),
+                        message: info.warningNote!,
+                        color: info.color,
+                      ),
                     ],
                   ],
                 ),
@@ -94,7 +96,7 @@ class _DialogHeader extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.25),
+              color: Colors.white.withValues(alpha: 0.25),
               shape: BoxShape.circle,
             ),
             child: Icon(info.icon, size: 32, color: Colors.white),
@@ -116,15 +118,20 @@ class _DialogHeader extends StatelessWidget {
                   spacing: 12,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: <Widget>[
-                    const Icon(Icons.access_time,
-                        size: 16, color: Colors.white70,),
+                    const Icon(
+                      Icons.access_time,
+                      size: 16,
+                      color: Colors.white70,
+                    ),
                     Text(
                       '${info.estimatedDuration.inMinutes} min',
                       style: const TextStyle(color: Colors.white70),
                     ),
                     const Icon(Icons.category, size: 16, color: Colors.white70),
-                    Text(info.category,
-                        style: const TextStyle(color: Colors.white70),),
+                    Text(
+                      info.category,
+                      style: const TextStyle(color: Colors.white70),
+                    ),
                   ],
                 ),
               ],
@@ -183,63 +190,69 @@ class _DialogSection extends StatelessWidget {
                 Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.5),
           ),
         if (bullets != null)
-          ...bullets!.map((String item) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(top: 6),
-                      width: 6,
-                      height: 6,
-                      decoration:
-                          BoxDecoration(color: color, shape: BoxShape.circle),
+          ...bullets!.map(
+            (String item) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    width: 6,
+                    height: 6,
+                    decoration:
+                        BoxDecoration(color: color, shape: BoxShape.circle),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      item,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                        child: Text(item,
-                            style: Theme.of(context).textTheme.bodyMedium,),),
-                  ],
-                ),
-              ),),
+                  ),
+                ],
+              ),
+            ),
+          ),
         if (numberedSteps != null)
-          ...numberedSteps!
-              .asMap()
-              .entries
-              .map((MapEntry<int, String> entry) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: color.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${entry.key + 1}',
-                              style: TextStyle(
-                                color: color,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
+          ...numberedSteps!.asMap().entries.map(
+                (MapEntry<int, String> entry) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${entry.key + 1}',
+                            style: TextStyle(
+                              color: color,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(entry.value,
-                                style: Theme.of(context).textTheme.bodyMedium,),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            entry.value,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ),
-                      ],
-                    ),
-                  ),),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
       ],
     );
   }
@@ -253,13 +266,13 @@ class _WarningCallout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final Color borderColor = color.withOpacity(0.3);
+    final Color borderColor = color.withValues(alpha: 0.3);
     final Color textColor =
         color is MaterialColor ? (color as MaterialColor).shade900 : color;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: borderColor),
       ),
@@ -302,7 +315,8 @@ class _DialogActions extends StatelessWidget {
             child: OutlinedButton(
               onPressed: () => Navigator.of(context).pop(),
               style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
               child: const Text('Maybe later'),
             ),
           ),

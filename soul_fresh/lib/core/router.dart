@@ -9,11 +9,11 @@ import '../features/home/screens/improved_home_screen.dart';
 // New redesigned screens
 import '../features/mood/screens/mood_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
-import '../screens/login_screen.dart';
 import '../screens/forgot_password_screen.dart';
-import '../screens/reset_password_screen.dart';
+import '../screens/login_screen.dart';
 import '../screens/otp_verification_screen.dart';
 import '../screens/privacy_settings_screen.dart';
+import '../screens/reset_password_screen.dart';
 import '../screens/signup_screen.dart';
 
 /// App router configuration
@@ -79,9 +79,11 @@ class AppRouter {
                   const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const ImprovedHomeScreen(),
-                      ),);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ImprovedHomeScreen(),
+                        ),
+                      );
                     },
                     child: const Text('Open Improved Home'),
                   ),
@@ -152,7 +154,8 @@ class AppRouter {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).pushReplacementNamed(Routes.home),
+                onPressed: () =>
+                    Navigator.of(context).pushReplacementNamed(Routes.home),
                 child: const Text('Go Home'),
               ),
             ],
@@ -163,5 +166,5 @@ class AppRouter {
   }
 }
 
-/// Provider for AppRouter  
+/// Provider for AppRouter
 final appRouterProvider = Provider<AppRouter>((ref) => AppRouter());

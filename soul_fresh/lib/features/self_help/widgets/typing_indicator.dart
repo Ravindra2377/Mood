@@ -62,7 +62,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
               ),
             ),
             child: const Center(
-              child: Text('🤖', style: TextStyle(fontSize: 18)),
+              child: Text('ðŸ¤–', style: TextStyle(fontSize: 18)),
             ),
           ),
           const SizedBox(width: 8),
@@ -92,8 +92,9 @@ class _TypingIndicatorState extends State<TypingIndicator>
                           height: 8,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: (widget.color ?? Colors.grey).withOpacity(
-                              0.5 + (_animationControllers[index].value * 0.5),
+                            color: (widget.color ?? Colors.grey).withValues(
+                              alpha: 0.5 +
+                                  (_animationControllers[index].value * 0.5),
                             ),
                           ),
                         ),

@@ -67,10 +67,13 @@ class _PandaCompanionSettingsSheetState
               style: AppTypography.body2.copyWith(color: AppColors.darkGrey),
             ),
             const SizedBox(height: 24),
-            Text('Companion name', style: AppTypography.labelSmall.copyWith(
-              color: AppColors.darkGrey,
-              fontWeight: FontWeight.w600,
-            ),),
+            Text(
+              'Companion name',
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.darkGrey,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             const SizedBox(height: 8),
             TextField(
               controller: _nameController,
@@ -83,20 +86,28 @@ class _PandaCompanionSettingsSheetState
                 hintText: 'Mochi',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: AppColors.mediumGrey.withOpacity(0.4)),
+                  borderSide: BorderSide(
+                    color: AppColors.mediumGrey.withValues(alpha: 0.4),
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: AppColors.primaryPastel, width: 2),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryPastel,
+                    width: 2,
+                  ),
                 ),
                 prefixIcon: const Icon(Icons.pets_rounded),
               ),
             ),
             const SizedBox(height: 20),
-            Text('Choose a vibe', style: AppTypography.labelSmall.copyWith(
-              color: AppColors.darkGrey,
-              fontWeight: FontWeight.w600,
-            ),),
+            Text(
+              'Choose a vibe',
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.darkGrey,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 10,
@@ -130,15 +141,16 @@ class _PandaCompanionSettingsSheetState
                         persona.description,
                         style: AppTypography.labelSmall.copyWith(
                           color: isSelected
-                              ? AppColors.charcoal.withOpacity(0.75)
-                              : AppColors.darkGrey.withOpacity(0.7),
+                              ? AppColors.charcoal.withValues(alpha: 0.75)
+                              : AppColors.darkGrey.withValues(alpha: 0.7),
                           height: 1.2,
                         ),
                       ),
                     ],
                   ),
                   avatar: CircleAvatar(
-                    backgroundColor: persona.accentColor.withOpacity(0.25),
+                    backgroundColor:
+                        persona.accentColor.withValues(alpha: 0.25),
                     radius: 16,
                     child: Icon(
                       Icons.auto_awesome,
@@ -147,13 +159,13 @@ class _PandaCompanionSettingsSheetState
                     ),
                   ),
                   backgroundColor: AppColors.white,
-                  selectedColor: persona.accentColor.withOpacity(0.25),
+                  selectedColor: persona.accentColor.withValues(alpha: 0.25),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                     side: BorderSide(
                       color: isSelected
                           ? persona.accentColor
-                          : AppColors.mediumGrey.withOpacity(0.4),
+                          : AppColors.mediumGrey.withValues(alpha: 0.4),
                     ),
                   ),
                 );

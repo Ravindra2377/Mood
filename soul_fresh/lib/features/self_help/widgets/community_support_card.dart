@@ -8,7 +8,8 @@ class CommunitySupportCard extends StatelessWidget {
     final supportGroups = [
       {
         'name': 'Anxiety Support Circle',
-        'description': 'Connect with others managing anxiety and share coping strategies',
+        'description':
+            'Connect with others managing anxiety and share coping strategies',
         'members': 1247,
         'isActive': true,
         'color': Colors.blue,
@@ -16,7 +17,8 @@ class CommunitySupportCard extends StatelessWidget {
       },
       {
         'name': 'Depression Warriors',
-        'description': 'A supportive community for those experiencing depression',
+        'description':
+            'A supportive community for those experiencing depression',
         'members': 2156,
         'isActive': true,
         'color': Colors.purple,
@@ -60,7 +62,7 @@ class CommunitySupportCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: (group['color'] as Color).withOpacity(0.1),
+                      color: (group['color'] as Color).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -79,16 +81,22 @@ class CommunitySupportCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 group['name'] as String,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
                             ),
                             if (group['isActive'] as bool)
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: Colors.green.withOpacity(0.1),
+                                  color: Colors.green.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: const Text(
@@ -105,9 +113,12 @@ class CommunitySupportCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           group['description'] as String,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
                         ),
                       ],
                     ),
@@ -124,7 +135,7 @@ class CommunitySupportCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    '${group['members']} members • Anonymous & moderated',
+                    '${group['members']} members â€¢ Anonymous & moderated',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w500,
@@ -136,7 +147,10 @@ class CommunitySupportCard extends StatelessWidget {
                       OutlinedButton(
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           textStyle: const TextStyle(fontSize: 12),
                         ),
                         child: const Text('View posts'),
@@ -145,7 +159,10 @@ class CommunitySupportCard extends StatelessWidget {
                       TextButton(
                         onPressed: () {},
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           textStyle: const TextStyle(fontSize: 12),
                         ),
                         child: const Text('Share story'),
@@ -161,4 +178,3 @@ class CommunitySupportCard extends StatelessWidget {
     );
   }
 }
-

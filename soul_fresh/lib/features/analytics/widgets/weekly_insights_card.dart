@@ -29,8 +29,8 @@ class WeeklyInsightsCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.purple.withOpacity(0.1),
-                    Colors.blue.withOpacity(0.1),
+                    Colors.purple.withValues(alpha: 0.1),
+                    Colors.blue.withValues(alpha: 0.1),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(12),
@@ -40,14 +40,15 @@ class WeeklyInsightsCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Text('🎯', style: TextStyle(fontSize: 24)),
+                      const Text('ðŸŽ¯', style: TextStyle(fontSize: 24)),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           'This Week\'s Progress',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ),
                     ],
@@ -83,7 +84,7 @@ class WeeklyInsightsCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
+                color: Colors.green.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -133,4 +134,3 @@ class WeeklyInsightsCard extends StatelessWidget {
     );
   }
 }
-

@@ -18,7 +18,7 @@ final unifiedActivitiesProvider = FutureProvider<List<Activity>>((ref) async {
     // Return mock data
     return AppMockData.activities;
   }
-  
+
   // Fetch from API
   try {
     final activityService = ref.watch(activityServiceProvider);
@@ -33,11 +33,12 @@ final unifiedActivitiesProvider = FutureProvider<List<Activity>>((ref) async {
 });
 
 /// Provider for activity stats - switches between mock and real data
-final unifiedActivityStatsProvider = FutureProvider<List<ActivityStat>>((ref) async {
+final unifiedActivityStatsProvider =
+    FutureProvider<List<ActivityStat>>((ref) async {
   if (FeatureFlags.useMockData) {
     return AppMockData.activityStats;
   }
-  
+
   try {
     final activityService = ref.watch(activityServiceProvider);
     return await activityService.getActivityStats();
@@ -54,7 +55,7 @@ final unifiedPhysicalStateProvider = FutureProvider<PhysicalState>((ref) async {
   if (FeatureFlags.useMockData) {
     return AppMockData.physicalState;
   }
-  
+
   try {
     final activityService = ref.watch(activityServiceProvider);
     return await activityService.getPhysicalState();
@@ -71,7 +72,7 @@ final unifiedDailyQuoteProvider = FutureProvider<Quote>((ref) async {
   if (FeatureFlags.useMockData) {
     return AppMockData.quote;
   }
-  
+
   try {
     final contentService = ref.watch(contentServiceProvider);
     return await contentService.getDailyQuote();
@@ -84,11 +85,12 @@ final unifiedDailyQuoteProvider = FutureProvider<Quote>((ref) async {
 });
 
 /// Provider for content items - switches between mock and real data
-final unifiedContentItemsProvider = FutureProvider<List<ContentItem>>((ref) async {
+final unifiedContentItemsProvider =
+    FutureProvider<List<ContentItem>>((ref) async {
   if (FeatureFlags.useMockData) {
     return AppMockData.contentItems;
   }
-  
+
   try {
     final contentService = ref.watch(contentServiceProvider);
     return await contentService.getContentItems();
@@ -101,11 +103,12 @@ final unifiedContentItemsProvider = FutureProvider<List<ContentItem>>((ref) asyn
 });
 
 /// Provider for mood history - switches between mock and real data
-final unifiedMoodHistoryProvider = FutureProvider<List<MoodHistoryItem>>((ref) async {
+final unifiedMoodHistoryProvider =
+    FutureProvider<List<MoodHistoryItem>>((ref) async {
   if (FeatureFlags.useMockData) {
     return AppMockData.moodHistory;
   }
-  
+
   try {
     final moodService = ref.watch(moodServiceProvider);
     return await moodService.getMoodHistory();

@@ -91,7 +91,8 @@ class ChatApiService {
 
       // Parse SSE stream with buffering to handle partial chunks
       var buffer = '';
-      await for (final chunk in streamedResponse.stream.transform(utf8.decoder)) {
+      await for (final chunk
+          in streamedResponse.stream.transform(utf8.decoder)) {
         buffer += chunk.replaceAll('\r\n', '\n');
 
         while (buffer.contains('\n\n')) {
@@ -151,7 +152,9 @@ class ChatApiService {
 
             yield ChatStreamChunk(token: token);
           } catch (e) {
-            yield ChatStreamChunk(error: 'Stream decode error: ${e.toString()}');
+            yield ChatStreamChunk(
+              error: 'Stream decode error: ${e.toString()}',
+            );
             return;
           }
         }

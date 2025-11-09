@@ -187,8 +187,10 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.check_circle_outline,
-                              color: AppColors.success,),
+                          const Icon(
+                            Icons.check_circle_outline,
+                            color: AppColors.success,
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
@@ -211,7 +213,10 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.error_outline, color: AppColors.error),
+                          const Icon(
+                            Icons.error_outline,
+                            color: AppColors.error,
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(

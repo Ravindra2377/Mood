@@ -55,8 +55,14 @@ void main() {
       );
 
       // Enter email/password
-      await tester.enterText(find.byType(TextFormField).at(0), 'user@example.com');
-      await tester.enterText(find.byType(TextFormField).at(1), 'StrongPass123!');
+      await tester.enterText(
+        find.byType(TextFormField).at(0),
+        'user@example.com',
+      );
+      await tester.enterText(
+        find.byType(TextFormField).at(1),
+        'StrongPass123!',
+      );
 
       // Tap login
       await tester.tap(find.text('Log In'));

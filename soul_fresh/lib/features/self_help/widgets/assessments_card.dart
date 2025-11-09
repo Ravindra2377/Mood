@@ -40,9 +40,18 @@ class AssessmentsCard extends StatelessWidget {
 
     return Column(
       children: assessments.map((assessment) {
-        final delta = (assessment['lastScore'] as int) - (assessment['previousScore'] as int);
-        final trend = delta == 0 ? 'No change' : delta < 0 ? '${delta.abs()} ↓' : '$delta ↑';
-        final trendColor = delta < 0 ? Colors.green : delta > 0 ? Colors.red : Colors.grey;
+        final delta = (assessment['lastScore'] as int) -
+            (assessment['previousScore'] as int);
+        final trend = delta == 0
+            ? 'No change'
+            : delta < 0
+                ? '${delta.abs()} â†“'
+                : '$delta â†‘';
+        final trendColor = delta < 0
+            ? Colors.green
+            : delta > 0
+                ? Colors.red
+                : Colors.grey;
 
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
@@ -59,7 +68,7 @@ class AssessmentsCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: (assessment['color'] as Color).withOpacity(0.1),
+                  color: (assessment['color'] as Color).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -83,7 +92,8 @@ class AssessmentsCard extends StatelessWidget {
                     Text(
                       assessment['description'] as String,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                     const SizedBox(height: 8),
@@ -91,15 +101,19 @@ class AssessmentsCard extends StatelessWidget {
                       children: [
                         Text(
                           'Score: ${assessment['lastScore']}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
-                            color: trendColor.withOpacity(0.1),
+                            color: trendColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -113,9 +127,13 @@ class AssessmentsCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
-                            color: (assessment['color'] as Color).withOpacity(0.1),
+                            color: (assessment['color'] as Color)
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -144,4 +162,3 @@ class AssessmentsCard extends StatelessWidget {
     );
   }
 }
-

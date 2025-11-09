@@ -22,8 +22,8 @@ class RecommendedActivityCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: <Color>[
-            base.withOpacity(0.85),
-            base.withOpacity(0.55),
+            base.withValues(alpha: 0.85),
+            base.withValues(alpha: 0.55),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -31,7 +31,7 @@ class RecommendedActivityCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: base.withOpacity(0.2),
+            color: base.withValues(alpha: 0.2),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -74,7 +74,8 @@ class RecommendedActivityCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       '${activity.durationMinutes} min',
-                      style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      style:
+                          const TextStyle(color: Colors.white70, fontSize: 12),
                     ),
                   ],
                 ),
@@ -114,7 +115,7 @@ class _Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
+        color: Colors.black.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(

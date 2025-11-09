@@ -7,7 +7,7 @@ class AppMockData {
   // User data
   static const String userName = 'Olivia';
   static const String userAvatarUrl = 'https://i.pravatar.cc/150?img=1';
-  
+
   // Activities
   static final List<Activity> activities = [
     const Activity(
@@ -79,7 +79,8 @@ class AppMockData {
 
   // Quote
   static const Quote quote = Quote(
-    text: 'Success is not final, failure is not fatal: it is the courage to continue that counts.',
+    text:
+        'Success is not final, failure is not fatal: it is the courage to continue that counts.',
     author: 'Winston Churchill',
   );
 
@@ -90,14 +91,16 @@ class AppMockData {
       type: ContentType.article,
       title: 'How to find balance in life despite...',
       duration: '4 min',
-      thumbnail: 'https://images.unsplash.com/photo-1526785033379-75ba86cfacf6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBtZWRpdGF0aW9uJTIwYmFsYW5jZSUyMHBlYWNlZnVsfGVufDB8Mnx8Ymx1ZXwxNzYwNjQwNzg0fDA&ixlib=rb-4.1.0&q=85',
+      thumbnail:
+          'https://images.unsplash.com/photo-1526785033379-75ba86cfacf6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBtZWRpdGF0aW9uJTIwYmFsYW5jZSUyMHBlYWNlZnVsfGVufDB8Mnx8Ymx1ZXwxNzYwNjQwNzg0fDA&ixlib=rb-4.1.0&q=85',
     ),
     const ContentItem(
       id: 'content-2',
       type: ContentType.video,
       title: "It's okay to ask for help, you're not alone",
       duration: '8 min',
-      thumbnail: 'https://images.unsplash.com/photo-1705405739947-9449cb52f143?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxicmFpbiUyMGNhcnRvb24lMjBjaGFyYWN0ZXIlMjBwaW5rfGVufDB8Mnx8cHVycGxlfDE3NjA2NDA3ODR8MA&ixlib=rb-4.1.0&q=85',
+      thumbnail:
+          'https://images.unsplash.com/photo-1705405739947-9449cb52f143?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxicmFpbiUyMGNhcnRvb24lMjBjaGFyYWN0ZXIlMjBwaW5rfGVufDB8Mnx8cHVycGxlfDE3NjA2NDA3ODR8MA&ixlib=rb-4.1.0&q=85',
     ),
   ];
 
@@ -116,7 +119,8 @@ class AppMockData {
   ];
 
   // Journal entry
-  static const String journalEntryText = 'Sometimes it feels like no matter what we do, things only get worse.';
+  static const String journalEntryText =
+      'Sometimes it feels like no matter what we do, things only get worse.';
   static const int journalCharacterCount = 68;
   static const int journalMaxCharacters = 240;
 
@@ -129,4 +133,3 @@ class AppMockData {
     'Calm piano',
   ];
 }
-

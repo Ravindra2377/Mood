@@ -3,11 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:soul/config/app_colors.dart';
 
 // Provider for stress logs
-final stressLogsProvider =
-    StateProvider<List<StressLog>>((ref) => []);
+final stressLogsProvider = StateProvider<List<StressLog>>((ref) => []);
 
-final stressAnalyticsProvider =
-    StateProvider<StressAnalytics?>((ref) => null);
+final stressAnalyticsProvider = StateProvider<StressAnalytics?>((ref) => null);
 
 class StressLog {
   final int id;
@@ -47,8 +45,7 @@ class StressManagementScreen extends ConsumerStatefulWidget {
       _StressManagementScreenState();
 }
 
-class _StressManagementScreenState
-    extends ConsumerState<StressManagementScreen>
+class _StressManagementScreenState extends ConsumerState<StressManagementScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -109,11 +106,13 @@ class _StressManagementScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Stress Level Card
-          _StressLevelCard(onLevelSelected: (level) {
-            // Log stress
-          },),
+          _StressLevelCard(
+            onLevelSelected: (level) {
+              // Log stress
+            },
+          ),
           const SizedBox(height: 20),
-          
+
           // Recent Logs
           Text(
             'Recent Stress Logs',
@@ -143,28 +142,28 @@ class _StressManagementScreenState
         'name': '4-7-8 Breathing',
         'description': 'Calm your nervous system with controlled breathing',
         'duration': '5 min',
-        'icon': '🫁',
+        'icon': 'ðŸ«',
         'color': const Color(0xFFFF6B6B),
       },
       {
         'name': 'Progressive Muscle Relaxation',
         'description': 'Release tension by tensing and relaxing muscle groups',
         'duration': '10 min',
-        'icon': '💪',
+        'icon': 'ðŸ’ª',
         'color': const Color(0xFFFF8C8C),
       },
       {
         'name': 'Box Breathing',
         'description': '4-4-4-4 pattern for immediate calm',
         'duration': '3 min',
-        'icon': '📦',
+        'icon': 'ðŸ“¦',
         'color': const Color(0xFFFFA9A9),
       },
       {
         'name': 'Stress Relief Meditation',
         'description': 'Guided meditation for stress relief',
         'duration': '7 min',
-        'icon': '🧘',
+        'icon': 'ðŸ§˜',
         'color': const Color(0xFFFFBFC0),
       },
     ];
@@ -198,7 +197,7 @@ class _StressManagementScreenState
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFFF6B6B).withOpacity(0.1),
+              color: const Color(0xFFFF6B6B).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFFFF6B6B),
@@ -216,23 +215,29 @@ class _StressManagementScreenState
                   children: [
                     Text(
                       '6.2',
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            color: const Color(0xFFFF6B6B),
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                color: const Color(0xFFFF6B6B),
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.2),
+                        color: Colors.green.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.trending_down,
-                              color: Colors.green, size: 16,),
+                          Icon(
+                            Icons.trending_down,
+                            color: Colors.green,
+                            size: 16,
+                          ),
                           SizedBox(width: 4),
                           Text(
                             'Decreasing',
@@ -317,7 +322,10 @@ class _StressManagementScreenState
     );
   }
 
-  void _showExerciseDetail(BuildContext context, Map<String, dynamic> exercise) {
+  void _showExerciseDetail(
+    BuildContext context,
+    Map<String, dynamic> exercise,
+  ) {
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
@@ -345,7 +353,7 @@ class _StressManagementScreenState
                         ),
                       ),
                       Text(
-                        '${exercise['duration']} • Stress Relief',
+                        '${exercise['duration']} â€¢ Stress Relief',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.secondaryText,
@@ -430,7 +438,7 @@ class _StressLevelCardState extends State<_StressLevelCard> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? const Color(0xFFFF6B6B)
-                        : const Color(0xFFFF6B6B).withOpacity(0.2),
+                        : const Color(0xFFFF6B6B).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Center(
@@ -487,7 +495,7 @@ class _StressLogCard extends StatelessWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: const Color(0xFFFF6B6B).withOpacity(0.2),
+              color: const Color(0xFFFF6B6B).withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
@@ -527,7 +535,8 @@ class _StressLogCard extends StatelessWidget {
           const SizedBox(width: 12),
           Text(
             '${time.hour}:${time.minute.toString().padLeft(2, '0')}',
-            style: const TextStyle(fontSize: 12, color: AppColors.secondaryText),
+            style:
+                const TextStyle(fontSize: 12, color: AppColors.secondaryText),
           ),
         ],
       ),
@@ -560,7 +569,7 @@ class _ExerciseCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: color),
         ),

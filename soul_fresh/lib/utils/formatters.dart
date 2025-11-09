@@ -32,7 +32,11 @@ class Formatters {
   }
 
   /// Truncate text with ellipsis
-  static String truncate(String text, int maxLength, {String ellipsis = '...'}) {
+  static String truncate(
+    String text,
+    int maxLength, {
+    String ellipsis = '...',
+  }) {
     if (text.length <= maxLength) return text;
     return '${text.substring(0, maxLength - ellipsis.length)}$ellipsis';
   }
@@ -50,13 +54,13 @@ class Formatters {
   /// Format phone number (US format)
   static String phoneNumber(String phone) {
     final cleaned = phone.replaceAll(RegExp(r'\D'), '');
-    
+
     if (cleaned.length == 10) {
       return '(${cleaned.substring(0, 3)}) ${cleaned.substring(3, 6)}-${cleaned.substring(6)}';
     } else if (cleaned.length == 11 && cleaned.startsWith('1')) {
       return '+1 (${cleaned.substring(1, 4)}) ${cleaned.substring(4, 7)}-${cleaned.substring(7)}';
     }
-    
+
     return phone;
   }
 
@@ -145,7 +149,7 @@ class Formatters {
     if (items.isEmpty) return '';
     if (items.length == 1) return items[0];
     if (items.length == 2) return '${items[0]} and ${items[1]}';
-    
+
     final allButLast = items.sublist(0, items.length - 1).join(', ');
     return '$allButLast, and ${items.last}';
   }

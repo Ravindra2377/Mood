@@ -20,16 +20,16 @@ void main() {
     });
 
     test('gives points for lowercase letters', () {
-      final withLower = PasswordStrength.calculate('abc');  // lower = 0.2
-      final without = PasswordStrength.calculate('123');    // numbers = 0.15
+      final withLower = PasswordStrength.calculate('abc'); // lower = 0.2
+      final without = PasswordStrength.calculate('123'); // numbers = 0.15
       // Both have points, but different features - test that lower is recognized
       expect(withLower, equals(0.2));
       expect(without, equals(0.15));
     });
 
     test('gives points for uppercase letters', () {
-      final withUpper = PasswordStrength.calculate('ABC');  // upper = 0.2
-      final without = PasswordStrength.calculate('123');    // numbers = 0.15
+      final withUpper = PasswordStrength.calculate('ABC'); // upper = 0.2
+      final without = PasswordStrength.calculate('123'); // numbers = 0.15
       // Both have points, but different features - test that upper is recognized
       expect(withUpper, equals(0.2));
       expect(without, equals(0.15));
@@ -58,7 +58,9 @@ void main() {
     });
 
     test('returns medium score (0.4-0.7) for moderate password', () {
-      final score = PasswordStrength.calculate('Password');  // 8 chars + lower + upper = 0.55
+      final score = PasswordStrength.calculate(
+        'Password',
+      ); // 8 chars + lower + upper = 0.55
       expect(score, greaterThanOrEqualTo(0.4));
       expect(score, lessThan(0.7));
     });
@@ -220,7 +222,7 @@ void main() {
     });
 
     test('medium threshold is 0.4 to 0.7', () {
-      final password = 'Password';  // 8 chars + lower + upper = 0.55
+      const password = 'Password'; // 8 chars + lower + upper = 0.55
       final score = PasswordStrength.calculate(password);
       expect(score, greaterThanOrEqualTo(0.4));
       expect(score, lessThan(0.7));
@@ -228,7 +230,7 @@ void main() {
     });
 
     test('strong threshold is 0.7 and above', () {
-      final password = 'Strong!Pass123';
+      const password = 'Strong!Pass123';
       final score = PasswordStrength.calculate(password);
       expect(score, greaterThanOrEqualTo(0.7));
       expect(PasswordStrength.getLabel(password), equals('Strong'));

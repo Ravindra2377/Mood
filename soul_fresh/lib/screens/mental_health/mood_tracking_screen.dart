@@ -3,11 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:soul/config/app_colors.dart';
 
 // Providers
-final moodEntriesProvider =
-    StateProvider<List<MoodEntry>>((ref) => []);
+final moodEntriesProvider = StateProvider<List<MoodEntry>>((ref) => []);
 
-final moodInsightsProvider =
-    StateProvider<MoodInsights?>((ref) => null);
+final moodInsightsProvider = StateProvider<MoodInsights?>((ref) => null);
 
 class MoodEntry {
   final int id;
@@ -43,8 +41,7 @@ class MoodTrackingScreen extends ConsumerStatefulWidget {
   const MoodTrackingScreen({super.key});
 
   @override
-  ConsumerState<MoodTrackingScreen> createState() =>
-      _MoodTrackingScreenState();
+  ConsumerState<MoodTrackingScreen> createState() => _MoodTrackingScreenState();
 }
 
 class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
@@ -108,9 +105,11 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Quick Mood Selector
-          _MoodSelector(onMoodSelected: (mood) {
-            // Save mood
-          },),
+          _MoodSelector(
+            onMoodSelected: (mood) {
+              // Save mood
+            },
+          ),
           const SizedBox(height: 24),
 
           // Activities
@@ -199,8 +198,10 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('October 2025',
-                        style: Theme.of(context).textTheme.titleSmall,),
+                    Text(
+                      'October 2025',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     Row(
                       children: [
                         IconButton(
@@ -220,13 +221,15 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-                      .map((day) => Text(
-                            day,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),)
+                      .map(
+                        (day) => Text(
+                          day,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
                 const SizedBox(height: 8),
@@ -234,8 +237,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 7,
                   ),
                   itemCount: 35,
@@ -248,7 +250,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                       decoration: BoxDecoration(
                         color: isCurrentMonth
                             ? (day % 3 == 0
-                                ? const Color(0xFFFFD93D).withOpacity(0.3)
+                                ? const Color(0xFFFFD93D).withValues(alpha: 0.3)
                                 : AppColors.backgroundColor)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(4),
@@ -309,7 +311,7 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFD93D).withOpacity(0.1),
+              color: const Color(0xFFFFD93D).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFFFFD93D),
@@ -327,23 +329,29 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                   children: [
                     Text(
                       '7.3',
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            color: const Color(0xFFFFD93D),
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                color: const Color(0xFFFFD93D),
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.2),
+                        color: Colors.green.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.trending_up,
-                              color: Colors.green, size: 16,),
+                          Icon(
+                            Icons.trending_up,
+                            color: Colors.green,
+                            size: 16,
+                          ),
                           SizedBox(width: 4),
                           Text(
                             'Improving',
@@ -410,8 +418,9 @@ class _MoodTrackingScreenState extends ConsumerState<MoodTrackingScreen>
                         (i) => Icon(
                           Icons.star,
                           color: i <
-                                  (item['score'] as double).toStringAsFixed(1)[0]
-                                      .codeUnitAt(0) -
+                                  (item['score'] as double)
+                                          .toStringAsFixed(1)[0]
+                                          .codeUnitAt(0) -
                                       48
                               ? const Color(0xFFFFD93D)
                               : Colors.grey,
@@ -487,18 +496,18 @@ class _MoodSelectorState extends State<_MoodSelector> {
   @override
   Widget build(BuildContext context) {
     final moods = [
-      {'emoji': '😢', 'label': 'Terrible', 'value': 1},
-      {'emoji': '😞', 'label': 'Bad', 'value': 2},
-      {'emoji': '😐', 'label': 'Okay', 'value': 3},
-      {'emoji': '🙂', 'label': 'Good', 'value': 4},
-      {'emoji': '😄', 'label': 'Great', 'value': 5},
-      {'emoji': '😄', 'label': 'Amazing', 'value': 6},
+      {'emoji': 'ðŸ˜¢', 'label': 'Terrible', 'value': 1},
+      {'emoji': 'ðŸ˜ž', 'label': 'Bad', 'value': 2},
+      {'emoji': 'ðŸ˜', 'label': 'Okay', 'value': 3},
+      {'emoji': 'ðŸ™‚', 'label': 'Good', 'value': 4},
+      {'emoji': 'ðŸ˜„', 'label': 'Great', 'value': 5},
+      {'emoji': 'ðŸ˜„', 'label': 'Amazing', 'value': 6},
     ];
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFD93D).withOpacity(0.1),
+        color: const Color(0xFFFFD93D).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFFFFD93D),
@@ -535,7 +544,8 @@ class _MoodSelectorState extends State<_MoodSelector> {
                         mood['label'] as String,
                         style: TextStyle(
                           fontSize: 10,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
                           color: isSelected
                               ? const Color(0xFFFFD93D)
                               : AppColors.secondaryText,
@@ -557,12 +567,12 @@ class _ActivityGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final activities = [
-      {'name': 'Exercise', 'emoji': '🏃', 'color': const Color(0xFF00B894)},
-      {'name': 'Time Out', 'emoji': '🌳', 'color': const Color(0xFF00B894)},
-      {'name': 'Social', 'emoji': '👥', 'color': const Color(0xFF00B894)},
-      {'name': 'Reading', 'emoji': '📚', 'color': const Color(0xFF00B894)},
-      {'name': 'Music', 'emoji': '🎵', 'color': const Color(0xFF00B894)},
-      {'name': 'Creative', 'emoji': '🎨', 'color': const Color(0xFF00B894)},
+      {'name': 'Exercise', 'emoji': 'ðŸƒ', 'color': const Color(0xFF00B894)},
+      {'name': 'Time Out', 'emoji': 'ðŸŒ³', 'color': const Color(0xFF00B894)},
+      {'name': 'Social', 'emoji': 'ðŸ‘¥', 'color': const Color(0xFF00B894)},
+      {'name': 'Reading', 'emoji': 'ðŸ“š', 'color': const Color(0xFF00B894)},
+      {'name': 'Music', 'emoji': 'ðŸŽµ', 'color': const Color(0xFF00B894)},
+      {'name': 'Creative', 'emoji': 'ðŸŽ¨', 'color': const Color(0xFF00B894)},
     ];
 
     return GridView.builder(
@@ -582,7 +592,7 @@ class _ActivityGrid extends StatelessWidget {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: (activity['color'] as Color).withOpacity(0.1),
+              color: (activity['color'] as Color).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: activity['color'] as Color,
@@ -591,8 +601,10 @@ class _ActivityGrid extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(activity['emoji'] as String,
-                    style: const TextStyle(fontSize: 24),),
+                Text(
+                  activity['emoji'] as String,
+                  style: const TextStyle(fontSize: 24),
+                ),
                 const SizedBox(height: 4),
                 Text(
                   activity['name'] as String,
@@ -624,8 +636,14 @@ class _MoodEntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final moodEmoji =
-        ['😢', '😞', '😐', '🙂', '😄', '😄'][(mood - 1).clamp(0, 5)];
+    final moodEmoji = [
+      'ðŸ˜¢',
+      'ðŸ˜ž',
+      'ðŸ˜',
+      'ðŸ™‚',
+      'ðŸ˜„',
+      'ðŸ˜„',
+    ][(mood - 1).clamp(0, 5)];
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -660,7 +678,8 @@ class _MoodEntryCard extends StatelessWidget {
           ),
           Text(
             '${time.hour}:${time.minute.toString().padLeft(2, '0')}',
-            style: const TextStyle(fontSize: 12, color: AppColors.secondaryText),
+            style:
+                const TextStyle(fontSize: 12, color: AppColors.secondaryText),
           ),
         ],
       ),

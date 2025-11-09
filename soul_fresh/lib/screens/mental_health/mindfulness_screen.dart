@@ -9,8 +9,7 @@ final meditationSessionsProvider =
 final mindfulnessStatsProvider =
     StateProvider<MindfulnessStats?>((ref) => null);
 
-final achievementsProvider =
-    StateProvider<List<Achievement>>((ref) => []);
+final achievementsProvider = StateProvider<List<Achievement>>((ref) => []);
 
 class MeditationSession {
   final int id;
@@ -181,12 +180,23 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
             itemCount: 5,
             itemBuilder: (context, index) {
               return _SessionCard(
-                title: ['Guided Breathing', 'Body Scan', 'Loving Kindness',
-                    'Mindful Walking', 'Sleep Meditation',][index],
+                title: [
+                  'Guided Breathing',
+                  'Body Scan',
+                  'Loving Kindness',
+                  'Mindful Walking',
+                  'Sleep Meditation',
+                ][index],
                 duration: (5 + index * 5),
                 focus: 4 - (index % 2),
                 date: DateTime.now().subtract(Duration(days: index)),
-                category: ['Breathing', 'Body', 'Love', 'Movement', 'Sleep'][index],
+                category: [
+                  'Breathing',
+                  'Body',
+                  'Love',
+                  'Movement',
+                  'Sleep',
+                ][index],
               );
             },
           ),
@@ -199,37 +209,37 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
     final categories = [
       {
         'name': 'Breathing',
-        'icon': '💨',
+        'icon': 'ðŸ’¨',
         'count': 8,
         'duration': '5-10 min',
       },
       {
         'name': 'Body Scan',
-        'icon': '🧘',
+        'icon': 'ðŸ§˜',
         'count': 6,
         'duration': '10-20 min',
       },
       {
         'name': 'Loving Kindness',
-        'icon': '💗',
+        'icon': 'ðŸ’—',
         'count': 5,
         'duration': '15-30 min',
       },
       {
         'name': 'Sleep',
-        'icon': '🌙',
+        'icon': 'ðŸŒ™',
         'count': 7,
         'duration': '20-45 min',
       },
       {
         'name': 'Mindful Movement',
-        'icon': '🚶',
+        'icon': 'ðŸš¶',
         'count': 6,
         'duration': '10-15 min',
       },
       {
         'name': 'Focus',
-        'icon': '🎯',
+        'icon': 'ðŸŽ¯',
         'count': 9,
         'duration': '5-15 min',
       },
@@ -253,7 +263,9 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
               final cat = categories[index];
               return GestureDetector(
                 onTap: () => _showCategoryMeditations(
-                    context, cat['name'] as String,),
+                  context,
+                  cat['name'] as String,
+                ),
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -316,7 +328,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF00B894).withOpacity(0.1),
+              color: const Color(0xFF00B894).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFF00B894),
@@ -328,7 +340,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
               children: [
                 Column(
                   children: [
-                    const Text('🔥', style: TextStyle(fontSize: 32)),
+                    const Text('ðŸ”¥', style: TextStyle(fontSize: 32)),
                     const SizedBox(height: 8),
                     Text(
                       'Current Streak',
@@ -337,10 +349,11 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
                     const SizedBox(height: 4),
                     Text(
                       '12 days',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF00B894),
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF00B894),
+                              ),
                     ),
                   ],
                 ),
@@ -351,7 +364,7 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
                 ),
                 Column(
                   children: [
-                    const Text('⭐', style: TextStyle(fontSize: 32)),
+                    const Text('â­', style: TextStyle(fontSize: 32)),
                     const SizedBox(height: 8),
                     Text(
                       'Longest Streak',
@@ -360,10 +373,11 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
                     const SizedBox(height: 4),
                     Text(
                       '28 days',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF00B894),
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF00B894),
+                              ),
                     ),
                   ],
                 ),
@@ -382,25 +396,25 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
             childAspectRatio: 1.2,
             children: const [
               _StatCard(
-                icon: '🧘',
+                icon: 'ðŸ§˜',
                 label: 'Total Sessions',
                 value: '87',
                 subtitle: 'meditations',
               ),
               _StatCard(
-                icon: '⏱️',
+                icon: 'â±ï¸',
                 label: 'Total Minutes',
                 value: '562',
                 subtitle: 'minutes',
               ),
               _StatCard(
-                icon: '⭐',
+                icon: 'â­',
                 label: 'Average Focus',
                 value: '4.2',
                 subtitle: 'out of 5',
               ),
               _StatCard(
-                icon: '📈',
+                icon: 'ðŸ“ˆ',
                 label: 'This Week',
                 value: '5',
                 subtitle: 'sessions',
@@ -427,22 +441,24 @@ class _MindfulnessScreenState extends ConsumerState<MindfulnessScreen>
             itemCount: 9,
             itemBuilder: (context, index) {
               final achievements = [
-                ('🎯', 'First Step', index < 1),
-                ('🔥', 'Week Warrior', index < 2),
-                ('👑', 'Month Master', index < 3),
-                ('🌟', 'Focus Expert', index < 4),
-                ('💫', 'Calm Master', index < 5),
-                ('🏆', 'Streak King', index < 6),
-                ('✨', 'Zen Mode', index < 7),
-                ('🌈', 'Loving Heart', index < 8),
-                ('🎊', 'Perfect Week', index < 9),
+                ('ðŸŽ¯', 'First Step', index < 1),
+                ('ðŸ”¥', 'Week Warrior', index < 2),
+                ('ðŸ‘‘', 'Month Master', index < 3),
+                ('ðŸŒŸ', 'Focus Expert', index < 4),
+                ('ðŸ’«', 'Calm Master', index < 5),
+                ('ðŸ†', 'Streak King', index < 6),
+                ('âœ¨', 'Zen Mode', index < 7),
+                ('ðŸŒˆ', 'Loving Heart', index < 8),
+                ('ðŸŽŠ', 'Perfect Week', index < 9),
               ];
 
               final (icon, name, unlocked) = achievements[index];
               return Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: unlocked ? AppColors.cardColor : Colors.grey.withOpacity(0.1),
+                  color: unlocked
+                      ? AppColors.cardColor
+                      : Colors.grey.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: unlocked ? const Color(0xFF00B894) : Colors.grey,
@@ -656,7 +672,8 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.secondaryText),
+            style:
+                const TextStyle(fontSize: 11, color: AppColors.secondaryText),
           ),
           const SizedBox(height: 4),
           Text(
@@ -669,7 +686,8 @@ class _StatCard extends StatelessWidget {
           ),
           Text(
             subtitle,
-            style: const TextStyle(fontSize: 10, color: AppColors.secondaryText),
+            style:
+                const TextStyle(fontSize: 10, color: AppColors.secondaryText),
           ),
         ],
       ),

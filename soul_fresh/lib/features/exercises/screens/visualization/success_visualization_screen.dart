@@ -72,10 +72,12 @@ class _SuccessVisualizationScreenState
         'confidence': _confidence.round(),
         'activation': _activation.round(),
         'phases': _phases
-            .map((phase) => {
-                  'title': phase.title,
-                  'details': phase.controller.text.trim(),
-                },)
+            .map(
+              (phase) => {
+                'title': phase.title,
+                'details': phase.controller.text.trim(),
+              },
+            )
             .toList(),
       };
 
@@ -87,7 +89,8 @@ class _SuccessVisualizationScreenState
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Visualization saved. Carry that confidence forward.'),),
+        content: Text('Visualization saved. Carry that confidence forward.'),
+      ),
     );
     Navigator.of(context).pop();
   }

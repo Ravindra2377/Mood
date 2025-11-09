@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
 
-import 'package:soul/screens/journal_list.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
 import 'package:soul/models/journal_entry.dart' as model;
+import 'package:soul/screens/journal_list.dart';
 import 'package:soul/services/journals_service.dart';
 
 /// Comprehensive Journal system tests covering:
@@ -18,19 +18,16 @@ import 'package:soul/services/journals_service.dart';
 // Fake journal data for testing
 class _FakeJournal extends model.JournalEntry {
   _FakeJournal({
-    required String id,
-    required String title,
-    required String content,
-    required DateTime createdAt,
-    DateTime? updatedAt,
+    required super.id,
+    required super.title,
+    required super.content,
+    required DateTime super.createdAt,
+    super.updatedAt,
     String? sentiment,
     List<String>? keywords,
   }) : super(
-          id: id,
-          title: title,
-          content: content,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
+          mood: sentiment ?? 'neutral',
+          attachments: keywords,
         );
 }
 
@@ -54,7 +51,10 @@ class _FakeJournalsService {
   }
 
   Future<model.JournalEntry> updateJournal(
-      String id, String title, String content) async {
+    String id,
+    String title,
+    String content,
+  ) async {
     final index = _entries.indexWhere((e) => e.id == id);
     if (index == -1) throw Exception('Journal not found');
 
@@ -153,21 +153,22 @@ void main() {
       // Inject an in-memory store with a couple entries to exercise list rendering
       final store = InMemoryJournalStore();
       final e1 = model.JournalEntry(
-          id: 'j1',
-          title: 'First',
-          content: 'First content',
-          createdAt: DateTime.now());
+        id: 'j1',
+        title: 'First',
+        content: 'First content',
+        createdAt: DateTime.now(),
+      );
       final e2 = model.JournalEntry(
-          id: 'j2',
-          title: 'Second',
-          content: 'Second content',
-          createdAt: DateTime.now());
+        id: 'j2',
+        title: 'Second',
+        content: 'Second content',
+        createdAt: DateTime.now(),
+      );
       await store.save(e1);
       await store.save(e2);
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [],
           child: MaterialApp(
             home: JournalListScreen(overrideStore: store),
           ),
@@ -241,7 +242,7 @@ void main() {
   group('🧠 AI Sentiment & Keywords Tests', () {
     test('Sentiment analysis extracts emotion from content', () {
       // Simulate backend sentiment analysis
-      final positiveContent =
+      const positiveContent =
           'I had an amazing day! Everything went great and I feel wonderful.';
       final sentiment = _analyzeSentiment(positiveContent);
 
@@ -249,7 +250,7 @@ void main() {
     });
 
     test('Negative sentiment detected correctly', () {
-      final negativeContent =
+      const negativeContent =
           'I feel terrible and sad. Nothing is going right.';
       final sentiment = _analyzeSentiment(negativeContent);
 
@@ -257,14 +258,14 @@ void main() {
     });
 
     test('Neutral sentiment for mixed content', () {
-      final neutralContent = 'I went to work today and did some tasks.';
+      const neutralContent = 'I went to work today and did some tasks.';
       final sentiment = _analyzeSentiment(neutralContent);
 
       expect(sentiment, equals('NEUTRAL'));
     });
 
     test('Keyword extraction identifies top terms', () {
-      final content =
+      const content =
           'I went to work today and had a meeting about the project. '
           'The project deadline is coming up and work has been busy.';
 
@@ -277,7 +278,7 @@ void main() {
     });
 
     test('Keywords exclude common stop words', () {
-      final content = 'The the the a an and but or if then';
+      const content = 'The the the a an and but or if then';
       final keywords = _extractKeywords(content);
 
       // Common stop words should be filtered out
@@ -286,12 +287,12 @@ void main() {
 
     testWidgets('Journal card displays sentiment chip', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: _MockJournalCard(
               title: 'Test Entry',
               sentiment: 'POSITIVE',
-              keywords: const ['happy', 'work'],
+              keywords: ['happy', 'work'],
             ),
           ),
         ),
@@ -306,12 +307,12 @@ void main() {
 
     testWidgets('Journal card displays keyword chips', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: _MockJournalCard(
               title: 'Test Entry',
               sentiment: 'POSITIVE',
-              keywords: const ['work', 'meeting', 'project'],
+              keywords: ['work', 'meeting', 'project'],
             ),
           ),
         ),
@@ -335,12 +336,12 @@ void main() {
             onGenerateRoute: (settings) {
               if (settings.name == '/') {
                 return MaterialPageRoute(
-                  builder: (_) => Scaffold(
+                  builder: (context) => Scaffold(
                     body: Hero(
                       tag: 'journal-1',
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(_).pushNamed('/detail');
+                          Navigator.of(context).pushNamed('/detail');
                         },
                         child: const Card(child: Text('Journal Entry')),
                       ),
@@ -349,12 +350,10 @@ void main() {
                 );
               } else if (settings.name == '/detail') {
                 return MaterialPageRoute(
-                  builder: (_) => Scaffold(
+                  builder: (context) => const Scaffold(
                     body: Hero(
                       tag: 'journal-1',
-                      child: Container(
-                        child: const Text('Journal Detail'),
-                      ),
+                      child: Text('Journal Detail'),
                     ),
                   ),
                 );
@@ -396,7 +395,7 @@ String _analyzeSentiment(String content) {
     'wonderful',
     'happy',
     'excellent',
-    'fantastic'
+    'fantastic',
   ];
   final negativeWords = [
     'terrible',
@@ -404,17 +403,17 @@ String _analyzeSentiment(String content) {
     'awful',
     'horrible',
     'bad',
-    'worse'
+    'worse',
   ];
 
   int positiveScore = 0;
   int negativeScore = 0;
 
-  for (var word in positiveWords) {
+  for (final word in positiveWords) {
     if (lower.contains(word)) positiveScore++;
   }
 
-  for (var word in negativeWords) {
+  for (final word in negativeWords) {
     if (lower.contains(word)) negativeScore++;
   }
 
@@ -465,7 +464,7 @@ List<String> _extractKeywords(String content) {
       .toList();
 
   final wordCounts = <String, int>{};
-  for (var word in words) {
+  for (final word in words) {
     wordCounts[word] = (wordCounts[word] ?? 0) + 1;
   }
 

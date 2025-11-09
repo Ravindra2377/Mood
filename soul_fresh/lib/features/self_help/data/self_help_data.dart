@@ -59,9 +59,21 @@ final List<GuidedPathway> guidedPathways = <GuidedPathway>[
         },
         summary: 'Daily micro-lesson with practices and reflection.',
         components: const <LessonComponent>[
-          LessonComponent(type: LessonComponentType.read, title: 'Learn', minutes: 10),
-          LessonComponent(type: LessonComponentType.exercise, title: 'Practice', minutes: 10),
-          LessonComponent(type: LessonComponentType.reflection, title: 'Reflect', minutes: 5),
+          LessonComponent(
+            type: LessonComponentType.read,
+            title: 'Learn',
+            minutes: 10,
+          ),
+          LessonComponent(
+            type: LessonComponentType.exercise,
+            title: 'Practice',
+            minutes: 10,
+          ),
+          LessonComponent(
+            type: LessonComponentType.reflection,
+            title: 'Reflect',
+            minutes: 5,
+          ),
         ],
         isCompleted: day < 3,
         isUnlocked: day <= 3,
@@ -76,7 +88,7 @@ final List<GuidedPathway> guidedPathways = <GuidedPathway>[
     progress: 0.29,
     focus: 'Tonight: Build Your Wind-Down Routine',
     minutesToday: 30,
-  lessons: <DailyLesson>[],
+    lessons: <DailyLesson>[],
   ),
   const GuidedPathway(
     id: 'depression_relief',
@@ -86,7 +98,7 @@ final List<GuidedPathway> guidedPathways = <GuidedPathway>[
     progress: 0.18,
     focus: 'Today: Behavioral Activation',
     minutesToday: 20,
-  lessons: <DailyLesson>[],
+    lessons: <DailyLesson>[],
   ),
 ];
 
@@ -98,9 +110,21 @@ const List<TherapyFramework> therapyFrameworks = <TherapyFramework>[
     icon: Icons.pattern,
     color: Color(0xFF8C9EFF),
     tools: <TherapyTool>[
-      TherapyTool(id: 'thought_record', title: 'Thought Record', subtitle: 'Capture and reframe anxious thinking.'),
-      TherapyTool(id: 'behavioral_experiment', title: 'Behavioral Experiments', subtitle: 'Test beliefs with real-world actions.'),
-      TherapyTool(id: 'mood_chart', title: 'Mood Chart', subtitle: 'Spot your emotional patterns quickly.'),
+      TherapyTool(
+        id: 'thought_record',
+        title: 'Thought Record',
+        subtitle: 'Capture and reframe anxious thinking.',
+      ),
+      TherapyTool(
+        id: 'behavioral_experiment',
+        title: 'Behavioral Experiments',
+        subtitle: 'Test beliefs with real-world actions.',
+      ),
+      TherapyTool(
+        id: 'mood_chart',
+        title: 'Mood Chart',
+        subtitle: 'Spot your emotional patterns quickly.',
+      ),
     ],
   ),
   TherapyFramework(
@@ -110,9 +134,21 @@ const List<TherapyFramework> therapyFrameworks = <TherapyFramework>[
     icon: Icons.all_inclusive,
     color: Color(0xFFFFC4A3),
     tools: <TherapyTool>[
-      TherapyTool(id: 'tipp', title: 'TIPP Skills', subtitle: 'Cool your body to calm your mind fast.'),
-      TherapyTool(id: 'opposite_action', title: 'Opposite Action', subtitle: 'Shift your behavior to move emotions.'),
-      TherapyTool(id: 'wise_mind', title: 'Wise Mind', subtitle: 'Find balance between logic and emotion.'),
+      TherapyTool(
+        id: 'tipp',
+        title: 'TIPP Skills',
+        subtitle: 'Cool your body to calm your mind fast.',
+      ),
+      TherapyTool(
+        id: 'opposite_action',
+        title: 'Opposite Action',
+        subtitle: 'Shift your behavior to move emotions.',
+      ),
+      TherapyTool(
+        id: 'wise_mind',
+        title: 'Wise Mind',
+        subtitle: 'Find balance between logic and emotion.',
+      ),
     ],
   ),
   TherapyFramework(
@@ -122,9 +158,21 @@ const List<TherapyFramework> therapyFrameworks = <TherapyFramework>[
     icon: Icons.auto_awesome,
     color: Color(0xFF80DEEA),
     tools: <TherapyTool>[
-      TherapyTool(id: 'values_map', title: 'Values Map', subtitle: 'Name what matters most right now.'),
-      TherapyTool(id: 'defusion', title: 'Defusion Practices', subtitle: 'Unhook from intrusive thoughts.'),
-      TherapyTool(id: 'committed_action', title: 'Committed Action', subtitle: 'Plan one value-based action today.'),
+      TherapyTool(
+        id: 'values_map',
+        title: 'Values Map',
+        subtitle: 'Name what matters most right now.',
+      ),
+      TherapyTool(
+        id: 'defusion',
+        title: 'Defusion Practices',
+        subtitle: 'Unhook from intrusive thoughts.',
+      ),
+      TherapyTool(
+        id: 'committed_action',
+        title: 'Committed Action',
+        subtitle: 'Plan one value-based action today.',
+      ),
     ],
   ),
 ];
@@ -209,7 +257,8 @@ const List<CrisisContact> crisisContacts = <CrisisContact>[
 
 const InsightHighlight weeklyInsight = InsightHighlight(
   headline: 'Your anxiety peaks on Monday mornings',
-  detail: 'Evening meditation lowered your anxiety by 15%. Keep the streak going!',
+  detail:
+      'Evening meditation lowered your anxiety by 15%. Keep the streak going!',
   trends: <InsightTrend>[
     InsightTrend(metric: 'Anxiety', current: 61, previous: 72),
     InsightTrend(metric: 'Sleep', current: 78, previous: 65),
@@ -238,8 +287,15 @@ const List<SupportCircle> supportCircles = <SupportCircle>[
   ),
 ];
 
-const Map<String, List<String>> emotionTriggerSuggestions = <String, List<String>>{
-  'Anxious': <String>['Work/School', 'Relationships', 'Health', 'Money worries', 'Upcoming event'],
+const Map<String, List<String>> emotionTriggerSuggestions =
+    <String, List<String>>{
+  'Anxious': <String>[
+    'Work/School',
+    'Relationships',
+    'Health',
+    'Money worries',
+    'Upcoming event',
+  ],
   'Sad': <String>['Loneliness', 'Loss', 'Weather', 'Unexpected setback'],
   'Angry': <String>['Conflict', 'Unfairness', 'Broken boundary'],
   'Overwhelmed': <String>['Too many tasks', 'Uncertainty', 'Expectations'],
@@ -249,7 +305,8 @@ const Map<String, List<String>> emotionTriggerSuggestions = <String, List<String
   'Confused': <String>['Mixed signals', 'Decision fatigue', 'Change'],
 };
 
-const Map<String, SelfHelpActionPlan> emotionActionPlans = <String, SelfHelpActionPlan>{
+const Map<String, SelfHelpActionPlan> emotionActionPlans =
+    <String, SelfHelpActionPlan>{
   'Anxious': SelfHelpActionPlan(
     emotion: 'Anxious',
     context: 'Moderate-High anxiety about upcoming events',

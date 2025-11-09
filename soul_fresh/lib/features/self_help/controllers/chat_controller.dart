@@ -80,7 +80,7 @@ class ChatController extends StateNotifier<ChatState> {
     );
 
     // Create placeholder for assistant message
-  final assistantMessageId = generateMessageId('assistant');
+    final assistantMessageId = generateMessageId('assistant');
     final assistantMessage = ChatMessage(
       id: assistantMessageId,
       sessionId: state.currentSessionId ?? '',
@@ -128,7 +128,8 @@ class ChatController extends StateNotifier<ChatState> {
         }
 
         if (chunk.hasError) {
-          final failureMessage = chunk.error ?? 'Unable to respond right now. Please try again later.';
+          final failureMessage = chunk.error ??
+              'Unable to respond right now. Please try again later.';
           final messagesWithError = state.messages.map((msg) {
             if (msg.id == assistantMessageId) {
               return msg.copyWith(
@@ -245,21 +246,23 @@ class ChatController extends StateNotifier<ChatState> {
         newSession();
       }
     } catch (e) {
-      state = state.copyWith(error: 'Failed to delete session: ${e.toString()}');
+      state =
+          state.copyWith(error: 'Failed to delete session: ${e.toString()}');
       rethrow;
     }
   }
 }
 
 // Bonus: Provider for sessions list
-final chatSessionsProvider = FutureProvider.autoDispose<List<ChatSession>>((ref) async {
+final chatSessionsProvider =
+    FutureProvider.autoDispose<List<ChatSession>>((ref) async {
   final controller = ref.watch(chatControllerProvider.notifier);
   return controller.loadSessions(limit: 20);
 });
 
 // Bonus: Provider for session messages (given a sessionId)
-final sessionMessagesProvider =
-    FutureProvider.family.autoDispose<List<ChatMessage>, String>((ref, sessionId) async {
+final sessionMessagesProvider = FutureProvider.family
+    .autoDispose<List<ChatMessage>, String>((ref, sessionId) async {
   final apiService = ref.watch(chatApiServiceProvider);
   return apiService.getSessionMessages(sessionId);
 });

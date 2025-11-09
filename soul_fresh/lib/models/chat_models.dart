@@ -99,7 +99,8 @@ class ChatSession {
       id: json['id'],
       userId: json['user_id'],
       startedAt: DateTime.parse(json['started_at']),
-      endedAt: json['ended_at'] != null ? DateTime.parse(json['ended_at']) : null,
+      endedAt:
+          json['ended_at'] != null ? DateTime.parse(json['ended_at']) : null,
       isActive: json['is_active'] ?? true,
       sessionMood: json['session_mood'],
       sessionIntensity: json['session_intensity'],

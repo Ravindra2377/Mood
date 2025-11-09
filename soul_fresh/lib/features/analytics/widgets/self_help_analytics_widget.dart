@@ -34,7 +34,11 @@ class SelfHelpAnalyticsWidget extends StatelessWidget {
             _buildStat('Total Time', '${stats.totalTimeMinutes} min', '⏱️'),
             _buildStat('Thought Records', '${stats.thoughtRecordsCount}', '✍️'),
             _buildStat('Check-Ins', '${stats.checkInsCount}', '❤️'),
-            _buildStat('Guided Programs', '${stats.guidedProgramsCount}', '🗺️'),
+            _buildStat(
+              'Guided Programs',
+              '${stats.guidedProgramsCount}',
+              '🗺️',
+            ),
             _buildStat('Assessments', '${stats.assessmentsCount}', '📋'),
             const SizedBox(height: 16),
             Text(
@@ -129,4 +133,3 @@ class SelfHelpAnalyticsWidget extends StatelessWidget {
     }
   }
 }
-

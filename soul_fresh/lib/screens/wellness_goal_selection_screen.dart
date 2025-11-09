@@ -47,7 +47,7 @@ class _WellnessGoalSelectionScreenState
       id: 'managing_stress',
       title: 'Managing Stress',
       description: 'Track and reduce stress with guided exercises',
-      emoji: '😰',
+      emoji: 'ðŸ˜°',
       accentColor: const Color(0xFFFF6B6B),
       benefits: [
         'Daily stress tracking',
@@ -60,7 +60,7 @@ class _WellnessGoalSelectionScreenState
       id: 'improving_mood',
       title: 'Improving Mood',
       description: 'Boost your mood with activities and gratitude',
-      emoji: '😊',
+      emoji: 'ðŸ˜Š',
       accentColor: const Color(0xFFFFD93D),
       benefits: [
         'Mood tracking dashboard',
@@ -73,7 +73,7 @@ class _WellnessGoalSelectionScreenState
       id: 'better_sleep',
       title: 'Better Sleep',
       description: 'Improve sleep quality and duration',
-      emoji: '😴',
+      emoji: 'ðŸ˜´',
       accentColor: const Color(0xFF6C5CE7),
       benefits: [
         'Sleep tracking',
@@ -86,7 +86,7 @@ class _WellnessGoalSelectionScreenState
       id: 'mindfulness',
       title: 'Mindfulness Practice',
       description: 'Build a consistent meditation habit',
-      emoji: '🧘',
+      emoji: 'ðŸ§˜',
       accentColor: const Color(0xFF00B894),
       benefits: [
         'Guided meditations',
@@ -99,7 +99,7 @@ class _WellnessGoalSelectionScreenState
       id: 'coping_anxiety',
       title: 'Coping with Anxiety',
       description: 'Learn coping techniques and manage anxiety',
-      emoji: '😰',
+      emoji: 'ðŸ˜°',
       accentColor: const Color(0xFFFF7675),
       benefits: [
         'Anxiety tracking',
@@ -112,7 +112,7 @@ class _WellnessGoalSelectionScreenState
       id: 'general_wellness',
       title: 'General Wellness',
       description: 'Holistic health and lifestyle tracking',
-      emoji: '🌟',
+      emoji: 'ðŸŒŸ',
       accentColor: const Color(0xFF74B9FF),
       benefits: [
         'Wellness score',
@@ -183,7 +183,7 @@ class _WellnessGoalSelectionScreenState
                     ),
                   ),
                   child: Text(
-                    '💡 Tip: You can change these anytime in settings',
+                    'ðŸ’¡ Tip: You can change these anytime in settings',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.primary,
                         ),
@@ -218,7 +218,8 @@ class _WellnessGoalSelectionScreenState
                     } else {
                       newSelection.add(goal.id);
                     }
-                    ref.read(selectedGoalsProvider.notifier).state = newSelection;
+                    ref.read(selectedGoalsProvider.notifier).state =
+                        newSelection;
                   },
                   animationController: _animationController,
                   index: index,
@@ -240,8 +241,9 @@ class _WellnessGoalSelectionScreenState
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                    disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor:
+                        AppColors.primary.withValues(alpha: 0.5),
                     padding: const EdgeInsets.symmetric(
                       vertical: 16,
                       horizontal: 32,
@@ -332,7 +334,7 @@ class _GoalCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
-                ? goal.accentColor.withOpacity(0.15)
+                ? goal.accentColor.withValues(alpha: 0.15)
                 : AppColors.cardColor,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
@@ -342,7 +344,7 @@ class _GoalCard extends StatelessWidget {
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: goal.accentColor.withOpacity(0.2),
+                      color: goal.accentColor.withValues(alpha: 0.2),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -407,7 +409,7 @@ class _GoalCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
-                      color: goal.accentColor.withOpacity(0.2),
+                      color: goal.accentColor.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(

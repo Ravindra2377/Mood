@@ -162,8 +162,11 @@ class _ButterflyHugScreenState extends State<ButterflyHugScreen> {
                   children: [
                     _TapIndicator(active: _leftTap),
                     const SizedBox(width: 24),
-                    Icon(Icons.self_improvement,
-                        size: 72, color: Theme.of(context).primaryColor,),
+                    Icon(
+                      Icons.self_improvement,
+                      size: 72,
+                      color: Theme.of(context).primaryColor,
+                    ),
                     const SizedBox(width: 24),
                     _TapIndicator(active: !_leftTap),
                   ],

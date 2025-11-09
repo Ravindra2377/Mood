@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
-
-import 'package:soul/features/insights/screens/insights_screen.dart';
-import 'package:soul/features/insights/providers/insights_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:soul/features/insights/models/insights_data.dart';
+import 'package:soul/features/insights/providers/insights_provider.dart';
+import 'package:soul/features/insights/screens/insights_screen.dart';
 
 /// Comprehensive AI Analyst (Insights) tests covering:
 /// 1. Backend aggregation API (/api/v1/insights)
@@ -60,8 +59,8 @@ class _FakeInsightsData {
 
 // Fake insights notifier for testing
 class _FakeInsightsNotifier extends InsightsNotifier {
-  bool _isEmpty = false;
-  
+  final bool _isEmpty;
+
   _FakeInsightsNotifier({bool isEmpty = false}) : _isEmpty = isEmpty;
 
   @override
@@ -72,7 +71,6 @@ class _FakeInsightsNotifier extends InsightsNotifier {
     return _FakeInsightsData.withData();
   }
 
-  @override
   Future<void> refresh() async {
     state = const AsyncLoading();
     await Future.delayed(const Duration(milliseconds: 100));
@@ -96,10 +94,10 @@ void main() {
 
       // Screen should be present
       expect(find.byType(InsightsScreen), findsOneWidget);
-      
-  // Should have app bar title containing 'Insights'
-  expect(find.textContaining('Insights'), findsWidgets);
-      
+
+      // Should have app bar title containing 'Insights'
+      expect(find.textContaining('Insights'), findsWidgets);
+
       // Should have refresh button
       expect(find.byIcon(Icons.refresh), findsOneWidget);
     });
@@ -108,7 +106,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            insightsProvider.overrideWith(() => _FakeInsightsNotifier(isEmpty: true)),
+            insightsProvider
+                .overrideWith(() => _FakeInsightsNotifier(isEmpty: true)),
           ],
           child: const MaterialApp(home: InsightsScreen()),
         ),
@@ -116,10 +115,10 @@ void main() {
 
       await tester.pumpAndSettle();
 
-  // Should show empty states for sections
-  expect(find.byKey(const ValueKey('overall-empty')), findsOneWidget);
-  expect(find.byKey(const ValueKey('keywords-empty')), findsOneWidget);
-  expect(find.byKey(const ValueKey('trend-empty')), findsOneWidget);
+      // Should show empty states for sections
+      expect(find.byKey(const ValueKey('overall-empty')), findsOneWidget);
+      expect(find.byKey(const ValueKey('keywords-empty')), findsOneWidget);
+      expect(find.byKey(const ValueKey('trend-empty')), findsOneWidget);
     });
 
     testWidgets('Pie chart displays sentiment breakdown', (tester) async {
@@ -162,7 +161,7 @@ void main() {
       expect(find.text('Top Keywords'), findsOneWidget);
     });
 
-  testWidgets('Refresh button reloads insights data', (tester) async {
+    testWidgets('Refresh button reloads insights data', (tester) async {
       final container = ProviderContainer(
         overrides: [
           insightsProvider.overrideWith(() => _FakeInsightsNotifier()),
@@ -192,25 +191,26 @@ void main() {
   group('📊 Data Aggregation Tests', () {
     test('Backend aggregation calculates sentiment percentages correctly', () {
       final data = _FakeInsightsData.withData();
-      
+
       expect(data.overallSentiment['POSITIVE'], equals(60));
       expect(data.overallSentiment['NEGATIVE'], equals(25));
       expect(data.overallSentiment['NEUTRAL'], equals(15));
-      
+
       // Total should be 100%
-      final total = data.overallSentiment.values.fold<int>(0, (sum, val) => sum + val);
+      final total =
+          data.overallSentiment.values.fold<int>(0, (sum, val) => sum + val);
       expect(total, equals(100));
     });
 
     test('Top keywords sorted by frequency', () {
       final data = _FakeInsightsData.withData();
-      
+
       expect(data.topKeywords.length, equals(5));
-      
+
       // First keyword should have highest count
       expect(data.topKeywords[0].keyword, equals('work'));
       expect(data.topKeywords[0].count, equals(45));
-      
+
       // Should be in descending order
       for (int i = 0; i < data.topKeywords.length - 1; i++) {
         expect(
@@ -222,7 +222,7 @@ void main() {
 
     test('Sentiment over time tracks historical data', () {
       final data = _FakeInsightsData.withData();
-      
+
       expect(data.sentimentOverTime.length, equals(3));
 
       // Dates should be in chronological order
@@ -235,13 +235,16 @@ void main() {
 
       // Sentiment values should be valid keys
       for (final s in data.sentimentOverTime) {
-        expect(['POSITIVE', 'NEGATIVE', 'NEUTRAL', 'MIXED'], contains(s.sentiment.toUpperCase()));
+        expect(
+          ['POSITIVE', 'NEGATIVE', 'NEUTRAL', 'MIXED'],
+          contains(s.sentiment.toUpperCase()),
+        );
       }
     });
 
     test('Empty data structure handles zero entries', () {
       final emptyData = _FakeInsightsData.empty();
-      
+
       expect(emptyData.overallSentiment, isEmpty);
       expect(emptyData.topKeywords, isEmpty);
       expect(emptyData.sentimentOverTime, isEmpty);
@@ -251,36 +254,36 @@ void main() {
   group('📈 Pie Chart Visualization Tests', () {
     test('Pie chart sections match sentiment percentages', () {
       final data = _FakeInsightsData.withData();
-      
+
       // Create pie chart sections
       final sections = _createPieChartSections(data.overallSentiment);
-      
+
       expect(sections.length, equals(3)); // POSITIVE, NEGATIVE, NEUTRAL
-      
+
       final positiveSection = sections.firstWhere((s) => s.value == 60);
       expect(positiveSection, isNotNull);
-      
+
       final negativeSection = sections.firstWhere((s) => s.value == 25);
       expect(negativeSection, isNotNull);
-      
+
       final neutralSection = sections.firstWhere((s) => s.value == 15);
       expect(neutralSection, isNotNull);
     });
 
     test('Pie chart colors are distinct for each sentiment', () {
       final colors = _getSentimentColors();
-      
+
       expect(colors['POSITIVE'], isNotNull);
       expect(colors['NEGATIVE'], isNotNull);
       expect(colors['NEUTRAL'], isNotNull);
-      
+
       // Colors should be different
       expect(colors['POSITIVE'], isNot(equals(colors['NEGATIVE'])));
       expect(colors['POSITIVE'], isNot(equals(colors['NEUTRAL'])));
       expect(colors['NEGATIVE'], isNot(equals(colors['NEUTRAL'])));
     });
 
-  testWidgets('Pie chart widget is present', (tester) async {
+    testWidgets('Pie chart widget is present', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -300,15 +303,19 @@ void main() {
   group('📊 Bar Chart Visualization Tests', () {
     test('Bar chart heights proportional to keyword frequency', () {
       final data = _FakeInsightsData.withData();
-      
+
       final bars = _createBarChartData(data.topKeywords);
-      
+
       expect(bars.length, equals(5));
-      
+
       // Highest bar should correspond to most frequent keyword
-      final maxBar = bars.reduce((a, b) =>
-        a.barRods.first.toY > b.barRods.first.toY ? a : b);
-      expect(maxBar.barRods.first.toY, equals(45)); // 'work' with 45 occurrences
+      final maxBar = bars.reduce(
+        (a, b) => a.barRods.first.toY > b.barRods.first.toY ? a : b,
+      );
+      expect(
+        maxBar.barRods.first.toY,
+        equals(45),
+      ); // 'work' with 45 occurrences
     });
 
     test('Bar chart shows top 10 keywords maximum', () {
@@ -317,7 +324,7 @@ void main() {
         (i) => KeywordData(keyword: 'keyword$i', count: 50 - i),
       );
       final bars = _createBarChartData(manyKeywords);
-      
+
       expect(bars.length, lessThanOrEqualTo(10));
     });
 
@@ -343,8 +350,8 @@ void main() {
   group('🔄 Refresh & Loading States', () {
     testWidgets('Loading indicator shows while fetching data', (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: const MaterialApp(
+        const ProviderScope(
+          child: MaterialApp(
             home: Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
@@ -381,8 +388,8 @@ void main() {
 
       await tester.pumpAndSettle();
 
-  // Should show error message
-  expect(find.textContaining('Unable to load insights'), findsWidgets);
+      // Should show error message
+      expect(find.textContaining('Unable to load insights'), findsWidgets);
     });
   });
 
@@ -403,7 +410,8 @@ void main() {
       expect(find.byType(ListView), findsWidgets);
     });
 
-    testWidgets('Charts maintain aspect ratio on different screen sizes', (tester) async {
+    testWidgets('Charts maintain aspect ratio on different screen sizes',
+        (tester) async {
       // Test on small screen
       tester.view.physicalSize = const Size(400, 600);
       tester.view.devicePixelRatio = 1.0;
@@ -430,7 +438,7 @@ void main() {
 // Helper functions
 List<PieChartSectionData> _createPieChartSections(Map<String, int> sentiments) {
   final colors = _getSentimentColors();
-  
+
   return sentiments.entries.map((entry) {
     return PieChartSectionData(
       value: entry.value.toDouble(),

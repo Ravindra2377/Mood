@@ -78,4 +78,3 @@ class CustomButton extends StatelessWidget {
     );
   }
 }
-

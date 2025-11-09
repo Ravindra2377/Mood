@@ -8,21 +8,28 @@ class TherapyToolboxCard extends StatelessWidget {
     final tools = [
       {
         'title': 'Cognitive Behavioral Therapy (CBT)',
-        'description': 'Challenge negative thought patterns and develop healthier thinking habits',
+        'description':
+            'Challenge negative thought patterns and develop healthier thinking habits',
         'color': Colors.blue,
-        'tools': ['Thought Records', 'Cognitive Restructuring', 'Behavioral Experiments'],
+        'tools': [
+          'Thought Records',
+          'Cognitive Restructuring',
+          'Behavioral Experiments',
+        ],
         'icon': Icons.psychology,
       },
       {
         'title': 'Dialectical Behavior Therapy (DBT)',
-        'description': 'Build skills for emotional regulation and interpersonal effectiveness',
+        'description':
+            'Build skills for emotional regulation and interpersonal effectiveness',
         'color': Colors.purple,
         'tools': ['Mindfulness', 'Distress Tolerance', 'Emotion Regulation'],
         'icon': Icons.self_improvement,
       },
       {
         'title': 'Acceptance & Commitment Therapy (ACT)',
-        'description': 'Accept difficult thoughts and commit to value-driven actions',
+        'description':
+            'Accept difficult thoughts and commit to value-driven actions',
         'color': Colors.green,
         'tools': ['Acceptance', 'Defusion', 'Values Clarification'],
         'icon': Icons.explore,
@@ -35,10 +42,10 @@ class TherapyToolboxCard extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: (tool['color'] as Color).withOpacity(0.1),
+            color: (tool['color'] as Color).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: (tool['color'] as Color).withOpacity(0.3),
+              color: (tool['color'] as Color).withValues(alpha: 0.3),
             ),
           ),
           child: Column(
@@ -74,9 +81,10 @@ class TherapyToolboxCard extends StatelessWidget {
                 runSpacing: 8,
                 children: (tool['tools'] as List<String>).map((toolName) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: (tool['color'] as Color).withOpacity(0.2),
+                      color: (tool['color'] as Color).withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -111,4 +119,3 @@ class TherapyToolboxCard extends StatelessWidget {
     );
   }
 }
-

@@ -280,7 +280,11 @@ final List<Exercise> mockExercises = [
       'Create alternative perspective',
       'Write balanced thought',
     ],
-    benefits: ['Reduces anxiety', 'Better thinking patterns', 'Mood improvement'],
+    benefits: [
+      'Reduces anxiety',
+      'Better thinking patterns',
+      'Mood improvement',
+    ],
     emoji: '🧠',
     completions: 1876,
     rating: 4.7,
@@ -378,7 +382,11 @@ final List<Exercise> mockExercises = [
       'Notice details - sights, sounds, feelings',
       'Reinforce positive feelings',
     ],
-    benefits: ['Increased confidence', 'Better performance', 'Motivation boost'],
+    benefits: [
+      'Increased confidence',
+      'Better performance',
+      'Motivation boost',
+    ],
     emoji: '🎯',
     completions: 1654,
     rating: 4.7,
@@ -431,7 +439,8 @@ final List<Exercise> mockExercises = [
     category: ExerciseCategory.anxiety,
     difficulty: ExerciseDifficulty.easy,
     durationSeconds: 300,
-    description: 'Crisis intervention: Temperature, Intense exercise, Paced breathing, PMR',
+    description:
+        'Crisis intervention: Temperature, Intense exercise, Paced breathing, PMR',
     instructions: [
       'Temperature: Splash cold water on face',
       'Intense Exercise: 5 minutes of activity',
@@ -497,7 +506,11 @@ final List<Exercise> mockExercises = [
       'Understand what triggered it',
       'Write about the emotion',
     ],
-    benefits: ['Emotional awareness', 'Better regulation', 'Self-understanding'],
+    benefits: [
+      'Emotional awareness',
+      'Better regulation',
+      'Self-understanding',
+    ],
     emoji: '🎭',
     completions: 1876,
     rating: 4.7,

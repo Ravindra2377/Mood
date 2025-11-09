@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:soul/features/insights/screens/insights_screen.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:soul/features/insights/models/insights_data.dart';
 import 'package:soul/features/insights/providers/insights_provider.dart';
+import 'package:soul/features/insights/screens/insights_screen.dart';
 
 class _TestInsightsNotifier extends InsightsNotifier {
   _TestInsightsNotifier(this._data);
@@ -18,18 +17,18 @@ void main() {
 
   group('InsightsScreen', () {
     testWidgets('renders charts with data', (tester) async {
-      final data = InsightsData(
-        overallSentiment: const {
+      const data = InsightsData(
+        overallSentiment: {
           'POSITIVE': 3,
           'NEUTRAL': 2,
           'NEGATIVE': 1,
         },
-        sentimentOverTime: const [
+        sentimentOverTime: [
           SentimentTimeData(date: '2025-10-30', sentiment: 'NEUTRAL'),
           SentimentTimeData(date: '2025-11-01', sentiment: 'POSITIVE'),
           SentimentTimeData(date: '2025-11-02', sentiment: 'NEGATIVE'),
         ],
-        topKeywords: const [
+        topKeywords: [
           KeywordData(keyword: 'sleep', count: 5),
           KeywordData(keyword: 'work', count: 3),
           KeywordData(keyword: 'family', count: 2),
@@ -100,8 +99,10 @@ void main() {
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
-      expect(find.text('Once you log entries, we will chart the trend.'),
-          findsOneWidget);
+      expect(
+        find.text('Once you log entries, we will chart the trend.'),
+        findsOneWidget,
+      );
     });
   });
 }

@@ -5,7 +5,8 @@ import 'package:soul/features/exercises/screens/exercises_main_screen.dart';
 import 'package:soul/features/exercises/widgets/exercise_info_dialog.dart';
 
 void main() {
-  testWidgets('Exercises screen focus selection updates description', (tester) async {
+  testWidgets('Exercises screen focus selection updates description',
+      (tester) async {
     await tester.pumpWidget(const MaterialApp(home: ExercisesMainScreen()));
 
     // Initial description corresponds to first focus option (Find calm)
@@ -22,13 +23,18 @@ void main() {
     expect(find.textContaining('Take a short pause'), findsOneWidget);
   });
 
-  testWidgets('Exercise info dialog appears and start calls navigator', (tester) async {
+  testWidgets('Exercise info dialog appears and start calls navigator',
+      (tester) async {
     final navigatorObserver = _TestNavigatorObserver();
-    await tester.pumpWidget(MaterialApp(
-      home: const ExercisesMainScreen(),
-      navigatorObservers: [navigatorObserver],
-      onGenerateRoute: (settings) => MaterialPageRoute(builder: (_) => const Scaffold(body: Text('Dest'))),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: const ExercisesMainScreen(),
+        navigatorObservers: [navigatorObserver],
+        onGenerateRoute: (settings) => MaterialPageRoute(
+          builder: (_) => const Scaffold(body: Text('Dest')),
+        ),
+      ),
+    );
 
     // Tap first exercise card (Box Breathing)
     await tester.tap(find.text('Box Breathing'));
@@ -36,8 +42,8 @@ void main() {
     expect(find.byType(ExerciseInfoDialog), findsOneWidget);
 
     // Tap Start exercise button
-  // The dialog builds buttons at bottom; look for the label text directly and tap its parent
-  await tester.tap(find.text('Start exercise'));
+    // The dialog builds buttons at bottom; look for the label text directly and tap its parent
+    await tester.tap(find.text('Start exercise'));
     await tester.pumpAndSettle();
 
     // Since route names aren't registered in this minimal test harness, we just verify dialog closed

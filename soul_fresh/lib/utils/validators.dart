@@ -80,7 +80,8 @@ class Validators {
     }
 
     final phoneRegex = RegExp(r'^\+?[\d\s-()]+$');
-    if (!phoneRegex.hasMatch(value) || value.replaceAll(RegExp(r'\D'), '').length < 10) {
+    if (!phoneRegex.hasMatch(value) ||
+        value.replaceAll(RegExp(r'\D'), '').length < 10) {
       return 'Please enter a valid phone number';
     }
 
@@ -114,7 +115,12 @@ class Validators {
   }
 
   /// Validate value is within range
-  static String? range(String? value, double min, double max, {String? fieldName}) {
+  static String? range(
+    String? value,
+    double min,
+    double max, {
+    String? fieldName,
+  }) {
     if (value == null || value.isEmpty) {
       return '${fieldName ?? 'This field'} is required';
     }

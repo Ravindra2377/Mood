@@ -18,8 +18,9 @@ class ExerciseService {
   int getStreakDays() {
     if (_sessions.isEmpty) return 0;
     final days = _sessions
-        .map((s) =>
-            DateTime(s.startTime.year, s.startTime.month, s.startTime.day),)
+        .map(
+          (s) => DateTime(s.startTime.year, s.startTime.month, s.startTime.day),
+        )
         .toSet()
         .toList()
       ..sort((a, b) => b.compareTo(a));

@@ -15,25 +15,29 @@ class MoodTrendChart extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '📈 Mood Trend',
+                  'ðŸ“ˆ Mood Trend',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                    color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.trending_up,
-                          size: 14, color: Colors.green,),
+                      Icon(
+                        Icons.trending_up,
+                        size: 14,
+                        color: Colors.green,
+                      ),
                       SizedBox(width: 4),
                       Text(
-                        '↑ 15%',
+                        'â†‘ 15%',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -117,4 +121,3 @@ class MoodTrendChart extends StatelessWidget {
     );
   }
 }
-

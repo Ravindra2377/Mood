@@ -26,7 +26,9 @@ class _SleepMeditationScreenState extends State<SleepMeditationScreen> {
   void initState() {
     super.initState();
     session = ExerciseSession(
-        exerciseId: 'sleep_meditation', startTime: DateTime.now(),);
+      exerciseId: 'sleep_meditation',
+      startTime: DateTime.now(),
+    );
   }
 
   void _start() {

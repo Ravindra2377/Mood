@@ -12,7 +12,7 @@ class ActivitySummaryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '📊 Activity Summary',
+              'ðŸ“Š Activity Summary',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -52,7 +52,7 @@ class ActivitySummaryCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -77,11 +77,16 @@ class ActivitySummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActivityItem(String label, String count, IconData icon, Color color) {
+  Widget _buildActivityItem(
+    String label,
+    String count,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -100,7 +105,7 @@ class ActivitySummaryCard extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 10,
-              color: color.withOpacity(0.8),
+              color: color.withValues(alpha: 0.8),
             ),
             textAlign: TextAlign.center,
           ),
@@ -109,4 +114,3 @@ class ActivitySummaryCard extends StatelessWidget {
     );
   }
 }
-

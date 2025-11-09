@@ -55,7 +55,10 @@ void main() {
       );
 
       // Enter a valid email
-      await tester.enterText(find.byType(TextFormField).first, 'user@example.com');
+      await tester.enterText(
+        find.byType(TextFormField).first,
+        'user@example.com',
+      );
 
       // Tap Send Code -> triggers 429
       await tester.tap(find.text('Send Code'));

@@ -42,7 +42,8 @@ class AppConfig {
 
   // External Services
   static const String sentryDsn = String.fromEnvironment('SENTRY_DSN');
-  static const String firebaseApiKey = String.fromEnvironment('FIREBASE_API_KEY');
+  static const String firebaseApiKey =
+      String.fromEnvironment('FIREBASE_API_KEY');
 
   // Helper methods
   static bool get isProduction => environment == 'production';

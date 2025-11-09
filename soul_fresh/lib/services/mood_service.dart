@@ -21,13 +21,17 @@ class MoodService {
         fromIso: startDate?.toIso8601String(),
         toIso: endDate?.toIso8601String(),
       );
-      
+
       // Parse response and convert to MoodHistoryItem list
-      return response.map((item) => MoodHistoryItem(
-        date: item.createdAt,
-        mood: _scoreToMoodLevel(item.score),
-        value: item.score,
-      ),).toList();
+      return response
+          .map(
+            (item) => MoodHistoryItem(
+              date: item.createdAt,
+              mood: _scoreToMoodLevel(item.score),
+              value: item.score,
+            ),
+          )
+          .toList();
     } catch (e) {
       throw Exception('Failed to fetch mood history: $e');
     }
@@ -41,9 +45,11 @@ class MoodService {
   }) async {
     try {
       // Use the typed ApiClient method
-      await _apiClient.createMood(CreateMoodRequest(
-        score: value,
-      ),);
+      await _apiClient.createMood(
+        CreateMoodRequest(
+          score: value,
+        ),
+      );
     } catch (e) {
       throw Exception('Failed to save mood: $e');
     }

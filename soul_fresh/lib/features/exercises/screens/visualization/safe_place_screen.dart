@@ -50,10 +50,12 @@ class _SafePlaceScreenState extends State<SafePlaceScreen> {
 
     final entries = _prompts
         .where((prompt) => prompt.controller.text.trim().isNotEmpty)
-        .map((prompt) => {
-              'sense': prompt.sense,
-              'details': prompt.controller.text.trim(),
-            },)
+        .map(
+          (prompt) => {
+            'sense': prompt.sense,
+            'details': prompt.controller.text.trim(),
+          },
+        )
         .toList();
 
     if (entries.length < 3) {
@@ -87,7 +89,8 @@ class _SafePlaceScreenState extends State<SafePlaceScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Visualization saved. Carry this feeling with you.'),),
+        content: Text('Visualization saved. Carry this feeling with you.'),
+      ),
     );
     Navigator.of(context).pop();
   }

@@ -146,7 +146,7 @@ class _AnalyticsDashboardScreenState
             children: [
               Expanded(
                 child: _buildStatCard(
-                  icon: '🔥',
+                  icon: 'ðŸ”¥',
                   label: 'Current Streak',
                   value: '7',
                   subtitle: 'days',
@@ -156,7 +156,7 @@ class _AnalyticsDashboardScreenState
               const SizedBox(width: 12),
               Expanded(
                 child: _buildStatCard(
-                  icon: '✅',
+                  icon: 'âœ…',
                   label: 'Activities',
                   value: '18',
                   subtitle: 'this week',
@@ -211,7 +211,9 @@ class _AnalyticsDashboardScreenState
       padding: const EdgeInsets.all(16),
       children: [
         _buildAnalyticsPandaCard(
-            compact: true, headline: 'Here are the trends I spotted',),
+          compact: true,
+          headline: 'Here are the trends I spotted',
+        ),
         const SizedBox(height: 16),
         // Weekly Insights
         const WeeklyInsightsCard(),
@@ -322,7 +324,7 @@ class _AnalyticsDashboardScreenState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '🧰 Self-Help Activities',
+                  'ðŸ§° Self-Help Activities',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -356,7 +358,7 @@ class _AnalyticsDashboardScreenState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '🧘 Meditation Sessions',
+                  'ðŸ§˜ Meditation Sessions',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -375,7 +377,10 @@ class _AnalyticsDashboardScreenState
             _buildSessionStat('Avg Session', '15 min', Icons.trending_up),
             const SizedBox(height: 8),
             _buildSessionStat(
-                'Longest Streak', '5 days', Icons.local_fire_department,),
+              'Longest Streak',
+              '5 days',
+              Icons.local_fire_department,
+            ),
           ],
         ),
       ),
@@ -444,13 +449,13 @@ class _AnalyticsDashboardScreenState
             ),
             const SizedBox(height: 16),
             _buildPatternItem(
-              '📊 Mood Pattern',
+              'ðŸ“Š Mood Pattern',
               'Your anxiety peaks on Monday mornings',
               'Consider morning meditation on Mondays',
             ),
             const Divider(height: 24),
             _buildPatternItem(
-              '⏰ Best Time',
+              'â° Best Time',
               'Evening exercises show 25% better results',
               'Schedule activities after 6 PM',
             ),
@@ -461,7 +466,10 @@ class _AnalyticsDashboardScreenState
   }
 
   Widget _buildPatternItem(
-      String title, String description, String suggestion,) {
+    String title,
+    String description,
+    String suggestion,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -478,7 +486,7 @@ class _AnalyticsDashboardScreenState
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors.blue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -519,17 +527,17 @@ class _AnalyticsDashboardScreenState
             ),
             const SizedBox(height: 16),
             _buildRecommendationItem(
-              '🎯',
+              'ðŸŽ¯',
               'Try Box Breathing',
               'Based on your anxiety patterns',
             ),
             _buildRecommendationItem(
-              '📚',
+              'ðŸ“š',
               'Continue 7-Day Anxiety Reset',
               'You\'re 43% complete',
             ),
             _buildRecommendationItem(
-              '✍️',
+              'âœï¸',
               'Log a Thought Record',
               'Haven\'t done one this week',
             ),
@@ -588,19 +596,19 @@ class _AnalyticsDashboardScreenState
             ),
             const SizedBox(height: 16),
             _buildMilestoneItem(
-              '🔥',
+              'ðŸ”¥',
               '7-Day Streak',
               'Achieved',
               true,
             ),
             _buildMilestoneItem(
-              '📊',
+              'ðŸ“Š',
               '10 Assessments',
               '7/10',
               false,
             ),
             _buildMilestoneItem(
-              '🧘',
+              'ðŸ§˜',
               '50 Exercise Sessions',
               '18/50',
               false,
@@ -612,7 +620,11 @@ class _AnalyticsDashboardScreenState
   }
 
   Widget _buildMilestoneItem(
-      String emoji, String title, String progress, bool isComplete,) {
+    String emoji,
+    String title,
+    String progress,
+    bool isComplete,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -621,8 +633,8 @@ class _AnalyticsDashboardScreenState
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: isComplete
-                  ? Colors.green.withOpacity(0.1)
-                  : Colors.grey.withOpacity(0.1),
+                  ? Colors.green.withValues(alpha: 0.1)
+                  : Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(emoji, style: const TextStyle(fontSize: 24)),
@@ -666,19 +678,21 @@ class _AnalyticsDashboardScreenState
             ),
             const SizedBox(height: 16),
             ...['Week', 'Month', '3 Months', '6 Months', 'Year', 'All Time']
-                .map((period) => ListTile(
-                      title: Text(period),
-                      trailing: selectedPeriod == period
-                          ? const Icon(Icons.check, color: Colors.green)
-                          : null,
-                      onTap: () {
-                        setState(() {
-                          selectedPeriod = period;
-                        });
-                        _updateAnalyticsMood(PandaMood.focus);
-                        Navigator.pop(context);
-                      },
-                    ),),
+                .map(
+              (period) => ListTile(
+                title: Text(period),
+                trailing: selectedPeriod == period
+                    ? const Icon(Icons.check, color: Colors.green)
+                    : null,
+                onTap: () {
+                  setState(() {
+                    selectedPeriod = period;
+                  });
+                  _updateAnalyticsMood(PandaMood.focus);
+                  Navigator.pop(context);
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -730,10 +744,10 @@ class _AnalyticsDashboardScreenState
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-  border: Border.all(color: AppColors.coolPastel.withOpacity(0.55)),
+        border: Border.all(color: AppColors.coolPastel.withValues(alpha: 0.55)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.coolPastel.withOpacity(0.25),
+            color: AppColors.coolPastel.withValues(alpha: 0.25),
             blurRadius: 20,
             offset: const Offset(0, 14),
           ),
@@ -768,17 +782,17 @@ class _AnalyticsDashboardScreenState
             children: [
               ActionChip(
                 label: const Text('Celebrate wins'),
-                avatar: const Text('🎉'),
+                avatar: const Text('ðŸŽ‰'),
                 onPressed: () => _updateAnalyticsMood(PandaMood.celebrate),
               ),
               ActionChip(
                 label: const Text('Need motivation'),
-                avatar: const Text('✨'),
+                avatar: const Text('âœ¨'),
                 onPressed: () => _updateAnalyticsMood(PandaMood.focus),
               ),
               ActionChip(
                 label: const Text('Feeling stuck'),
-                avatar: const Text('🤔'),
+                avatar: const Text('ðŸ¤”'),
                 onPressed: () => _updateAnalyticsMood(PandaMood.lonely),
               ),
             ],

@@ -25,8 +25,8 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardBorder = border ??
-      Border.all(color: borderColor ?? AppColors.mediumGrey);
+    final cardBorder =
+        border ?? Border.all(color: borderColor ?? AppColors.mediumGrey);
 
     final cardRadius = borderRadius ?? BorderRadius.circular(20);
 
@@ -55,4 +55,3 @@ class CustomCard extends StatelessWidget {
     return container;
   }
 }
-

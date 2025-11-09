@@ -7,7 +7,8 @@ final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
   return AnalyticsService();
 });
 
-final analyticsSnapshotProvider = FutureProvider<AnalyticsSnapshot>((ref) async {
+final analyticsSnapshotProvider =
+    FutureProvider<AnalyticsSnapshot>((ref) async {
   final service = ref.watch(analyticsServiceProvider);
   return service.getAnalyticsSnapshot();
 });
@@ -26,4 +27,3 @@ final moodStatsProvider = FutureProvider<MoodStats>((ref) async {
   final service = ref.watch(analyticsServiceProvider);
   return service.getMoodStats(days: 7);
 });
-

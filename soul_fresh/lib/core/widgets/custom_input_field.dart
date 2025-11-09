@@ -120,4 +120,3 @@ class _CustomInputFieldState extends State<CustomInputField> {
     );
   }
 }
-

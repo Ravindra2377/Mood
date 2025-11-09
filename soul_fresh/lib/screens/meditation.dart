@@ -35,49 +35,49 @@ class _MeditationScreenState extends State<MeditationScreen>
     MeditationSession(
       id: 'ocean',
       name: 'Ocean breeze',
-      icon: '🌊',
+      icon: 'ðŸŒŠ',
       audioPath: 'assets/audio/ocean_breeze.mp3',
     ),
     MeditationSession(
       id: 'rain',
       name: 'Rain sounds',
-      icon: '🌧️',
+      icon: 'ðŸŒ§ï¸',
       audioPath: 'assets/audio/rain_sounds.mp3',
     ),
     MeditationSession(
       id: 'forest',
       name: 'Forest birds',
-      icon: '🌲',
+      icon: 'ðŸŒ²',
       audioPath: 'assets/audio/forest_birds.mp3',
     ),
     MeditationSession(
       id: 'white_noise',
       name: 'White noise',
-      icon: '🎵',
+      icon: 'ðŸŽµ',
       audioPath: 'assets/audio/white_noise.mp3',
     ),
     MeditationSession(
       id: 'piano',
       name: 'Calm piano',
-      icon: '🎹',
+      icon: 'ðŸŽ¹',
       audioPath: 'assets/audio/calm_piano.mp3',
     ),
     MeditationSession(
       id: 'meditation',
       name: 'Meditation bells',
-      icon: '🔔',
+      icon: 'ðŸ””',
       audioPath: 'assets/audio/meditation_bells.mp3',
     ),
     MeditationSession(
       id: 'nature',
       name: 'Nature symphony',
-      icon: '🦅',
+      icon: 'ðŸ¦…',
       audioPath: 'assets/audio/nature_symphony.mp3',
     ),
     MeditationSession(
       id: 'stream',
       name: 'Flowing stream',
-      icon: '💧',
+      icon: 'ðŸ’§',
       audioPath: 'assets/audio/flowing_stream.mp3',
     ),
   ];
@@ -239,12 +239,18 @@ class _MeditationScreenState extends State<MeditationScreen>
                             shape: BoxShape.circle,
                           ),
                         ),
-                        Image.asset('assets/images/meditation_child.png',
-                            width: 150, height: 150, fit: BoxFit.contain,),
+                        Image.asset(
+                          'assets/images/meditation_child.png',
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.contain,
+                        ),
                         const Positioned(
                           bottom: 16,
-                          child: Text('Inhale...',
-                              style: TextStyle(fontWeight: FontWeight.w600),),
+                          child: Text(
+                            'Inhale...',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ],
                     ),
@@ -266,21 +272,25 @@ class _MeditationScreenState extends State<MeditationScreen>
                       _stopwatch.start();
                       // Mock audio playback - shows sound is "playing"
                       // In production, add actual MP3 files to assets/audio/
-                      debugPrint('🔊 Playing: ${_musicOptions[_selectedMusicIndex].name}');
+                      debugPrint(
+                        'ðŸ”Š Playing: ${_musicOptions[_selectedMusicIndex].name}',
+                      );
                       Future.delayed(const Duration(milliseconds: 100), () {
                         _scheduleUpdate();
                       });
                     } else {
                       _ctrl.stop();
                       _stopwatch.stop();
-                      debugPrint('⏸️ Paused');
+                      debugPrint('â¸ï¸ Paused');
                     }
                   },
                   icon: Icon(_playing ? Icons.pause : Icons.play_arrow),
                   label: Text(_playing ? 'Pause' : 'Start'),
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 16,),
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
                     backgroundColor: const Color(0xFF00B894),
                   ),
                 ),
@@ -290,9 +300,10 @@ class _MeditationScreenState extends State<MeditationScreen>
                   builder: (context, child) {
                     return Text(
                       _formatTime(_stopwatch.elapsedMilliseconds),
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                     );
                   },
                 ),
@@ -304,17 +315,17 @@ class _MeditationScreenState extends State<MeditationScreen>
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF00B894).withOpacity(0.1),
+                color: const Color(0xFF00B894).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFF00B894).withOpacity(0.3),
+                  color: const Color(0xFF00B894).withValues(alpha: 0.3),
                 ),
               ),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '💡 How to get music working:',
+                    'ðŸ’¡ How to get music working:',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -325,14 +336,14 @@ class _MeditationScreenState extends State<MeditationScreen>
                   Text(
                     '1. Add this dependency to pubspec.yaml:\n   audioplayers: ^5.0.0\n\n'
                     '2. Place audio files in assets/audio/:\n'
-                    '   • ocean_breeze.mp3\n'
-                    '   • rain_sounds.mp3\n'
-                    '   • forest_birds.mp3\n'
-                    '   • white_noise.mp3\n'
-                    '   • calm_piano.mp3\n'
-                    '   • meditation_bells.mp3\n'
-                    '   • nature_symphony.mp3\n'
-                    '   • flowing_stream.mp3\n\n'
+                    '   â€¢ ocean_breeze.mp3\n'
+                    '   â€¢ rain_sounds.mp3\n'
+                    '   â€¢ forest_birds.mp3\n'
+                    '   â€¢ white_noise.mp3\n'
+                    '   â€¢ calm_piano.mp3\n'
+                    '   â€¢ meditation_bells.mp3\n'
+                    '   â€¢ nature_symphony.mp3\n'
+                    '   â€¢ flowing_stream.mp3\n\n'
                     '3. Update pubspec.yaml assets section:\n'
                     '   assets:\n'
                     '     - assets/audio/\n\n'

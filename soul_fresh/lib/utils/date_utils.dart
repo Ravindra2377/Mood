@@ -79,7 +79,9 @@ class AppDateUtils {
   /// Check if date is today
   static bool isToday(DateTime date) {
     final now = DateTime.now();
-    return date.year == now.year && date.month == now.month && date.day == now.day;
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
   }
 
   /// Check if date is yesterday
@@ -125,7 +127,7 @@ class AppDateUtils {
   /// Get date range for a specific filter
   static DateTimeRange getDateRangeForFilter(String filter) {
     final now = DateTime.now();
-    
+
     switch (filter.toLowerCase()) {
       case 'today':
         return DateTimeRange(

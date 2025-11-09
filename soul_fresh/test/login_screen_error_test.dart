@@ -39,9 +39,11 @@ class FailingAuthService extends AuthService {
 
 void main() {
   testWidgets('Login shows error message on failure', (tester) async {
-    final container = ProviderContainer(overrides: [
-      authServiceProvider.overrideWithValue(FailingAuthService()),
-    ]);
+    final container = ProviderContainer(
+      overrides: [
+        authServiceProvider.overrideWithValue(FailingAuthService()),
+      ],
+    );
 
     await tester.pumpWidget(
       UncontrolledProviderScope(
@@ -51,7 +53,10 @@ void main() {
     );
 
     // Enter email / password
-    await tester.enterText(find.byType(TextFormField).at(0), 'wrong@example.com');
+    await tester.enterText(
+      find.byType(TextFormField).at(0),
+      'wrong@example.com',
+    );
     await tester.enterText(find.byType(TextFormField).at(1), 'BadPass123!');
 
     // Tap login

@@ -14,7 +14,7 @@ class ContentService {
   Future<Quote> getDailyQuote() async {
     try {
       final response = await (_apiClient as dynamic).getDailyQuote();
-      
+
       final data = response as Map<String, dynamic>;
       return Quote(
         text: data['text'] as String,
@@ -35,7 +35,7 @@ class ContentService {
         type: type?.toString().split('.').last,
         limit: limit,
       );
-      
+
       final data = response as List<dynamic>;
       return data.map((item) {
         final itemData = item as Map<String, dynamic>;

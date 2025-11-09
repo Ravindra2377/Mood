@@ -43,7 +43,7 @@ class ChatBubble extends StatelessWidget {
                 ),
               ),
               child: const Center(
-                child: Text('🤖', style: TextStyle(fontSize: 18)),
+                child: Text('ðŸ¤–', style: TextStyle(fontSize: 18)),
               ),
             ),
             const SizedBox(width: 8),
@@ -59,12 +59,14 @@ class ChatBubble extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: _getBubbleColor(context, isUser),
                   borderRadius: BorderRadius.circular(16).copyWith(
-                    bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
-                    bottomRight: isUser ? Radius.zero : const Radius.circular(16),
+                    bottomLeft:
+                        isUser ? const Radius.circular(16) : Radius.zero,
+                    bottomRight:
+                        isUser ? Radius.zero : const Radius.circular(16),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -101,14 +103,15 @@ class ChatBubble extends StatelessWidget {
                           children: List.generate(
                             3,
                             (i) => Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 2),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2),
                               child: Container(
                                 width: 4,
                                 height: 4,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: _getTextColor(isUser, isDarkMode)
-                                      .withOpacity(0.6),
+                                      .withValues(alpha: 0.6),
                                 ),
                               ),
                             ),
@@ -132,7 +135,7 @@ class ChatBubble extends StatelessWidget {
                 ),
               ),
               child: const Center(
-                child: Text('👤', style: TextStyle(fontSize: 18)),
+                child: Text('ðŸ‘¤', style: TextStyle(fontSize: 18)),
               ),
             ),
           ],
