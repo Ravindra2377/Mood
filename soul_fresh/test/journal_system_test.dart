@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
 import 'package:soul/screens/journal_list.dart';
-import 'package:soul/screens/journal_entry.dart';
-import 'package:soul/screens/journal_edit.dart';
 import 'package:soul/models/journal_entry.dart' as model;
 import 'package:soul/services/journals_service.dart';
 
@@ -55,10 +53,11 @@ class _FakeJournalsService {
     return entry;
   }
 
-  Future<model.JournalEntry> updateJournal(String id, String title, String content) async {
+  Future<model.JournalEntry> updateJournal(
+      String id, String title, String content) async {
     final index = _entries.indexWhere((e) => e.id == id);
     if (index == -1) throw Exception('Journal not found');
-    
+
     final updated = _FakeJournal(
       id: id,
       title: title,
@@ -81,8 +80,8 @@ class _FakeJournalsService {
 
 void main() {
   setUpAll(() async {
-  final tempDir = await Directory.systemTemp.createTemp('hive_test');
-  Hive.init(tempDir.path);
+    final tempDir = await Directory.systemTemp.createTemp('hive_test');
+    Hive.init(tempDir.path);
   });
 
   tearDownAll(() async {
@@ -122,8 +121,9 @@ void main() {
     });
 
     test('Update journal entry modifies content', () async {
-      final entry = await service.createJournal('Original Title', 'Original Content');
-      
+      final entry =
+          await service.createJournal('Original Title', 'Original Content');
+
       final updated = await service.updateJournal(
         entry.id,
         'Updated Title',
@@ -148,11 +148,20 @@ void main() {
       expect(entries.where((e) => e.id == entryToDelete.id).isEmpty, isTrue);
     });
 
-    testWidgets('Journal list screen displays entries (flexible)', (tester) async {
+    testWidgets('Journal list screen displays entries (flexible)',
+        (tester) async {
       // Inject an in-memory store with a couple entries to exercise list rendering
-  final store = InMemoryJournalStore();
-  final e1 = model.JournalEntry(id: 'j1', title: 'First', content: 'First content', createdAt: DateTime.now());
-  final e2 = model.JournalEntry(id: 'j2', title: 'Second', content: 'Second content', createdAt: DateTime.now());
+      final store = InMemoryJournalStore();
+      final e1 = model.JournalEntry(
+          id: 'j1',
+          title: 'First',
+          content: 'First content',
+          createdAt: DateTime.now());
+      final e2 = model.JournalEntry(
+          id: 'j2',
+          title: 'Second',
+          content: 'Second content',
+          createdAt: DateTime.now());
       await store.save(e1);
       await store.save(e2);
 
@@ -187,7 +196,8 @@ void main() {
       expect(find.text('Second'), findsOneWidget);
     });
 
-    testWidgets('Tapping journal entry navigates to detail screen', (tester) async {
+    testWidgets('Tapping journal entry navigates to detail screen',
+        (tester) async {
       // Would require navigator setup and journal data
       // Testing hero animation transition
       await tester.pumpWidget(
@@ -231,32 +241,35 @@ void main() {
   group('🧠 AI Sentiment & Keywords Tests', () {
     test('Sentiment analysis extracts emotion from content', () {
       // Simulate backend sentiment analysis
-      final positiveContent = 'I had an amazing day! Everything went great and I feel wonderful.';
+      final positiveContent =
+          'I had an amazing day! Everything went great and I feel wonderful.';
       final sentiment = _analyzeSentiment(positiveContent);
-      
+
       expect(sentiment, equals('POSITIVE'));
     });
 
     test('Negative sentiment detected correctly', () {
-      final negativeContent = 'I feel terrible and sad. Nothing is going right.';
+      final negativeContent =
+          'I feel terrible and sad. Nothing is going right.';
       final sentiment = _analyzeSentiment(negativeContent);
-      
+
       expect(sentiment, equals('NEGATIVE'));
     });
 
     test('Neutral sentiment for mixed content', () {
       final neutralContent = 'I went to work today and did some tasks.';
       final sentiment = _analyzeSentiment(neutralContent);
-      
+
       expect(sentiment, equals('NEUTRAL'));
     });
 
     test('Keyword extraction identifies top terms', () {
-      final content = 'I went to work today and had a meeting about the project. '
+      final content =
+          'I went to work today and had a meeting about the project. '
           'The project deadline is coming up and work has been busy.';
-      
+
       final keywords = _extractKeywords(content);
-      
+
       expect(keywords, contains('work'));
       expect(keywords, contains('project'));
       expect(keywords.length, greaterThan(0));
@@ -266,7 +279,7 @@ void main() {
     test('Keywords exclude common stop words', () {
       final content = 'The the the a an and but or if then';
       final keywords = _extractKeywords(content);
-      
+
       // Common stop words should be filtered out
       expect(keywords, isEmpty);
     });
@@ -314,7 +327,8 @@ void main() {
   });
 
   group('🎭 Hero Animation Tests', () {
-    testWidgets('Hero animation transitions from list to detail', (tester) async {
+    testWidgets('Hero animation transitions from list to detail',
+        (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Navigator(
@@ -375,21 +389,35 @@ void main() {
 // Helper functions to simulate backend AI
 String _analyzeSentiment(String content) {
   final lower = content.toLowerCase();
-  
-  final positiveWords = ['amazing', 'great', 'wonderful', 'happy', 'excellent', 'fantastic'];
-  final negativeWords = ['terrible', 'sad', 'awful', 'horrible', 'bad', 'worse'];
-  
+
+  final positiveWords = [
+    'amazing',
+    'great',
+    'wonderful',
+    'happy',
+    'excellent',
+    'fantastic'
+  ];
+  final negativeWords = [
+    'terrible',
+    'sad',
+    'awful',
+    'horrible',
+    'bad',
+    'worse'
+  ];
+
   int positiveScore = 0;
   int negativeScore = 0;
-  
+
   for (var word in positiveWords) {
     if (lower.contains(word)) positiveScore++;
   }
-  
+
   for (var word in negativeWords) {
     if (lower.contains(word)) negativeScore++;
   }
-  
+
   if (positiveScore > negativeScore) return 'POSITIVE';
   if (negativeScore > positiveScore) return 'NEGATIVE';
   return 'NEUTRAL';
@@ -397,25 +425,53 @@ String _analyzeSentiment(String content) {
 
 List<String> _extractKeywords(String content) {
   final stopWords = {
-    'the', 'a', 'an', 'and', 'but', 'or', 'if', 'then', 'is', 'was', 'are',
-    'were', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
-    'to', 'of', 'in', 'for', 'on', 'with', 'at', 'by', 'from', 'as',
+    'the',
+    'a',
+    'an',
+    'and',
+    'but',
+    'or',
+    'if',
+    'then',
+    'is',
+    'was',
+    'are',
+    'were',
+    'been',
+    'being',
+    'have',
+    'has',
+    'had',
+    'do',
+    'does',
+    'did',
+    'to',
+    'of',
+    'in',
+    'for',
+    'on',
+    'with',
+    'at',
+    'by',
+    'from',
+    'as',
   };
-  
-  final words = content.toLowerCase()
+
+  final words = content
+      .toLowerCase()
       .replaceAll(RegExp(r'[^\w\s]'), '')
       .split(RegExp(r'\s+'))
       .where((w) => w.length > 3 && !stopWords.contains(w))
       .toList();
-  
+
   final wordCounts = <String, int>{};
   for (var word in words) {
     wordCounts[word] = (wordCounts[word] ?? 0) + 1;
   }
-  
+
   final sorted = wordCounts.entries.toList()
     ..sort((a, b) => b.value.compareTo(a.value));
-  
+
   return sorted.take(10).map((e) => e.key).toList();
 }
 

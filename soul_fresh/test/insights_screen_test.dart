@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 import 'package:soul/features/insights/screens/insights_screen.dart';
 import 'package:soul/features/insights/models/insights_data.dart';
@@ -45,16 +44,16 @@ void main() {
           child: const MaterialApp(home: InsightsScreen()),
         ),
       );
-  // Initial frame (loading state expected)
-  await tester.pump();
-  // Allow async provider + AnimatedSwitcher transition (250ms)
-  await tester.pump(const Duration(milliseconds: 300));
-  await tester.pumpAndSettle();
+      // Initial frame (loading state expected)
+      await tester.pump();
+      // Allow async provider + AnimatedSwitcher transition (250ms)
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
 
       // Data container
       expect(find.byKey(const ValueKey('insights-data')), findsOneWidget);
-  // Should not show empty-state messages when data is provided
-  expect(find.text('No sentiment data yet.'), findsNothing);
+      // Should not show empty-state messages when data is provided
+      expect(find.text('No sentiment data yet.'), findsNothing);
       // Section titles
       expect(find.text('Overall Sentiment'), findsOneWidget);
       expect(find.text('Top Keywords'), findsOneWidget);
@@ -87,9 +86,9 @@ void main() {
           child: const MaterialApp(home: InsightsScreen()),
         ),
       );
-  await tester.pump();
-  await tester.pump(const Duration(milliseconds: 300));
-  await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
 
       expect(find.byKey(const ValueKey('insights-data')), findsOneWidget);
       expect(find.text('No sentiment data yet.'), findsOneWidget);
@@ -101,7 +100,8 @@ void main() {
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
-      expect(find.text('Once you log entries, we will chart the trend.'), findsOneWidget);
+      expect(find.text('Once you log entries, we will chart the trend.'),
+          findsOneWidget);
     });
   });
 }

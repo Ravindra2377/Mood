@@ -3,18 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:soul/screens/journal_list.dart';
-import 'package:soul/screens/journal_edit.dart';
-import 'package:soul/models/journal_entry.dart';
-import 'package:soul/services/journals_service.dart';
 
+import 'package:soul/screens/journal_list.dart';
+import 'package:soul/services/journals_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async {
-     final tempDir = await Directory.systemTemp.createTemp('hive_test');
-     Hive.init(tempDir.path);
+    final tempDir = await Directory.systemTemp.createTemp('hive_test');
+    Hive.init(tempDir.path);
   });
 
   tearDownAll(() async {
@@ -50,7 +48,8 @@ void main() {
       await tester.enterText(textFields.at(1), 'Body content goes here');
 
       // Change mood
-      final dropdown = find.byWidgetPredicate((w) => w is DropdownButton<String>);
+      final dropdown =
+          find.byWidgetPredicate((w) => w is DropdownButton<String>);
       if (dropdown.evaluate().isNotEmpty) {
         await tester.tap(dropdown);
         await tester.pump(const Duration(milliseconds: 500));
