@@ -8,14 +8,17 @@ import 'journal_edit.dart';
 
 class JournalListScreen extends ConsumerStatefulWidget {
   static const route = '/journals';
-  const JournalListScreen({super.key});
+  const JournalListScreen({super.key, this.overrideStore});
+
+  /// Optional override for tests to inject an in-memory store.
+  final JournalStore? overrideStore;
 
   @override
   ConsumerState<JournalListScreen> createState() => _JournalListScreenState();
 }
 
 class _JournalListScreenState extends ConsumerState<JournalListScreen> {
-  late Future<JournalsService> _svcFuture;
+  late Future<JournalStore> _svcFuture;
 
   @override
   void initState() {
@@ -26,18 +29,24 @@ class _JournalListScreenState extends ConsumerState<JournalListScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final api = ref.read(apiClientProvider);
-    _svcFuture = JournalsService.create(apiClient: api);
+    if (widget.overrideStore != null) {
+      _svcFuture = Future.value(widget.overrideStore);
+    } else {
+      final api = ref.read(apiClientProvider);
+      _svcFuture = JournalsService.create(apiClient: api);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Journals')),
-      body: FutureBuilder<JournalsService>(
+      body: FutureBuilder<JournalStore>(
         future: _svcFuture,
         builder: (context, snap) {
-          if (!snap.hasData) return const Center(child: CircularProgressIndicator());
+          if (!snap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
           final svc = snap.data!;
           final items = svc.list();
           return ListView.builder(
@@ -50,25 +59,45 @@ class _JournalListScreenState extends ConsumerState<JournalListScreen> {
                   onTap: () async {
                     final id = DateTime.now().microsecondsSinceEpoch.toString();
                     final entry = JournalEntry(id: id);
-                    Navigator.push(
+                    final changed = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => JournalEditScreen(entry: entry, serviceFuture: _svcFuture),
+                        builder: (_) => JournalEditScreen(
+                          entry: entry,
+                          serviceFuture: _svcFuture,
+                        ),
                       ),
                     );
+                    if (changed == true && mounted) {
+                      setState(() {});
+                    }
                   },
                 );
               }
               final entry = items[index - 1];
               return ListTile(
-                title: Text(entry.title.isEmpty
-                    ? entry.content.split('\n').firstWhere((_) => true, orElse: () => 'Untitled')
-                    : entry.title),
-                subtitle: Text(entry.createdAt.toLocal().toString()),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => JournalEditScreen(entry: entry, serviceFuture: _svcFuture)),
+                title: Text(
+                  entry.title.isEmpty
+                      ? entry.content
+                          .split('\n')
+                          .firstWhere((_) => true, orElse: () => 'Untitled')
+                      : entry.title,
                 ),
+                subtitle: Text(entry.createdAt.toLocal().toString()),
+                onTap: () async {
+                  final changed = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => JournalEditScreen(
+                        entry: entry,
+                        serviceFuture: _svcFuture,
+                      ),
+                    ),
+                  );
+                  if (changed == true && mounted) {
+                    setState(() {});
+                  }
+                },
               );
             },
           );

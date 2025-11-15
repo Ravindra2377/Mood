@@ -156,6 +156,96 @@ Map<String, dynamic> _$UpdateJournalRequestToJson(
       'content': instance.content,
     };
 
+ProfileRead _$ProfileReadFromJson(Map<String, dynamic> json) => ProfileRead(
+      id: (json['id'] as num).toInt(),
+      userId: (json['user_id'] as num).toInt(),
+      displayName: json['display_name'] as String?,
+      language: json['language'] as String?,
+      timezone: json['timezone'] as String?,
+      consentPrivacy: json['consent_privacy'] as bool?,
+      notifyEmail: json['notify_email'] as bool?,
+      notifyPush: json['notify_push'] as bool?,
+      notifySms: json['notify_sms'] as bool?,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
+      nextNotificationAt: json['next_notification_at'] == null
+          ? null
+          : DateTime.parse(json['next_notification_at'] as String),
+      preferredNotifyStart: (json['preferred_notify_start'] as num?)?.toInt(),
+      preferredNotifyEnd: (json['preferred_notify_end'] as num?)?.toInt(),
+      lastNotificationSentAt: json['last_notification_sent_at'] == null
+          ? null
+          : DateTime.parse(json['last_notification_sent_at'] as String),
+      engagementStatus: json['engagement_status'] as String?,
+    );
+
+Map<String, dynamic> _$ProfileReadToJson(ProfileRead instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'user_id': instance.userId,
+      'display_name': instance.displayName,
+      'language': instance.language,
+      'timezone': instance.timezone,
+      'consent_privacy': instance.consentPrivacy,
+      'notify_email': instance.notifyEmail,
+      'notify_push': instance.notifyPush,
+      'notify_sms': instance.notifySms,
+      'created_at': instance.createdAt?.toIso8601String(),
+      'next_notification_at': instance.nextNotificationAt?.toIso8601String(),
+      'preferred_notify_start': instance.preferredNotifyStart,
+      'preferred_notify_end': instance.preferredNotifyEnd,
+      'last_notification_sent_at':
+          instance.lastNotificationSentAt?.toIso8601String(),
+      'engagement_status': instance.engagementStatus,
+    };
+
+ProfileUpdate _$ProfileUpdateFromJson(Map<String, dynamic> json) =>
+    ProfileUpdate(
+      displayName: json['display_name'] as String?,
+      language: json['language'] as String?,
+      timezone: json['timezone'] as String?,
+      consentPrivacy: json['consent_privacy'] as bool?,
+      notifyEmail: json['notify_email'] as bool?,
+      notifyPush: json['notify_push'] as bool?,
+      notifySms: json['notify_sms'] as bool?,
+      nextNotificationAt: json['next_notification_at'] == null
+          ? null
+          : DateTime.parse(json['next_notification_at'] as String),
+      preferredNotifyStart: (json['preferred_notify_start'] as num?)?.toInt(),
+      preferredNotifyEnd: (json['preferred_notify_end'] as num?)?.toInt(),
+      lastNotificationSentAt: json['last_notification_sent_at'] == null
+          ? null
+          : DateTime.parse(json['last_notification_sent_at'] as String),
+      engagementStatus: json['engagement_status'] as String?,
+    );
+
+Map<String, dynamic> _$ProfileUpdateToJson(ProfileUpdate instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('display_name', instance.displayName);
+  writeNotNull('language', instance.language);
+  writeNotNull('timezone', instance.timezone);
+  writeNotNull('consent_privacy', instance.consentPrivacy);
+  writeNotNull('notify_email', instance.notifyEmail);
+  writeNotNull('notify_push', instance.notifyPush);
+  writeNotNull('notify_sms', instance.notifySms);
+  writeNotNull(
+      'next_notification_at', instance.nextNotificationAt?.toIso8601String());
+  writeNotNull('preferred_notify_start', instance.preferredNotifyStart);
+  writeNotNull('preferred_notify_end', instance.preferredNotifyEnd);
+  writeNotNull('last_notification_sent_at',
+      instance.lastNotificationSentAt?.toIso8601String());
+  writeNotNull('engagement_status', instance.engagementStatus);
+  return val;
+}
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
@@ -568,6 +658,103 @@ class _ApiClient implements ApiClient {
       rethrow;
     }
     return _value;
+  }
+
+  @override
+  Future<ProfileRead> getProfile() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ProfileRead>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/profile',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ProfileRead _value;
+    try {
+      _value = ProfileRead.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ProfileRead> updateProfile(ProfileUpdate body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<ProfileRead>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/profile',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ProfileRead _value;
+    try {
+      _value = ProfileRead.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<Map<String, dynamic>> getInsights() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<Map<String, dynamic>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v1/insights',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    final value = _result.data;
+    if (value == null) {
+      return <String, dynamic>{};
+    }
+    return value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

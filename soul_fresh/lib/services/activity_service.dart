@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/app_models.dart';
+import '../state/app_state.dart';
 import 'api_client.dart';
 
 /// Service for activity-related API calls
@@ -12,15 +14,23 @@ class ActivityService {
   /// Fetch user's activities
   Future<List<Activity>> getActivities() async {
     try {
-      final response = await _apiClient.getActivities();
-      
-      return response.map((item) => Activity(
-        id: item['id'] as String,
-        type: _parseActivityType(item['type']),
-        title: item['title'] as String,
-        color: Color(int.parse(item['color'].replaceFirst('#', '0xFF'))),
-        icon: _getIconForType(item['type']),
-      )).toList();
+      final response = await (_apiClient as dynamic).getActivities();
+
+      final data = response as List<dynamic>;
+      return data.map((item) {
+        final activityData = item as Map<String, dynamic>;
+        return Activity(
+          id: activityData['id'] as String,
+          type: _parseActivityType(activityData['type'] as String),
+          title: activityData['title'] as String,
+          color: Color(
+            int.parse(
+              (activityData['color'] as String).replaceFirst('#', '0xFF'),
+            ),
+          ),
+          icon: _getIconForType(activityData['type'] as String),
+        );
+      }).toList();
     } catch (e) {
       throw Exception('Failed to fetch activities: $e');
     }
@@ -29,17 +39,25 @@ class ActivityService {
   /// Fetch activity statistics
   Future<List<ActivityStat>> getActivityStats({DateTime? date}) async {
     try {
-      final response = await _apiClient.getActivityStats(
+      final response = await (_apiClient as dynamic).getActivityStats(
         date: date?.toIso8601String(),
       );
-      
-      return response.map((item) => ActivityStat(
-        id: item['id'] as String,
-        title: item['title'] as String,
-        value: item['value'] as String,
-        color: Color(int.parse(item['color'].replaceFirst('#', '0xFF'))),
-        icon: _getIconForStat(item['type']),
-      )).toList();
+
+      final data = response as List<dynamic>;
+      return data.map((item) {
+        final statData = item as Map<String, dynamic>;
+        return ActivityStat(
+          id: statData['id'] as String,
+          title: statData['title'] as String,
+          value: statData['value'] as String,
+          color: Color(
+            int.parse(
+              (statData['color'] as String).replaceFirst('#', '0xFF'),
+            ),
+          ),
+          icon: _getIconForStat(statData['type'] as String),
+        );
+      }).toList();
     } catch (e) {
       throw Exception('Failed to fetch activity stats: $e');
     }
@@ -48,15 +66,16 @@ class ActivityService {
   /// Fetch physical state data
   Future<PhysicalState> getPhysicalState({DateTime? date}) async {
     try {
-      final response = await _apiClient.getPhysicalState(
+      final response = await (_apiClient as dynamic).getPhysicalState(
         date: date?.toIso8601String(),
       );
-      
+
+      final data = response as Map<String, dynamic>;
       return PhysicalState(
-        percentage: response['percentage'] as double,
-        sleepGoal: response['sleepGoal'] as String,
-        lastNight: response['lastNight'] as String,
-        deficit: response['deficit'] as String,
+        percentage: (data['percentage'] as num).toDouble(),
+        sleepGoal: data['sleepGoal'] as String,
+        lastNight: data['lastNight'] as String,
+        deficit: data['deficit'] as String,
       );
     } catch (e) {
       throw Exception('Failed to fetch physical state: $e');

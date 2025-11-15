@@ -84,6 +84,8 @@ storybook-static/
 # ------------------------------------------------------------
 # Python (backend)
 # ------------------------------------------------------------
+# Python bytecode
+*.pyc
 __pycache__/
 *.py[cod]
 *$py.class
@@ -140,9 +142,13 @@ android-app/**/outputs/
 # Keystores (DO NOT COMMIT SECRETS)
 *.keystore
 *.jks
+key.properties
+**/key.properties
 
 # Keep Gradle wrapper JAR (should be committed)
 !gradle/wrapper/gradle-wrapper.jar
+!android-app/gradle/wrapper/gradle-wrapper.jar
+!soul_fresh/android/gradle/wrapper/gradle-wrapper.jar
 
 # ------------------------------------------------------------
 # iOS (ios-app)
@@ -154,6 +160,10 @@ ios-app/build/
 ios-app/**/xcuserdata/
 ios-app/**/*.xcuserdatad/
 *.xcuserstate
+ios-app/fastlane/report.xml
+ios-app/fastlane/test_output/
+ios-app/fastlane/screenshots/
+ios-app/fastlane/Preview.html
 
 # ------------------------------------------------------------
 # Flutter (soul/)
@@ -166,6 +176,32 @@ soul/.flutter-plugins-dependencies
 soul/.metadata
 soul/build/
 # Note: keep pubspec.lock for apps (default Flutter practice)
+
+# ------------------------------------------------------------
+# Flutter (soul_fresh/)
+# ------------------------------------------------------------
+soul_fresh/.dart_tool/
+soul_fresh/.packages
+soul_fresh/.pub-cache/
+soul_fresh/.flutter-plugins
+soul_fresh/.flutter-plugins-dependencies
+soul_fresh/.metadata
+soul_fresh/build/
+# Android within Flutter app
+soul_fresh/android/.gradle/
+soul_fresh/android/**/build/
+soul_fresh/android/local.properties
+soul_fresh/android/**/local.properties
+soul_fresh/android/**/captures/
+soul_fresh/android/**/outputs/
+soul_fresh/android/key.properties
+soul_fresh/android/**/key.properties
+# iOS within Flutter app
+soul_fresh/ios/Pods/
+soul_fresh/ios/DerivedData/
+soul_fresh/ios/.symlinks/
+soul_fresh/ios/**/xcuserdata/
+soul_fresh/ios/**/*.xcuserdatad/
 
 # ------------------------------------------------------------
 # Web artifacts (web, web-app)
@@ -182,6 +218,8 @@ web-app/build/
 # ------------------------------------------------------------
 # VS Code
 .vscode/
+# Root Flutter metadata
+/.metadata
 # JetBrains
 .idea/
 *.iml
@@ -201,6 +239,7 @@ docker/*.env
 # CI / Local artifacts
 # ------------------------------------------------------------
 android-apks/
+android-app/app/dist-apk/
 
 # ------------------------------------------------------------
 # OneDrive / Sync noise (optional)

@@ -1,0 +1,117 @@
+name: Flutter CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  analyze-and-test:
+    name: Analyze and Test (Flutter)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: stable
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --no-pub -r expanded
+name: Flutter CI (Soul Fresh)
+
+on:
+  push:
+    branches: [ master, main, soul_fresh ]
+  pull_request:
+    branches: [ master, main, soul_fresh ]
+
+defaults:
+  run:
+    working-directory: ./soul_fresh
+
+jobs:
+  # --- JOB 1: Test the code ---
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze project
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+  # --- JOB 2: Build the release file ---
+  build-android-release:
+    # This job only runs if 'build-and-test' succeeds
+    needs: build-and-test
+    # Only run this on a push to your main branch (not on pull requests)
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Set up Java (required for Android builds)
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      # --- This is the magic part that uses your secrets ---
+      - name: Decode Keystore and Create key.properties
+        run: |
+          # 1. Decode the Base64 keystore and create the .jks file
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/my-app-key.jks
+          
+          # 2. Create the key.properties file from your secrets
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=my-app-key.jks" >> android/key.properties
+        working-directory: ./soul_fresh # Run this from the soul_fresh directory
+
+      # --- Run the build command ---
+      - name: Build Android App Bundle
+        run: flutter build appbundle
+        # Use 'flutter build apk' if you want an .apk file
+
+      # --- Upload the built file ---
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-appbundle
+          path: soul_fresh/build/app/outputs/bundle/release/app-release.aab
+          # Use this path for an .apk: soul_fresh/build/app/outputs/flutter-apk/app-release.apk

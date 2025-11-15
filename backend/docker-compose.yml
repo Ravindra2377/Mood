@@ -14,9 +14,10 @@ services:
     build: .
     depends_on:
       - db
-    environment:
-      - DATABASE_URL=postgresql+psycopg2://mh_user:mh_pass@db:5432/mh_db
-      - SECRET_KEY=${SECRET_KEY}
+    # Use an env_file for local development to avoid shell-specific inline env var syntax
+    # Create a .env in the same folder (or place one at repo root and adjust the path).
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     volumes:

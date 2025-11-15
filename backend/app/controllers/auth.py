@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends, Body, Header
+from fastapi import APIRouter, HTTPException, status, Depends, Body, Header, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.schemas.user import (
@@ -7,6 +7,8 @@ from app.schemas.user import (
     Token,
     PasswordResetRequest,
     PasswordResetConfirm,
+    PasswordOtpRequest,
+    PasswordOtpConfirm,
 )
 from app.models.user import User
 from app.models.refresh_token import RefreshToken
@@ -32,7 +34,7 @@ router = APIRouter()
 
 @limiter.limit("5/minute")
 @router.post("/signup", response_model=UserRead)
-def signup(user_in: UserCreate):
+def signup(user_in: UserCreate, request: Request):
     """Create a new user (minimal implementation)."""
     from app.main import SessionLocal
 
@@ -112,7 +114,7 @@ def token(form_data: OAuth2PasswordRequestForm = Depends()):
 @limiter.limit("3/minute")
 @router.post("/password-reset/request")
 def password_reset_request(
-    payload: PasswordResetRequest, locale: str = Depends(get_locale)
+    request: Request, payload: PasswordResetRequest, locale: str = Depends(get_locale)
 ):
     """Generate a password reset token and (stub) send it to the user's email."""
     from app.main import SessionLocal
@@ -153,7 +155,7 @@ def password_reset_request(
 @limiter.limit("3/minute")
 @router.post("/password-reset/confirm")
 def password_reset_confirm(
-    payload: PasswordResetConfirm, locale: str = Depends(get_locale)
+    request: Request, payload: PasswordResetConfirm, locale: str = Depends(get_locale)
 ):
     from app.main import SessionLocal
 
@@ -188,6 +190,75 @@ def password_reset_confirm(
         )
         if settings.DEV_EMAIL_PREVIEW:
             return {"preview": result}
+        return {"status": "ok"}
+    finally:
+        db.close()
+
+
+@limiter.limit("5/minute")
+@router.post("/password-otp/request")
+def password_otp_request(request: Request, payload: PasswordOtpRequest, locale: str = Depends(get_locale)):
+    """Issue a 6-digit OTP to reset password via email.
+
+    In DEV_EMAIL_PREVIEW/DEV_MODE, surface the preview code in the response.
+    Stores a hash of the code in `password_reset_token` and an expiry.
+    """
+    from app.main import SessionLocal
+
+    db: Session = SessionLocal()
+    try:
+        user = db.query(User).filter(User.email == payload.email).first()
+        # Do not reveal user existence
+        if not user:
+            return {"status": "ok"}
+        # Generate 6-digit numeric code
+        code = f"{secrets.randbelow(1000000):06d}"
+        code_hash = hashlib.sha256(code.encode("utf-8")).hexdigest()
+        user.password_reset_token = code_hash
+        user.password_reset_expires = datetime.now(timezone.utc) + timedelta(minutes=15)
+        db.add(user)
+        db.commit()
+
+        # Email content (stub)
+        subject = t_format("password_reset_subject", locale)
+        html = f"<p>Your password reset code is <b>{code}</b>. It expires in 15 minutes.</p>"
+        text = f"Your password reset code is {code}. It expires in 15 minutes."
+        result = send_email(to=user.email, subject=subject, html_body=html, text_body=text)
+
+        if settings.DEV_EMAIL_PREVIEW or getattr(settings, "DEV_MODE", True):
+            return {"status": "ok", "preview": {"code": code}, "email": user.email}
+        return {"status": "ok"}
+    finally:
+        db.close()
+
+
+@limiter.limit("5/minute")
+@router.post("/password-otp/confirm")
+def password_otp_confirm(request: Request, payload: PasswordOtpConfirm):
+    """Confirm the 6-digit code and set a new password."""
+    from app.main import SessionLocal
+
+    db: Session = SessionLocal()
+    try:
+        user = db.query(User).filter(User.email == payload.email).first()
+        if not user or not user.password_reset_token or not user.password_reset_expires:
+            raise HTTPException(status_code=400, detail="Invalid or expired code")
+        # Normalize timezone of expiry
+        expires = user.password_reset_expires
+        if expires.tzinfo is None:
+            expires = expires.replace(tzinfo=timezone.utc)
+        if expires < datetime.now(timezone.utc):
+            raise HTTPException(status_code=400, detail="Invalid or expired code")
+        # Verify code
+        code_hash = hashlib.sha256(payload.code.encode("utf-8")).hexdigest()
+        if code_hash != user.password_reset_token:
+            raise HTTPException(status_code=400, detail="Invalid or expired code")
+        # Update password and clear token
+        user.hashed_password = security.hash_password(payload.new_password)
+        user.password_reset_token = None
+        user.password_reset_expires = None
+        db.add(user)
+        db.commit()
         return {"status": "ok"}
     finally:
         db.close()
@@ -244,22 +315,22 @@ def refresh_token(payload: dict = Body(...)):
 
 
 @router.post("/logout")
-def logout(payload: dict = Body(...)):
+def logout(payload: dict | None = Body(None)):
     """Revoke the given refresh token so it cannot be used again."""
     from app.main import SessionLocal
 
     db: Session = SessionLocal()
     try:
-        refresh_token = payload.get("refresh_token")
+        refresh_token = payload.get("refresh_token") if payload else None
         if not refresh_token:
-            return {"status": "ok"}
+            return {"status": "ok", "message": "ok"}
         h = hashlib.sha256(refresh_token.encode("utf-8")).hexdigest()
         rt = db.query(RefreshToken).filter(RefreshToken.token_hash == h).first()
         if rt:
             rt.revoked = True
             db.add(rt)
             db.commit()
-        return {"status": "ok"}
+        return {"status": "ok", "message": "ok"}
     finally:
         db.close()
 
@@ -302,7 +373,6 @@ def verify_confirm(token: str):
     user_id = int(payload["sub"])
     from app.main import SessionLocal
 
-<<<<<<< HEAD
     db: Session = SessionLocal()
     try:
         user = db.query(User).filter(User.id == user_id).first()
@@ -318,7 +388,7 @@ def verify_confirm(token: str):
 
 @limiter.limit("10/minute")
 @router.post("/login")
-def login_json(payload: dict = Body(...)):
+def login_json(request: Request, payload: dict = Body(...)):
     """JSON-based login: accepts {email, password} or {username, password}.
     For dev convenience, if only {phone} is provided, it will attempt email = f"{phone}@example.com".
     """
@@ -396,12 +466,31 @@ def me(authorization: str | None = Header(None)):
 
 @limiter.limit("5 per 15 minutes", key_func=get_phone_key)
 @router.post("/otp/request")
-def otp_request(payload: dict = Body(...)):
-    """Send OTP via Twilio Verify or return preview in dev mode."""
+def otp_request(request: Request, payload: dict = Body(...)):
+    """Send OTP via Twilio Verify for phone OR stub email OTP in dev mode.
+
+    Accepts either {phone} or {email}. For email-based OTP, in dev/preview mode we
+    return a static code to simplify mobile/Flutter flows.
+    """
+    email = payload.get("email")
     phone = payload.get("phone")
 
+    # Email-based OTP (Flutter soul_fresh)
+    if email:
+        # In dev/preview, surface the code for client to display/use in tests
+        code = "123456"
+        try:
+            if settings.DEV_EMAIL_PREVIEW or getattr(settings, "DEV_MODE", True):
+                return {"message": "ok", "preview": {"code": code}, "email": email}
+        except Exception:
+            # Fallback if settings missing flags
+            return {"message": "ok", "preview": {"code": code}, "email": email}
+        # In production you would send an email here. Keep response generic.
+        return {"message": "ok"}
+
+    # Phone-based OTP (existing behavior)
     if not phone:
-        raise HTTPException(status_code=400, detail="phone required")
+        raise HTTPException(status_code=400, detail="phone or email required")
 
     try:
         normalized = normalize_phone(phone)
@@ -409,7 +498,11 @@ def otp_request(payload: dict = Body(...)):
         raise HTTPException(status_code=400, detail="Invalid phone number")
     try:
         result = sms.send_otp(normalized)
-        return result
+        # Normalize to MessageResponse shape
+        if isinstance(result, dict):
+            result = {**result, "message": result.get("message") or "ok"}
+            return result
+        return {"message": "ok"}
     except Exception:
         # Do not leak provider/internal errors to clients
         raise HTTPException(status_code=500, detail="Failed to send verification code")
@@ -417,12 +510,67 @@ def otp_request(payload: dict = Body(...)):
 
 @limiter.limit("10 per hour", key_func=get_phone_key)
 @router.post("/verify-otp")
-def verify_otp(payload: dict = Body(...)):
-    """Verify OTP via Twilio Verify (or dev fallback) then create/login user and issue tokens."""
+def verify_otp(request: Request, payload: dict = Body(...)):
+    """Verify OTP for phone (Twilio) OR email (dev stub), then create/login user and issue tokens.
+
+    Accepts either {phone, otp} or {email, code}.
+    """
     from app.main import SessionLocal
 
-    phone = payload.get("phone")
+    # Branch 1: Email-based OTP (Flutter soul_fresh)
+    email = payload.get("email")
+    code = payload.get("code") or payload.get("otp")
+    if email:
+        if not code:
+            raise HTTPException(status_code=400, detail="email and code required")
+        # In dev/preview, accept a static code
+        try:
+            is_dev = settings.DEV_EMAIL_PREVIEW or getattr(settings, "DEV_MODE", True)
+        except Exception:
+            is_dev = True
+        if is_dev and code != "123456":
+            raise HTTPException(status_code=400, detail="Invalid code")
+        # Create or fetch the user by email
+        db: Session = SessionLocal()
+        try:
+            user = db.query(User).filter(User.email == email).first()
+            if not user:
+                rnd = secrets.token_urlsafe(16)
+                user = User(
+                    email=email,
+                    hashed_password=security.hash_password(rnd),
+                    is_verified=True,
+                )
+                db.add(user)
+                db.commit()
+                db.refresh(user)
+                try:
+                    record_event("signup", user_id=user.id, props={"method": "otp_email"})
+                except Exception:
+                    pass
+            access_token = security.create_access_token({"sub": str(user.id), "role": user.role})
+            refresh_plain = secrets.token_urlsafe(48)
+            refresh_hash = hashlib.sha256(refresh_plain.encode("utf-8")).hexdigest()
+            expires = datetime.now(timezone.utc) + timedelta(days=30)
+            rt = RefreshToken(user_id=user.id, token_hash=refresh_hash, expires_at=expires)
+            db.add(rt)
+            db.commit()
+            db.refresh(rt)
+            try:
+                record_event("login", user_id=user.id, props={"method": "otp_email"})
+            except Exception:
+                pass
+            return {
+                "access_token": access_token,
+                "token_type": "bearer",
+                "refresh_token": refresh_plain,
+                "user": {"id": user.id, "email": user.email},
+            }
+        finally:
+            db.close()
 
+    # Branch 2: Phone-based OTP (existing behavior)
+    phone = payload.get("phone")
     otp = payload.get("otp")
 
     if not phone or not otp:
@@ -500,6 +648,8 @@ def verify_otp(payload: dict = Body(...)):
             "refresh_token": refresh_plain,
             "user": {"id": user.id, "email": user.email},
         }
+    finally:
+        db.close()
 
 
->>>>>>> feat/android-flavors-otp-version-bump
+ 

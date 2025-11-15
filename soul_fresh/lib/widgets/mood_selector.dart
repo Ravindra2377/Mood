@@ -18,35 +18,35 @@ class MoodSelector extends StatelessWidget {
       children: [
         _MoodButton(
           mood: MoodLevel.angry,
-          emoji: '😠',
+          emoji: 'ðŸ˜ ',
           color: const Color(0xFFFF6B6B),
           isSelected: selectedMood == MoodLevel.angry,
           onTap: () => onMoodSelected(MoodLevel.angry),
         ),
         _MoodButton(
           mood: MoodLevel.sad,
-          emoji: '😢',
+          emoji: 'ðŸ˜¢',
           color: const Color(0xFF6BCFFF),
           isSelected: selectedMood == MoodLevel.sad,
           onTap: () => onMoodSelected(MoodLevel.sad),
         ),
         _MoodButton(
           mood: MoodLevel.neutral,
-          emoji: '😐',
+          emoji: 'ðŸ˜',
           color: const Color(0xFFB4A7D6),
           isSelected: selectedMood == MoodLevel.neutral,
           onTap: () => onMoodSelected(MoodLevel.neutral),
         ),
         _MoodButton(
           mood: MoodLevel.happy,
-          emoji: '😊',
+          emoji: 'ðŸ˜Š',
           color: const Color(0xFFFFD93D),
           isSelected: selectedMood == MoodLevel.happy,
           onTap: () => onMoodSelected(MoodLevel.happy),
         ),
         _MoodButton(
           mood: MoodLevel.veryHappy,
-          emoji: '😄',
+          emoji: 'ðŸ˜„',
           color: const Color(0xFF6BCB77),
           isSelected: selectedMood == MoodLevel.veryHappy,
           onTap: () => onMoodSelected(MoodLevel.veryHappy),
@@ -81,9 +81,7 @@ class _MoodButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: color.withOpacity(isSelected ? 1.0 : 0.3),
           shape: BoxShape.circle,
-          border: isSelected
-              ? Border.all(color: color, width: 3)
-              : null,
+          border: isSelected ? Border.all(color: color, width: 3) : null,
         ),
         child: Center(
           child: Text(
@@ -95,3 +93,4 @@ class _MoodButton extends StatelessWidget {
     );
   }
 }
+

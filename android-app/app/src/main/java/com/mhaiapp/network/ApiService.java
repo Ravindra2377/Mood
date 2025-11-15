@@ -4,6 +4,7 @@ import com.mhaiapp.models.AuthResponse;
 import com.mhaiapp.models.AuthRequest;
 import com.mhaiapp.models.MoodEntry;
 import com.mhaiapp.models.MoodRequest;
+import com.mhaiapp.models.UserRead;
 
 
 import java.util.List;
@@ -18,7 +19,7 @@ import retrofit2.http.POST;
 
 public interface ApiService {
     @POST("api/auth/signup")
-    Call<AuthResponse> signup(@Body AuthRequest request);
+    Call<UserRead> signup(@Body AuthRequest request);
 
     @POST("api/auth/login")
     Call<AuthResponse> login(@Body AuthRequest request);

@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timedelta, timezone
 from app.dependencies import require_role, get_current_user
+from fastapi import Body
+from app.dependencies import get_current_user_optional
+from app.services.analytics import record_event
 
 router = APIRouter()
 
@@ -38,3 +41,26 @@ def analytics_summary(days: int = 30, current_user = Depends(require_role('admin
         return {'by_type': by_type, 'daily': daily}
     finally:
         db.close()
+
+
+@router.post('/track')
+def track_event(payload: dict = Body(...), current_user = Depends(get_current_user_optional)):
+    """Accept a simple analytics event from the frontend.
+
+    Expected JSON shape: { "event_type": "string", "props": { ... } }
+    If an Authorization token is provided, the event will be attributed to that user.
+    """
+    event_type = payload.get('event_type')
+    props = payload.get('props') or {}
+    if not event_type or not isinstance(event_type, str):
+        raise HTTPException(status_code=400, detail='Missing event_type')
+
+    user_id = None
+    try:
+        if current_user and getattr(current_user, 'id', None):
+            user_id = current_user.id
+    except Exception:
+        user_id = None
+
+    ev = record_event(event_type, user_id=user_id, props=props)
+    return {'status': 'ok', 'recorded': bool(ev), 'event': ev}

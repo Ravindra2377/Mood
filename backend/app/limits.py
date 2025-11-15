@@ -28,6 +28,8 @@ from typing import Optional
 
 from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse
+from datetime import datetime, timezone
+import hashlib
 
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -156,6 +158,56 @@ def get_phone_key(request: Request) -> str:
     return f"ip:{get_client_ip(request)}"
 
 
+def _extract_bearer_user_id(request: Request) -> Optional[int]:
+    """Best-effort extraction of the authenticated user id from a bearer token."""
+    try:
+        auth_header = request.headers.get("authorization") or request.headers.get(
+            "Authorization"
+        )
+        if not auth_header or " " not in auth_header:
+            return None
+        scheme, token = auth_header.split(" ", 1)
+        if scheme.lower() != "bearer":
+            return None
+        token = token.strip()
+        if not token:
+            return None
+        try:
+            # local import to avoid circular dependency during app startup
+            from app.services import security
+
+            payload = security.decode_access_token(token)
+        except Exception:
+            return None
+        if not payload or "sub" not in payload:
+            return None
+        return int(payload["sub"])
+    except Exception:
+        return None
+
+
+def user_or_ip_rate_key(request: Request) -> str:
+    """Rate-limit key preferring authenticated user id, else hashed IP.
+
+    To reduce user enumeration risk when email-based endpoints are hit prior
+    to authentication, we avoid embedding raw IP or email directly beyond the
+    prefix. (Authenticated user id is already an internal integer.)
+    """
+    user_id = _extract_bearer_user_id(request)
+    if user_id is not None:
+        try:
+            request.state.rate_limit_user_id = user_id
+        except Exception:
+            pass
+        return f"user:{user_id}"
+    ip = get_client_ip(request)
+    try:
+        h = hashlib.sha256(ip.encode('utf-8')).hexdigest()[:16]
+        return f"ip:{h}"
+    except Exception:
+        return f"ip:{ip}"
+
+
 # Create a single shared Limiter instance
 limiter: Limiter = Limiter(
     key_func=get_client_ip,
@@ -164,11 +216,32 @@ limiter: Limiter = Limiter(
 
 
 def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    """Default exception handler for rate limiting.
+
+    Adds Retry-After (seconds) and X-RateLimit-Reset (unix epoch seconds) headers when
+    the window reset can be inferred from SlowAPI's exception state. Keeps body generic
+    to avoid leaking detailed strategy information.
     """
-    Default exception handler for rate limiting. Attach this in app to return a generic 429.
-    """
-    # Keep response minimal and generic; avoid leaking internals
-    return PlainTextResponse("Too Many Requests", status_code=429)
+    headers = {}
+    try:
+        # SlowAPI's RateLimitExceeded exposes .reset or .remaining window attributes depending on version
+        reset_ts = None
+        if hasattr(exc, 'reset') and exc.reset:  # reset is epoch seconds
+            reset_ts = int(exc.reset)
+        elif hasattr(exc, 'limit') and hasattr(exc, 'window_stats'):
+            # Fallback: attempt to compute remaining window
+            ws = getattr(exc, 'window_stats', None)
+            if ws and isinstance(ws, dict) and 'reset' in ws:
+                reset_ts = int(ws['reset'])
+        if reset_ts:
+            now = int(datetime.now(timezone.utc).timestamp())
+            retry_after = max(0, reset_ts - now)
+            headers['Retry-After'] = str(retry_after)
+            headers['X-RateLimit-Reset'] = str(reset_ts)
+    except Exception:
+        pass
+
+    return PlainTextResponse("Too Many Requests", status_code=429, headers=headers)
 
 
 def init_rate_limiter(app: FastAPI) -> None:
@@ -193,4 +266,5 @@ __all__ = [
     "rate_limit_handler",
     "get_client_ip",
     "get_phone_key",
+    "user_or_ip_rate_key",
 ]

@@ -16,6 +16,9 @@ from app.models import community  # noqa: F401
 from app.models import crisis  # noqa: F401
 from app.models import translation  # noqa: F401
 from app.models import analytics  # noqa: F401
+from app.models import exercise  # noqa: F401
+from app.models import chat_session  # noqa: F401
+from app.models import mental_health_tracking  # noqa: F401
 
 # expose for main.py
 __all_models__ = [
@@ -32,4 +35,7 @@ __all_models__ = [
     crisis,
     translation,
     analytics,
+    exercise,
+    chat_session,
+    mental_health_tracking,
 ]

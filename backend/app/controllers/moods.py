@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, Header
+from fastapi import APIRouter, Depends, HTTPException, Header, Query, Request
 from typing import List, Optional
 from app.schemas.mood import MoodCreate, MoodRead
 from app.models.mood_entry import MoodEntry
 from app.models.user import User
 from app.services import security
 from app.services.analytics import record_event
-from app.schemas.journal import JournalCreate, JournalRead
+from app.schemas.journal import JournalCreate, JournalRead, JournalUpdate
 from app.schemas.symptom import SymptomCreate, SymptomRead, AnalyticsSummary
 from app.models.journal_entry import JournalEntry
 from app.models.symptom_entry import SymptomEntry
@@ -13,6 +13,7 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import func
 from app.models.sleep_entry import SleepEntry
+from app.limits import limiter, user_or_ip_rate_key
 
 router = APIRouter()
 
@@ -37,18 +38,43 @@ def get_current_user(authorization: Optional[str] = Header(None)) -> User:
     finally:
         db.close()
 
+@limiter.limit("240/hour", key_func=user_or_ip_rate_key)
 @router.get('/moods', response_model=List[MoodRead])
-def list_moods(user: User = Depends(get_current_user)):
+def list_moods(request: Request, page: int | None = None, limit: int | None = None, from_: str | None = Query(None, alias='from'), to: str | None = Query(None, alias='to'), user: User = Depends(get_current_user)):
     from app.main import SessionLocal
     db = SessionLocal()
     try:
-        entries = db.query(MoodEntry).filter(MoodEntry.user_id == user.id).order_by(MoodEntry.created_at.desc()).all()
+        q = db.query(MoodEntry).filter(MoodEntry.user_id == user.id)
+        # Date filtering
+        try:
+            if from_:
+                from datetime import datetime, timezone as _tz
+                start = datetime.fromisoformat(from_)
+                if start.tzinfo is None:
+                    start = start.replace(tzinfo=_tz.utc)
+                q = q.filter(MoodEntry.created_at >= start)
+            if to:
+                from datetime import datetime, timezone as _tz
+                end = datetime.fromisoformat(to)
+                if end.tzinfo is None:
+                    end = end.replace(tzinfo=_tz.utc)
+                q = q.filter(MoodEntry.created_at <= end)
+        except Exception:
+            pass
+        q = q.order_by(MoodEntry.created_at.desc())
+        # Pagination
+        if limit and limit > 0:
+            p = max(1, page or 1)
+            q = q.limit(limit).offset((p - 1) * limit)
+        entries = q.all()
+        # Coerce id to string in response model via Pydantic schema definition
         return entries
     finally:
         db.close()
 
+@limiter.limit("60/hour", key_func=user_or_ip_rate_key)
 @router.post('/moods', response_model=MoodRead)
-def create_mood(entry_in: MoodCreate, user: User = Depends(get_current_user)):
+def create_mood(request: Request, entry_in: MoodCreate, user: User = Depends(get_current_user)):
     from app.main import SessionLocal
     db = SessionLocal()
     try:
@@ -65,8 +91,9 @@ def create_mood(entry_in: MoodCreate, user: User = Depends(get_current_user)):
         db.close()
 
 
+@limiter.limit("30/hour", key_func=user_or_ip_rate_key)
 @router.post('/journals', response_model=JournalRead)
-def create_journal(payload: JournalCreate, user: User = Depends(get_current_user)):
+def create_journal(request: Request, payload: JournalCreate, user: User = Depends(get_current_user)):
     from app.main import SessionLocal
     db = SessionLocal()
     try:
@@ -105,6 +132,11 @@ def create_journal(payload: JournalCreate, user: User = Depends(get_current_user
         db.add(j)
         db.commit()
         db.refresh(j)
+        # inject updated_at for Flutter client compatibility (no DB column; return created_at)
+        try:
+            setattr(j, 'updated_at', getattr(j, 'created_at', None))
+        except Exception:
+            pass
         # decrypt for response
         try:
             # if stored with envelope encryption, use envelope decrypt
@@ -121,8 +153,9 @@ def create_journal(payload: JournalCreate, user: User = Depends(get_current_user
         db.close()
 
 
+@limiter.limit("180/hour", key_func=user_or_ip_rate_key)
 @router.get('/journals', response_model=list[JournalRead])
-def list_journals(date: str | None = None, start: str | None = None, end: str | None = None, user: User = Depends(get_current_user)):
+def list_journals(request: Request, date: str | None = None, start: str | None = None, end: str | None = None, user: User = Depends(get_current_user)):
     """List journals for the current user.
     Optional query parameters:
       - date: YYYY-MM-DD to return entries for a specific day
@@ -170,8 +203,9 @@ def list_journals(date: str | None = None, start: str | None = None, end: str | 
         db.close()
 
 
+@limiter.limit("60/hour", key_func=user_or_ip_rate_key)
 @router.put('/journals/{journal_id}', response_model=JournalRead)
-def update_journal(journal_id: int, payload: JournalCreate, user: User = Depends(get_current_user)):
+def update_journal(request: Request, journal_id: int, payload: JournalUpdate, user: User = Depends(get_current_user)):
     """Update an existing journal entry. Only the owner may update."""
     from app.main import SessionLocal
     from app.models.journal_entry import JournalEntry
@@ -183,22 +217,24 @@ def update_journal(journal_id: int, payload: JournalCreate, user: User = Depends
 
         # encrypt content similarly to create_journal
         from app.services.crypto import encrypt_text
-        content_enc = encrypt_text(payload.content) if payload.content else ''
+        content_enc = encrypt_text(payload.content) if getattr(payload, 'content', None) else None
         encryption_key = None
-        try:
-            import json
-            doc = json.loads(content_enc)
-            if isinstance(doc, dict) and 'ct' in doc and 'ek' in doc:
-                ciphertext = doc['ct']
-                encryption_key = doc['ek']
-            else:
+        if content_enc is not None:
+            try:
+                import json
+                doc = json.loads(content_enc)
+                if isinstance(doc, dict) and 'ct' in doc and 'ek' in doc:
+                    ciphertext = doc['ct']
+                    encryption_key = doc['ek']
+                else:
+                    ciphertext = content_enc
+            except Exception:
                 ciphertext = content_enc
-        except Exception:
-            ciphertext = content_enc
-
-        j.title = payload.title
-        j.content = ciphertext
-        j.encryption_key = encryption_key
+        if getattr(payload, 'title', None) is not None:
+            j.title = payload.title
+        if content_enc is not None:
+            j.content = ciphertext
+            j.encryption_key = encryption_key
         # handle entry_date and progress if provided
         try:
             if getattr(payload, 'entry_date', None):
@@ -218,6 +254,12 @@ def update_journal(journal_id: int, payload: JournalCreate, user: User = Depends
         db.commit()
         db.refresh(j)
 
+        # inject updated_at for Flutter client compatibility
+        try:
+            setattr(j, 'updated_at', datetime.now(timezone.utc))
+        except Exception:
+            pass
+
         # decrypt for response
         try:
             if getattr(j, 'encryption_key', None):
@@ -234,8 +276,9 @@ def update_journal(journal_id: int, payload: JournalCreate, user: User = Depends
         db.close()
 
 
+@limiter.limit("30/hour", key_func=user_or_ip_rate_key)
 @router.delete('/journals/{journal_id}')
-def delete_journal(journal_id: int, user: User = Depends(get_current_user)):
+def delete_journal(request: Request, journal_id: int, user: User = Depends(get_current_user)):
     """Delete a journal entry owned by the user."""
     from app.main import SessionLocal
     from app.models.journal_entry import JournalEntry
@@ -246,13 +289,14 @@ def delete_journal(journal_id: int, user: User = Depends(get_current_user)):
             raise HTTPException(status_code=404, detail='Journal not found')
         db.delete(j)
         db.commit()
-        return {'status': 'deleted'}
+        return {'message': 'ok'}
     finally:
         db.close()
 
 
+@limiter.limit("60/hour", key_func=user_or_ip_rate_key)
 @router.post('/symptoms', response_model=SymptomRead)
-def create_symptom(payload: SymptomCreate, user: User = Depends(get_current_user)):
+def create_symptom(request: Request, payload: SymptomCreate, user: User = Depends(get_current_user)):
     from app.main import SessionLocal
     db = SessionLocal()
     try:
@@ -265,8 +309,9 @@ def create_symptom(payload: SymptomCreate, user: User = Depends(get_current_user
         db.close()
 
 
+@limiter.limit("180/hour", key_func=user_or_ip_rate_key)
 @router.get('/symptoms', response_model=list[SymptomRead])
-def list_symptoms(user: User = Depends(get_current_user)):
+def list_symptoms(request: Request, user: User = Depends(get_current_user)):
     from app.main import SessionLocal
     db = SessionLocal()
     try:
@@ -276,8 +321,9 @@ def list_symptoms(user: User = Depends(get_current_user)):
         db.close()
 
 
+@limiter.limit("120/hour", key_func=user_or_ip_rate_key)
 @router.get('/moods/analytics', response_model=AnalyticsSummary)
-def mood_analytics(user: User = Depends(get_current_user)):
+def mood_analytics(request: Request, user: User = Depends(get_current_user)):
     from app.main import SessionLocal
     db = SessionLocal()
     try:
@@ -294,8 +340,9 @@ def mood_analytics(user: User = Depends(get_current_user)):
         db.close()
 
 
+@limiter.limit("120/hour", key_func=user_or_ip_rate_key)
 @router.get('/moods/analytics/daily')
-def mood_analytics_daily(start: str | None = None, end: str | None = None, user: User = Depends(get_current_user)):
+def mood_analytics_daily(request: Request, start: str | None = None, end: str | None = None, user: User = Depends(get_current_user)):
     """Return daily mood averages and counts between start and end (ISO dates). Defaults to last 30 days."""
     from app.main import SessionLocal
     db = SessionLocal()
@@ -324,8 +371,9 @@ def mood_analytics_daily(start: str | None = None, end: str | None = None, user:
         db.close()
 
 
+@limiter.limit("120/hour", key_func=user_or_ip_rate_key)
 @router.get('/journals/summary')
-def journals_progress_summary(start: str | None = None, end: str | None = None, user: User = Depends(get_current_user)):
+def journals_progress_summary(request: Request, start: str | None = None, end: str | None = None, user: User = Depends(get_current_user)):
     """Return daily progress summary for journals between start and end dates.
     Returns list of {day: YYYY-MM-DD, avg_progress: float, count: int}
     """
@@ -355,8 +403,9 @@ def journals_progress_summary(start: str | None = None, end: str | None = None, 
         db.close()
 
 
+@limiter.limit("120/hour", key_func=user_or_ip_rate_key)
 @router.get('/sleep/metric')
-def sleep_metric(window: str | None = None, user: User = Depends(get_current_user)):
+def sleep_metric(request: Request, window: str | None = None, user: User = Depends(get_current_user)):
     """Return a simple sleep metric.
 
     Query parameter `window` controls which metric is returned:

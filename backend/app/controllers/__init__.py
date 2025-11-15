@@ -3,6 +3,7 @@ from . import (
     moods,
     profile,
     chat,
+    chat_controller,
     gamification,
     personalization,
     community,
@@ -13,6 +14,10 @@ from . import (
     privacy,
     timers,
     consent,
+    journal,
+    insights_controller,
+    meditation,
+    exercises,
 )
 
 __all__ = [
@@ -20,6 +25,7 @@ __all__ = [
     "moods",
     "profile",
     "chat",
+    "chat_controller",
     "gamification",
     "personalization",
     "community",
@@ -30,4 +36,8 @@ __all__ = [
     "privacy",
     "timers",
     "consent",
+    "journal",
+    "insights_controller",
+    "meditation",
+    "exercises",
 ]

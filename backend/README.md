@@ -29,6 +29,8 @@ Configuration
 - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION` — credentials for S3/KMS operations
 - `SEGMENT_WRITE_KEY` — optional Segment write key for analytics export
 - `DATA_RETENTION_DAYS` — if set, retention job will purge older data
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_FROM` — email delivery settings (see Production Email below)
+- `DEV_EMAIL_PREVIEW` — when True (default in dev), API responses include preview payloads for email/OTP flows; set to `False` in production
 
 Security notes
 
@@ -119,3 +121,30 @@ cd D:/OneDrive/Desktop/Mood/backend
 ```
 
 This will bring up the Postgres container, run alembic migrations inside the web container and start the web service.
+
+## Production Email
+
+To enable real email delivery (password reset links/codes, verification emails):
+
+1. Configure SMTP:
+
+   - `SMTP_HOST` (e.g., smtp.sendgrid.net)
+   - `SMTP_PORT` (e.g., 587)
+   - `SMTP_USER` / `SMTP_PASSWORD`
+   - `EMAIL_FROM` (verified sender)
+
+2. Disable dev previews:
+
+   - Set `DEV_EMAIL_PREVIEW=False` (and typically `DEV_MODE=False`) in your environment.
+
+With previews disabled, endpoints like `/api/auth/password-otp/request` will not include the code in the response; users must retrieve it from their mailbox.
+
+## Rate Limiting
+
+This backend uses SlowAPI for request rate limiting. Standard headers are attached:
+
+- `X-RateLimit-Limit`
+- `X-RateLimit-Remaining`
+- `X-RateLimit-Reset` and `Retry-After` on 429
+
+The mobile app surfaces friendly messages on 429 and, when available, remaining attempts and retry-after seconds.

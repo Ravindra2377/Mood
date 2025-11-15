@@ -4,9 +4,12 @@ import '../services/journals_service.dart';
 
 class JournalEditScreen extends StatefulWidget {
   final JournalEntry entry;
-  final Future<JournalsService> serviceFuture;
-  const JournalEditScreen(
-      {super.key, required this.entry, required this.serviceFuture});
+  final Future<JournalStore> serviceFuture;
+  const JournalEditScreen({
+    super.key,
+    required this.entry,
+    required this.serviceFuture,
+  });
 
   @override
   State<JournalEditScreen> createState() => _JournalEditScreenState();
@@ -39,8 +42,9 @@ class _JournalEditScreenState extends State<JournalEditScreen> {
     widget.entry.title = _titleCtrl.text;
     widget.entry.content = _contentCtrl.text;
     widget.entry.mood = _mood;
-    if (widget.entry.id.isEmpty)
+    if (widget.entry.id.isEmpty) {
       widget.entry.id = DateTime.now().microsecondsSinceEpoch.toString();
+    }
     await svc.save(widget.entry);
     setState(() => _saving = false);
     if (mounted) Navigator.pop(context, true);
@@ -55,7 +59,7 @@ class _JournalEditScreenState extends State<JournalEditScreen> {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: _saving ? null : _save,
-          )
+          ),
         ],
       ),
       body: Padding(
@@ -64,40 +68,50 @@ class _JournalEditScreenState extends State<JournalEditScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
-                controller: _titleCtrl,
-                decoration: const InputDecoration(hintText: 'Title')),
+              controller: _titleCtrl,
+              decoration: const InputDecoration(hintText: 'Title'),
+            ),
             const SizedBox(height: 8),
             Expanded(
-                child: TextField(
-                    controller: _contentCtrl,
-                    maxLines: null,
-                    expands: true,
-                    decoration:
-                        const InputDecoration(hintText: 'Write something...'))),
+              child: TextField(
+                controller: _contentCtrl,
+                maxLines: null,
+                expands: true,
+                decoration:
+                    const InputDecoration(hintText: 'Write something...'),
+              ),
+            ),
             const SizedBox(height: 8),
             Row(
               children: [
                 const Text('Mood:'),
                 const SizedBox(width: 8),
                 DropdownButton<String>(
-                    value: _mood,
-                    items: const [
-                      DropdownMenuItem(value: 'happy', child: Text('😊 Happy')),
-                      DropdownMenuItem(value: 'sad', child: Text('😢 Sad')),
-                      DropdownMenuItem(
-                          value: 'anxious', child: Text('😰 Anxious')),
-                      DropdownMenuItem(
-                          value: 'neutral', child: Text('😐 Neutral')),
-                    ],
-                    onChanged: (v) => setState(() => _mood = v ?? 'neutral')),
+                  value: _mood,
+                  items: const [
+                    DropdownMenuItem(value: 'happy', child: Text('😊 Happy')),
+                    DropdownMenuItem(value: 'sad', child: Text('😢 Sad')),
+                    DropdownMenuItem(
+                      value: 'anxious',
+                      child: Text('😰 Anxious'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'neutral',
+                      child: Text('😐 Neutral'),
+                    ),
+                  ],
+                  onChanged: (v) => setState(() => _mood = v ?? 'neutral'),
+                ),
                 const Spacer(),
                 ElevatedButton.icon(
-                    onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Attach coming soon'))),
-                    icon: const Icon(Icons.attach_file),
-                    label: const Text('Attach')),
+                  onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Attach coming soon')),
+                  ),
+                  icon: const Icon(Icons.attach_file),
+                  label: const Text('Attach'),
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

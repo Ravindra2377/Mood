@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/app_models.dart';
+import '../state/app_state.dart';
 import 'api_client.dart';
 
 /// Service for content and resources API calls
@@ -11,11 +13,12 @@ class ContentService {
   /// Fetch daily quote
   Future<Quote> getDailyQuote() async {
     try {
-      final response = await _apiClient.getDailyQuote();
-      
+      final response = await (_apiClient as dynamic).getDailyQuote();
+
+      final data = response as Map<String, dynamic>;
       return Quote(
-        text: response['text'] as String,
-        author: response['author'] as String,
+        text: data['text'] as String,
+        author: data['author'] as String,
       );
     } catch (e) {
       throw Exception('Failed to fetch daily quote: $e');
@@ -28,18 +31,22 @@ class ContentService {
     int? limit,
   }) async {
     try {
-      final response = await _apiClient.getContentItems(
+      final response = await (_apiClient as dynamic).getContentItems(
         type: type?.toString().split('.').last,
         limit: limit,
       );
-      
-      return response.map((item) => ContentItem(
-        id: item['id'] as String,
-        type: _parseContentType(item['type']),
-        title: item['title'] as String,
-        duration: item['duration'] as String,
-        thumbnail: item['thumbnail'] as String,
-      )).toList();
+
+      final data = response as List<dynamic>;
+      return data.map((item) {
+        final itemData = item as Map<String, dynamic>;
+        return ContentItem(
+          id: itemData['id'] as String,
+          type: _parseContentType(itemData['type'] as String),
+          title: itemData['title'] as String,
+          duration: itemData['duration'] as String,
+          thumbnail: itemData['thumbnail'] as String,
+        );
+      }).toList();
     } catch (e) {
       throw Exception('Failed to fetch content items: $e');
     }

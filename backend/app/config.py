@@ -26,6 +26,9 @@ class Settings(BaseSettings):
 
     TWILIO_VERIFY_SERVICE_SID: str | None = None
 
+    # Generative AI integrations
+    GEMINI_API_KEY: str | None = None
+
     # Feature flags
 
     REQUIRE_ADMIN_FOR_REWARDS: bool = False
@@ -55,6 +58,10 @@ class Settings(BaseSettings):
     DEV_EMAIL_PREVIEW: bool = True
 
     # Escalation email for crisis alerts
+
+    # Supabase integration
+    SUPABASE_URL: str | None = None
+    SUPABASE_KEY: str | None = None
 
     ESCALATION_EMAIL: str | None = "alerts@example.com"
 

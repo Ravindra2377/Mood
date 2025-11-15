@@ -5,7 +5,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 
+
 from app.config import settings
+
+# Supabase integration
+from supabase import create_client, Client
+
+supabase: Client | None = None
+if settings.SUPABASE_URL and settings.SUPABASE_KEY:
+    supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
 from app.services.i18n import parse_accept_language
 
@@ -29,10 +37,7 @@ from app.limits import limiter, init_rate_limiter
 
 # Routers
 
-
-
 from app.controllers import (
-
     auth,
     moods,
     profile,
@@ -42,8 +47,10 @@ from app.controllers import (
     community,
     crisis,
     i18n,
-
     consent,
+    journal,
+    meditation,
+    exercises,
 )
 
 from app.controllers import timers as timers_controller
@@ -51,6 +58,9 @@ from app.controllers import timers as timers_controller
 from app.controllers import admin as admin_controller
 from app.controllers import analytics as analytics_controller
 from app.controllers import privacy as privacy_controller
+from app.controllers import mental_health_tracking
+from app.controllers import chat_controller
+from app.controllers import insights_controller
 
 # SQLAlchemy setup
 DATABASE_URL = settings.DATABASE_URL
@@ -92,10 +102,17 @@ async def accept_language_middleware(request: Request, call_next):
 
     # Prefer explicit header parsing with q-values
 
+    candidate = None
     try:
         from app.services.i18n import available_locales
 
-
+        candidate = parse_accept_language(al or '', available_locales())
+    except Exception:
+        try:
+            # Fallback: try parsing without a list of available locales
+            candidate = parse_accept_language(al or '')
+        except Exception:
+            candidate = None
 
     # If there's an Authorization bearer token, try to get profile language and cache it on request
 
@@ -218,14 +235,20 @@ def on_startup():
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(moods.router, prefix="/api", tags=["moods"])
+app.include_router(journal.router, prefix="/api", tags=["journal"])
+app.include_router(meditation.router, prefix="/api", tags=["meditation"])
+app.include_router(exercises.router, prefix="/api", tags=["exercises"])
 app.include_router(profile.router, prefix="/api", tags=["profile"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
+app.include_router(chat_controller.router, prefix="/api/v1", tags=["chat-companion"])
+app.include_router(insights_controller.router, prefix="/api/v1", tags=["insights"])
 app.include_router(gamification.router, prefix="/api", tags=["gamification"])
 app.include_router(personalization.router, prefix="/api", tags=["personalization"])
 app.include_router(community.router, prefix="/api", tags=["community"])
 
 app.include_router(crisis.router, prefix="/api/crisis", tags=["crisis"])
 
+app.include_router(mental_health_tracking.router)
 
 app.include_router(i18n.router, prefix="/api", tags=["i18n"])
 

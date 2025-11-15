@@ -11,7 +11,7 @@ class AppConfig {
   AppConfig._();
 
   /// Default fallback if no dart-define is provided.
-  static const String _defaultBaseUrl = 'https://api.soulapp.app';
+  static const String _defaultBaseUrl = 'http://10.0.2.2:8001';
 
   /// The root backend URL. Override at build time with:
   ///   --dart-define=BASE_URL=https://api-staging.soulapp.app
@@ -38,10 +38,12 @@ class AppConfig {
     final uri = Uri.parse(normalized);
     return (query == null || query.isEmpty)
         ? uri
-        : uri.replace(queryParameters: {
-            ...uri.queryParameters,
-            ...query.map((k, v) => MapEntry(k, '$v')),
-          });
+        : uri.replace(
+            queryParameters: {
+              ...uri.queryParameters,
+              ...query.map((k, v) => MapEntry(k, '$v')),
+            },
+          );
   }
 
   /// True if the current base URL looks like a staging endpoint.

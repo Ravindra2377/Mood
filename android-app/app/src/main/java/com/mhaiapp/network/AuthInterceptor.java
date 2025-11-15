@@ -7,6 +7,9 @@ import com.mhaiapp.utils.SharedPrefsManager;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AuthInterceptor implements Interceptor {
     private final SharedPrefsManager prefs;
@@ -16,7 +19,14 @@ public class AuthInterceptor implements Interceptor {
 
     public AuthInterceptor(SharedPrefsManager prefs, String baseUrl) {
         this.prefs = prefs;
-        this.apiService = ApiClient.getClient(baseUrl).create(ApiService.class);
+        // Use a dedicated Retrofit without this interceptor to avoid recursion during refresh
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        Retrofit rf = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        this.apiService = rf.create(ApiService.class);
     }
 
     @Override

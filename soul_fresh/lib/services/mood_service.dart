@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/app_models.dart';
+import '../state/app_state.dart';
 import 'api_client.dart';
 
 /// Service for mood-related API calls
@@ -14,18 +16,22 @@ class MoodService {
     DateTime? endDate,
   }) async {
     try {
-      // Replace with your actual API endpoint
-      final response = await _apiClient.getMoodHistory(
-        startDate: startDate?.toIso8601String(),
-        endDate: endDate?.toIso8601String(),
+      // Use the typed ApiClient method instead of dynamic cast
+      final response = await _apiClient.listMoods(
+        fromIso: startDate?.toIso8601String(),
+        toIso: endDate?.toIso8601String(),
       );
-      
+
       // Parse response and convert to MoodHistoryItem list
-      return response.map((item) => MoodHistoryItem(
-        date: DateTime.parse(item['date']),
-        mood: _parseMoodLevel(item['mood']),
-        value: item['value'] as int,
-      )).toList();
+      return response
+          .map(
+            (item) => MoodHistoryItem(
+              date: item.createdAt,
+              mood: _scoreToMoodLevel(item.score),
+              value: item.score,
+            ),
+          )
+          .toList();
     } catch (e) {
       throw Exception('Failed to fetch mood history: $e');
     }
@@ -38,32 +44,24 @@ class MoodService {
     DateTime? timestamp,
   }) async {
     try {
-      await _apiClient.saveMood({
-        'mood': mood.toString().split('.').last,
-        'value': value,
-        'timestamp': (timestamp ?? DateTime.now()).toIso8601String(),
-      });
+      // Use the typed ApiClient method
+      await _apiClient.createMood(
+        CreateMoodRequest(
+          score: value,
+        ),
+      );
     } catch (e) {
       throw Exception('Failed to save mood: $e');
     }
   }
 
-  MoodLevel _parseMoodLevel(String mood) {
-    switch (mood.toLowerCase()) {
-      case 'angry':
-        return MoodLevel.angry;
-      case 'sad':
-        return MoodLevel.sad;
-      case 'neutral':
-        return MoodLevel.neutral;
-      case 'happy':
-        return MoodLevel.happy;
-      case 'veryhappy':
-      case 'very_happy':
-        return MoodLevel.veryHappy;
-      default:
-        return MoodLevel.neutral;
-    }
+  /// Convert score (1-10) to MoodLevel enum
+  MoodLevel _scoreToMoodLevel(int score) {
+    if (score <= 2) return MoodLevel.angry;
+    if (score <= 4) return MoodLevel.sad;
+    if (score <= 6) return MoodLevel.neutral;
+    if (score <= 8) return MoodLevel.happy;
+    return MoodLevel.veryHappy;
   }
 }
 

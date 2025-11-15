@@ -10,7 +10,8 @@ final timeFilterProvider = StateProvider<TimeFilter>((ref) => TimeFilter.today);
 final selectedMoodProvider = StateProvider<MoodLevel?>((ref) => null);
 
 // Navigation state
-final navigationProvider = StateProvider<NavigationSection>((ref) => NavigationSection.home);
+final navigationProvider =
+    StateProvider<NavigationSection>((ref) => NavigationSection.home);
 
 // Meditation state
 class MeditationState {
@@ -43,12 +44,14 @@ class MeditationState {
 
 class MeditationStateNotifier extends StateNotifier<MeditationState> {
   MeditationStateNotifier()
-      : super(const MeditationState(
-          isPlaying: false,
-          timerSeconds: 0,
-          duration: 300, // 5 minutes default
-          selectedSound: "Ocean breeze",
-        ));
+      : super(
+          const MeditationState(
+            isPlaying: false,
+            timerSeconds: 0,
+            duration: 300, // 5 minutes default
+            selectedSound: 'Ocean breeze',
+          ),
+        );
 
   void togglePlay() {
     state = state.copyWith(isPlaying: !state.isPlaying);
@@ -73,10 +76,10 @@ final meditationStateProvider =
 );
 
 // Journal entry state
-final journalEntryProvider = StateProvider<String>((ref) => "");
+final journalEntryProvider = StateProvider<String>((ref) => '');
 
 // Selected calendar day state
 final selectedCalendarDayProvider = StateProvider<int>((ref) => 22);
 
 // Search query state
-final searchQueryProvider = StateProvider<String>((ref) => "");
+final searchQueryProvider = StateProvider<String>((ref) => '');

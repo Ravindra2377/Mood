@@ -1,10 +1,10 @@
 :root {
-  --bg-color: 255, 255, 255;
+  --bg-color: 242, 229, 255;
   --text-color: 17, 24, 39;
   --text-muted-color: 75, 85, 99;
-  --card-bg: 255, 255, 255;
-  --gradient-from: #f3e7ff;
-  --gradient-to: #e5efff;
+  --card-bg: 255, 251, 255;
+  --gradient-from: #f2e5ff;
+  --gradient-to: #e5f2ff;
   --primary-blue: #3b82f6;
   --primary-purple: #a855f7;
 }
@@ -56,7 +56,7 @@ body {
 }
 
 .main-gradient {
-  background: linear-gradient(160deg, #e0c3fc 0%, #8ec5fc 100%);
+  background: linear-gradient(160deg, #fadafa 0%, #daf0fa 100%);
 }
 
 .calm-gradient {
@@ -357,12 +357,12 @@ html.dark .form-button:hover {
 }
 
 .activity-card.meditation {
-  background: rgba(236, 72, 153, 0.2);
+  background: #ffe5f2;
   color: #be185d;
 }
 
 .activity-card.journal {
-  background: rgba(59, 130, 246, 0.2);
+  background: #e5f2ff;
   color: #1d4ed8;
 }
 
@@ -455,8 +455,8 @@ html.dark .back-button {
   width: 256px;
   height: 256px;
   border-radius: 50%;
-  background: linear-gradient(160deg, #e0c3fc 0%, #8ec5fc 100%);
-  opacity: 0.3;
+  background: linear-gradient(160deg, #fadafa 0%, #daf0fa 100%);
+  opacity: 0.5;
   position: relative;
   display: flex;
   align-items: center;
@@ -586,7 +586,7 @@ html.dark .journal-textarea {
 }
 
 .insight-card {
-  background: rgba(168, 85, 247, 0.1);
+  background: #f2e5ff;
   color: #7c3aed;
   border-radius: 16px;
   padding: 16px;
