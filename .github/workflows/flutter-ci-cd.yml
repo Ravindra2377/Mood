@@ -161,7 +161,7 @@ jobs:
     name: 🤖 Build Android APK
     runs-on: ubuntu-latest
     needs: [flutter-test]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/soul_fresh') && github.event_name == 'push'
     timeout-minutes: 30
 
     steps:
